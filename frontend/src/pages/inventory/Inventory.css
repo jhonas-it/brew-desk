@@ -38,6 +38,7 @@
 
 .container-info-subtitle {
   font-size: 10px;
+  font-weight: 400;
 }
 
 .container-info-result {
@@ -65,13 +66,15 @@
   background: none;
   color: #475569;
   font-size: 12px;
-  font-weight: bold;
+  font-family: inherit;
+  font-weight: 500;
 }
 
 .inventory-tabs button.active {
   background-color: #eb5324;
   color: white;
   border-radius: 8px;
+  font-weight: bold;
 }
 
 .actions {
@@ -84,7 +87,8 @@
   display: flex;
   gap: 8px;
   align-items: center;
-  font-weight: bold;
+  font-family: inherit;
+  font-weight: 500;
   color: #334155;
   border: 1px solid #e2e8f0;
   background-color: white;
@@ -103,13 +107,16 @@
   color: white;
 }
 
-.actions .restock-btn:hover{
-  background-color: #B24B16;
-  
+.actions .restock-btn:hover {
+  background-color: #b24b16;
 }
 
-.toolbar{
+.toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.inventory-header-container-title > p {
+  font-weight: 500;
 }
