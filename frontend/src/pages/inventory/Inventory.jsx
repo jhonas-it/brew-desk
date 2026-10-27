@@ -59,10 +59,10 @@ const HeaderContainer = ({
           </div>
           <p>{title}</p>
         </div>
-        <div>
-          <p className="container-info-title">{subtitle}</p>
+
+          <p className="container-info-subtitle">{subtitle}</p>
           <p className="container-info-result">{value}</p> {/* Ibahin to */}
-        </div>
+      
       </div>
     </>
   );
