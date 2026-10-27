@@ -1,6 +1,14 @@
 import { useState } from "react";
 import "./Inventory.css";
-import { PackageOpen, ClockAlert, Gauge, Boxes } from "lucide-react";
+import {
+  PackageOpen,
+  ClockAlert,
+  Gauge,
+  Boxes,
+  Plus,
+  Trash,
+  Box
+} from "lucide-react";
 
 const Inventory = () => {
   const [activeTab, setActive] = useState("ingredients");
@@ -41,26 +49,37 @@ const Inventory = () => {
           iconColor="#017605"
         />
       </div>
-
-      <div className="inventory-tabs">
-        <button
-          className={activeTab === "ingredients" ? "active" : ""}
-          onClick={() => setActive("ingredients")}
-        >
-          Ingredients & batches
-        </button>
-        <button
-          className={activeTab === "waste" ? "active" : ""}
-          onClick={() => setActive("waste")}
-        >
-          Waste report
-        </button>
-        <button
-          className={activeTab === "stock" ? "active" : ""}
-          onClick={() => setActive("stock")}
-        >
-          Stock reconciliation
-        </button>
+      <div className="toolbar">
+        <div className="inventory-tabs">
+          <button
+            className={activeTab === "ingredients" ? "active" : ""}
+            onClick={() => setActive("ingredients")}
+          >
+            Ingredients & batches
+          </button>
+          <button
+            className={activeTab === "waste" ? "active" : ""}
+            onClick={() => setActive("waste")}
+          >
+            Waste report
+          </button>
+          <button
+            className={activeTab === "stock" ? "active" : ""}
+            onClick={() => setActive("stock")}
+          >
+            Stock reconciliation
+          </button>
+        </div>
+        <div className="actions">
+          <button>
+            <Plus size="15px" />
+            Add ingredients
+          </button>
+          <button>
+            <Trash size="15px" /> Log waste
+          </button>
+          <button className="restock-btn"><Box size="15px"/>Restock</button>
+        </div>
       </div>
     </>
   );
