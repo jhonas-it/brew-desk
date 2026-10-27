@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import Inventory from './pages/Inventory'
+import Inventory from './pages/inventory/Inventory.jsx'
 
 function App() {
   return (
