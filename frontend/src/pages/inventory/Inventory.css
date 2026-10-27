@@ -45,12 +45,37 @@
   font-weight: bold;
 }
 
-.inventory-tabs{
+.inventory-tabs {
   width: 435px;
   height: 38px;
-  background-color: #E8EDF3;
+  background-color: #e8edf3;
   padding: 4px;
   display: flex;
+  gap: 4px;
+  justify-content: space-around;
+  align-items: center;
   border-radius: 12px;
-  border: solid 1px #E2E8F0;
+  border: solid 1px #e2e8f0;
+}
+
+.inventory-tabs button {
+  cursor: pointer;
+  height: 28px;
+  border: none;
+  background: none;
+  color: #475569;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.inventory-tabs button.active {
+  background-color: #eb5324;
+  color: white;
+  border-radius: 8px;
+}
+
+.inventory-tabs button:hover {
+  background-color: #ecac99;
+  color: white;
+  border-radius: 8px;
 }

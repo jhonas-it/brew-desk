@@ -1,7 +1,10 @@
+import { useState } from "react";
 import "./Inventory.css";
 import { PackageOpen, ClockAlert, Gauge, Boxes } from "lucide-react";
 
 const Inventory = () => {
+  const [activeTab, setActive] = useState("ingredients");
+
   return (
     <>
       <div className="header-inventory">
@@ -39,7 +42,26 @@ const Inventory = () => {
         />
       </div>
 
-      <div className="inventory-tabs"></div>
+      <div className="inventory-tabs">
+        <button
+          className={activeTab === "ingredients" ? "active" : ""}
+          onClick={() => setActive("ingredients")}
+        >
+          Ingredients & batches
+        </button>
+        <button
+          className={activeTab === "waste" ? "active" : ""}
+          onClick={() => setActive("waste")}
+        >
+          Waste report
+        </button>
+        <button
+          className={activeTab === "stock" ? "active" : ""}
+          onClick={() => setActive("stock")}
+        >
+          Stock reconciliation
+        </button>
+      </div>
     </>
   );
 };
