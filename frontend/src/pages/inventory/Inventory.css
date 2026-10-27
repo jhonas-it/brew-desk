@@ -1,4 +1,4 @@
-.header-inventory{
+.header-inventory {
   display: flex;
   gap: 9px;
 }
@@ -38,10 +38,19 @@
 
 .container-info-subtitle {
   font-size: 10px;
-
 }
 
 .container-info-result {
   font-size: 15px;
   font-weight: bold;
+}
+
+.inventory-tabs{
+  width: 435px;
+  height: 38px;
+  background-color: #E8EDF3;
+  padding: 4px;
+  display: flex;
+  border-radius: 12px;
+  border: solid 1px #E2E8F0;
 }

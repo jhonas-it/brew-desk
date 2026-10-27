@@ -38,6 +38,8 @@ const Inventory = () => {
           iconColor="#017605"
         />
       </div>
+
+      <div className="inventory-tabs"></div>
     </>
   );
 };
@@ -59,10 +61,8 @@ const HeaderContainer = ({
           </div>
           <p>{title}</p>
         </div>
-
-          <p className="container-info-subtitle">{subtitle}</p>
-          <p className="container-info-result">{value}</p> {/* Ibahin to */}
-      
+        <p className="container-info-subtitle">{subtitle}</p>
+        <p className="container-info-result">{value}</p> {/* Ibahin to */}
       </div>
     </>
   );
