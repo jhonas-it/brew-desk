@@ -124,12 +124,13 @@
 }
 
 .table-wrapper {
-  /* background-color: red; */
+  background-color: white;
 }
 
 .search-container {
   display: flex;
   align-items: center;
+  padding: 13px
 }
 
 .search-container > input {
