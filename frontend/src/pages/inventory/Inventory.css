@@ -47,8 +47,8 @@
 }
 
 .inventory-tabs {
-  width: 380px;
-  height: 31px;
+  width: 500px;
+  height: 35px;
   background-color: #e8edf3;
   padding: 4px;
   display: flex;
@@ -61,7 +61,8 @@
 
 .inventory-tabs button {
   cursor: pointer;
-  height: 28px;
+  height: 35px;
+  width: 300px;
   border: none;
   background: none;
   color: #475569;
