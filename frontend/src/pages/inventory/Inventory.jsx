@@ -7,47 +7,100 @@ import {
   Boxes,
   Plus,
   Trash,
-  Box
+  Box,
+  Droplet,
+  Recycle,
+  Coffee,
 } from "lucide-react";
 
 const Inventory = () => {
   const [activeTab, setActive] = useState("ingredients");
 
+  const firstHeaderData = [
+    {
+      title: "Out of Stocks Items",
+      subtitle: "Count of Items currently out of stock",
+      value: "40",
+      bgColor: "#d5d5d5",
+      icon: PackageOpen,
+      iconColor: "black",
+    },
+    {
+      title: "Expired Date",
+      subtitle: "No. of Items past their expiration date",
+      value: "40",
+      bgColor: "#FDE4E4",
+      icon: ClockAlert,
+      iconColor: "#FF0000",
+    },
+    {
+      title: "Low Stock Items",
+      subtitle: "No. of Items that are running low",
+      value: "8",
+      bgColor: "#FCF4EA",
+      icon: Gauge,
+      iconColor: "#FFA100",
+    },
+    {
+      title: "Total Items",
+      subtitle: "Total Items in Stock",
+      value: "120",
+      bgColor: "#E2FFDF",
+      icon: Boxes,
+      iconColor: "#017605",
+    },
+  ];
+
+  const wasteHeaderData = [
+    {
+      title: "Expired",
+      subtitle: "Entried Recorded",
+      value: "4",
+      bgColor: "#FDE4E4",
+      icon: ClockAlert,
+      iconColor: "#FF0000",
+    },
+    {
+      title: "Spillage",
+      subtitle: "Entried Recorded",
+      value: "40",
+      bgColor: "#F7E4CA",
+      icon: Droplet,
+      iconColor: "#c38213",
+    },
+    {
+      title: "Waste",
+      subtitle: "Entried Recorded",
+      value: "8",
+      bgColor: "#B8FFAE",
+      icon: Recycle,
+      iconColor: "#027706",
+    },
+    {
+      title: "Others",
+      subtitle: "Entried Recorded",
+      value: "120",
+      bgColor: "#cccccc",
+      icon: Coffee,
+      iconColor: "black",
+    },
+  ];
+
+  const useHeaderData =
+    activeTab === "waste" ? wasteHeaderData : firstHeaderData;
   return (
     <>
       <div className="header-inventory">
-        <HeaderContainer
-          title="Out of Stocks Items"
-          subtitle="Count of Items currently out of stock"
-          value="40"
-          bgColor="#d5d5d5"
-          icon={PackageOpen}
-          iconColor="black"
-        />
-        <HeaderContainer
-          title="Expired Date"
-          subtitle="No. of Items past their expiration date"
-          value="40"
-          bgColor="#FDE4E4"
-          icon={ClockAlert}
-          iconColor="#FF0000"
-        />
-        <HeaderContainer
-          title="Low Stock Items"
-          subtitle="No. of Items that are running low"
-          value="8"
-          bgColor="#FCF4EA"
-          icon={Gauge}
-          iconColor="#FFA100"
-        />
-        <HeaderContainer
-          title="Total Items"
-          subtitle="Total Items in Stock"
-          value="120"
-          bgColor="#E2FFDF"
-          icon={Boxes}
-          iconColor="#017605"
-        />
+        {useHeaderData.map((item) => (
+          <HeaderContainer
+            title={item.title}
+            subtitle={item.subtitle}
+            value={item.value}
+            bgColor={item.bgColor}
+            icon={item.icon}
+            iconColor={item.iconColor}
+          />
+        ))}
       </div>
       <div className="toolbar">
         <div className="inventory-tabs">
@@ -78,7 +131,10 @@ const Inventory = () => {
           <button>
             <Trash size="15px" /> Log waste
           </button>
-          <button className="restock-btn"><Box size="15px"/>Restock</button>
+          <button className="restock-btn">
+            <Box size="15px" />
+            Restock
+          </button>
         </div>
       </div>
     </>
