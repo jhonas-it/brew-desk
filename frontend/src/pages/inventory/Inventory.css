@@ -50,7 +50,7 @@
 .inventory-tabs {
   width: 500px;
   height: 35px;
-  background-color: rgba(225, 231, 239, 0.70);
+  background-color: rgba(225, 231, 239, 0.7);
   padding: 4px;
   display: flex;
   gap: 4px;
@@ -124,6 +124,25 @@
 }
 
 .table-wrapper {
-  background-color: red;
-  
+  /* background-color: red; */
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+}
+
+.search-container > input {
+  width: 257.8px;
+  height: 30px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background-color: #f8fafc;
+  padding-left: 20px;
+  color: #475569;
+}
+
+.search-container > input:focus {
+  outline: none;
+  border: 1px solid #d0e4ff;
 }

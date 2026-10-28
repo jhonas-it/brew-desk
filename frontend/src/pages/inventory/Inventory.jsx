@@ -11,6 +11,7 @@ import {
   Droplet,
   Recycle,
   Coffee,
+  Search,
 } from "lucide-react";
 
 const Inventory = () => {
@@ -138,7 +139,10 @@ const Inventory = () => {
         </div>
       </div>
       <div className="table-wrapper">
-
+        <div className="search-container">
+          <Search size="20px" color="#475569" />
+          <input type="text" placeholder="Search products..." />
+        </div>
       </div>
     </>
   );
