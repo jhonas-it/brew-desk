@@ -63,7 +63,7 @@ const Inventory = () => {
     {
       title: "Spillage",
       subtitle: "Entried Recorded",
-      value: "40",
+      value: "3",
       bgColor: "#F7E4CA",
       icon: Droplet,
       iconColor: "#c38213",
@@ -71,7 +71,7 @@ const Inventory = () => {
     {
       title: "Waste",
       subtitle: "Entried Recorded",
-      value: "8",
+      value: "2",
       bgColor: "#B8FFAE",
       icon: Recycle,
       iconColor: "#027706",
@@ -79,7 +79,7 @@ const Inventory = () => {
     {
       title: "Others",
       subtitle: "Entried Recorded",
-      value: "120",
+      value: "3",
       bgColor: "#cccccc",
       icon: Coffee,
       iconColor: "black",
@@ -136,6 +136,9 @@ const Inventory = () => {
             Restock
           </button>
         </div>
+      </div>
+      <div className="table-wrapper">
+
       </div>
     </>
   );
