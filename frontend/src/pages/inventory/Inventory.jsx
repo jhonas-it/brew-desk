@@ -100,6 +100,7 @@ const Inventory = () => {
             bgColor={item.bgColor}
             icon={item.icon}
             iconColor={item.iconColor}
+            isWaste = {activeTab === "waste"}
           />
         ))}
       </div>
@@ -155,6 +156,7 @@ const HeaderContainer = ({
   bgColor,
   icon: Icon,
   iconColor,
+  isWaste,
 }) => {
   return (
     <>
@@ -165,8 +167,17 @@ const HeaderContainer = ({
           </div>
           <p>{title}</p>
         </div>
-        <p className="container-info-subtitle">{subtitle}</p>
-        <p className="container-info-result">{value}</p> {/* Ibahin to */}
+        {isWaste ? (
+          <>
+            <p className="container-info-subtitle">{subtitle}</p>
+            <p className="container-info-result">{value}</p> {/* Ibahin to */}
+          </>
+        ) : (
+          <>
+            <p className="container-info-result">{value}</p> {/* Ibahin to */}
+            <p className="container-info-subtitle">{subtitle}</p>
+          </>
+        )}
       </div>
     </>
   );
