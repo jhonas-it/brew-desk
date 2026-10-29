@@ -297,9 +297,12 @@
   display: grid;
   grid-template-columns: 1.1fr 1.2fr 1.3fr 1.3fr 1.1fr 1fr;
   align-items: center;
-  background-color: #fbfcfd;
   border-bottom: 2px solid #e2e8f0;
   padding: 16px;
+}
+
+.reconciliation-table-header {
+  background-color: #fbfcfd;
 }
 
 .reconciliation-table-header > span {
