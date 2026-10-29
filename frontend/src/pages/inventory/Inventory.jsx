@@ -140,18 +140,24 @@ const Inventory = () => {
           </button>
         </div>
       </div>
-      <div className="table-wrapper">
-        <div className="search-container">
-          <Search size="20px" color="#475569" />
-          <input type="text" placeholder="Search products..." />
+      {activeTab !== "stock" ? (
+        <div className="table-wrapper">
+          <div className="search-container">
+            <Search size="20px" color="#475569" />
+            <input type="text" placeholder="Search products..." />
+          </div>
+          <div className="table-header">
+            <HeaderTable isWaste={activeTab === "waste"} />
+          </div>
+          <div className="table-records">
+            <TableRecords isWaste={activeTab === "waste"} />
+          </div>
         </div>
-        <div className="table-header">
-          <HeaderTable isWaste={activeTab === "waste"} />
-        </div>
-        <div className="table-records">
-          <TableRecords isWaste={activeTab === "waste"} />
-        </div>
-      </div>
+      ) : (
+        <>
+        
+        </>
+      )}
     </>
   );
 };
@@ -202,14 +208,14 @@ const TableRecords = ({ isWaste }) => {
     <>
       {isWaste ? (
         <>
-          <span style={{color: "#64748B"}}>Today 09:15 AM</span>
-          <span style={{color: "#64748B"}}>Coffee</span>
-          <span style={{color: "#64748B"}}>#WM-0919</span>
+          <span style={{ color: "#64748B" }}>Today 09:15 AM</span>
+          <span style={{ color: "#64748B" }}>Coffee</span>
+          <span style={{ color: "#64748B" }}>#WM-0919</span>
           <span>Batch still Active</span>
           <span>1 expired</span>
           <span>Aquiera Cantillon</span>
           <span>Left in the shelf</span>
-          <span style={{fontWeight: "bold", color: "#64748B"}}>Edit</span>
+          <span style={{ fontWeight: "bold", color: "#64748B" }}>Edit</span>
         </>
       ) : (
         <>
@@ -217,13 +223,15 @@ const TableRecords = ({ isWaste }) => {
             <ChevronRight size="15px" />
             <span>Espresso Beans</span>
           </div>
-          <span style={{color: "#64748B"}}>Coffee</span>
-          <span style={{color: "#64748B"}}>g</span>
-          <span style={{fontWeight: "600"}}>2,600 g</span>
-          <span style={{color: "#64748B", fontWeight: "600"}}>3,000 g</span>
+          <span style={{ color: "#64748B" }}>Coffee</span>
+          <span style={{ color: "#64748B" }}>g</span>
+          <span style={{ fontWeight: "600" }}>2,600 g</span>
+          <span style={{ color: "#64748B", fontWeight: "600" }}>3,000 g</span>
           <span>1 expiring soon</span>
-          <span style={{fontWeight: "bold", color: "#64748B"}}>2 batches</span>
-          <span style={{fontWeight: "bold", color: "#64748B"}}>Edit</span>
+          <span style={{ fontWeight: "bold", color: "#64748B" }}>
+            2 batches
+          </span>
+          <span style={{ fontWeight: "bold", color: "#64748B" }}>Edit</span>
         </>
       )}
     </>
