@@ -13,6 +13,7 @@ import {
   Coffee,
   Search,
   ChevronRight,
+  FootprintsIcon,
 } from "lucide-react";
 
 const Inventory = () => {
@@ -155,7 +156,7 @@ const Inventory = () => {
         </div>
       ) : (
         <>
-        
+          <StockReconciliation />
         </>
       )}
     </>
@@ -272,4 +273,91 @@ const HeaderContainer = ({
   );
 };
 
+const StockReconciliation = () => {
+  return (
+    <>
+      <div className="stock-reconciliation">
+        <div className="left-panel">
+          <div className="top">
+            <div className="title">
+              <p style={{ fontWeight: "bold" }}>Physical Count</p>
+              <p style={{ color: "#94A3B8", fontSize: "12px" }}>
+                Compare shelf count to system expected stock.
+              </p>
+            </div>
+            <div className="ingredient">
+              <p
+                style={{
+                  color: "#334155",
+                  fontWeight: "bold",
+                  fontSize: "12px",
+                }}
+              >
+                Ingredient
+              </p>
+              <select name="ingredient-cb" id="ingredient-cb">
+                <option value="Espresso Beans">Espresso Beans</option>
+                <option value="Mascaporne">Mascaporne</option>
+                <option value="Frappe Base Powder">Frappe Base Powder</option>
+              </select>
+              <div className="recorded-quantity">
+                <span>Recorded Quantity:</span>
+                <strong>2,600 g</strong>
+              </div>
+            </div>
+            <div className="physical-count">
+              <span>Physical count (g)</span>
+              <input type="number" placeholder="Enter measured quantity" />
+            </div>
+          </div>
+          <div className="bottom">
+            <button className="record-adjust-btn">Record & Adjust Stock</button>
+            <button className="count-only-btn">Record Count Only</button>
+          </div>
+        </div>
+        <section className="right-panel">
+          <div className="header">
+            <span style={{ fontWeight: "bold", fontSize: "14px" }}>
+              Reconciliation History
+            </span>
+            <span style={{ fontSize: "12px", color: "#94A3B8" }}>
+              Audit and discrepancy adjustments
+            </span>
+          </div>
+          <hr style={{ border: "2px solid #F1F5F9" }} />
+          <ReconciliationTable />
+        </section>
+      </div>
+    </>
+  );
+};
+
+const ReconciliationTable = () => {
+  return (
+    <>
+      <div className="reconciliation-table-header">
+        <span>DATE</span>
+        <span>INGREDIENT</span>
+        <span>SYSTEM EXPECTED</span>
+        <span>PHYSICAL COUNT</span>
+        <span>DISCREPANCY</span>
+        <span>AUDITOR</span>
+      </div>
+      <div className="reconciliation-table-records">
+        <span style={{ color: "#64748B" }}>
+          Oct 20, <br /> 2024
+        </span>
+        <span style={{ fontWeight: "bold", color: "#1E293B" }}>
+          Espreso Beans
+        </span>
+        <span style={{ color: "#475569" }}>2,750 g</span>
+        <span style={{ color: "#1E293B" }}>2,600 g</span>
+        <span style={{ fontWeight: "bold" }}>-150 g</span>
+        <span style={{ color: "#334155" }}>
+          Jhonas <br /> (Owner)
+        </span>
+      </div>
+    </>
+  );
+};
 export default Inventory;
