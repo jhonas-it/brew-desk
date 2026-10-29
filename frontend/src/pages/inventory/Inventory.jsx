@@ -202,14 +202,14 @@ const TableRecords = ({ isWaste }) => {
     <>
       {isWaste ? (
         <>
-          <span>Today 09:15 AM</span>
-          <span>Coffee</span>
-          <span>#WM-0919</span>
+          <span style={{color: "#64748B"}}>Today 09:15 AM</span>
+          <span style={{color: "#64748B"}}>Coffee</span>
+          <span style={{color: "#64748B"}}>#WM-0919</span>
           <span>Batch still Active</span>
           <span>1 expired</span>
           <span>Aquiera Cantillon</span>
           <span>Left in the shelf</span>
-          <span>Edit</span>
+          <span style={{fontWeight: "bold", color: "#64748B"}}>Edit</span>
         </>
       ) : (
         <>
