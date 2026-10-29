@@ -146,29 +146,44 @@ const Inventory = () => {
           <input type="text" placeholder="Search products..." />
         </div>
         <div className="table-header">
-          <span>INGREDIENT</span>
-          <span>CATEGORY</span>
-          <span>UNIT</span>
-          <span>
-            REMAINING
-            <br />
-            (ACTIVE)
-          </span>
-          <span>
-            PAR <br />
-            LEVEL
-          </span>
-          <span>ALERTS</span>
-          <span>
-            BATCH
-            <br />
-            COUNT
-          </span>
-          <span>ACTIONS</span>
+          {activeTab === "waste" ? (
+            <>
+              <span>DATE / TIME</span>
+              <span>INGREDIENT</span>
+              <span>BATCH #</span>
+              <span>QUANTITY</span>
+              <span>REASON</span>
+              <span>LOGGED BY</span>
+              <span>NOTE</span>
+              <span>EDIT</span>
+            </>
+          ) : (
+            <>
+              <span>INGREDIENT</span>
+              <span>CATEGORY</span>
+              <span>UNIT</span>
+              <span>
+                REMAINING
+                <br />
+                (ACTIVE)
+              </span>
+              <span>
+                PAR <br />
+                LEVEL
+              </span>
+              <span>ALERTS</span>
+              <span>
+                BATCH
+                <br />
+                COUNT
+              </span>
+              <span>ACTIONS</span>
+            </>
+          )}
         </div>
         <div className="table-records">
           <div className="ingredient-cell">
-            <ChevronRight size="15px"/>
+            <ChevronRight size="15px" />
             <span>Espresso Beans</span>
           </div>
           <span>Coffee</span>
