@@ -146,40 +146,7 @@ const Inventory = () => {
           <input type="text" placeholder="Search products..." />
         </div>
         <div className="table-header">
-          {activeTab === "waste" ? (
-            <>
-              <span>DATE / TIME</span>
-              <span>INGREDIENT</span>
-              <span>BATCH #</span>
-              <span>QUANTITY</span>
-              <span>REASON</span>
-              <span>LOGGED BY</span>
-              <span>NOTE</span>
-              <span>EDIT</span>
-            </>
-          ) : (
-            <>
-              <span>INGREDIENT</span>
-              <span>CATEGORY</span>
-              <span>UNIT</span>
-              <span>
-                REMAINING
-                <br />
-                (ACTIVE)
-              </span>
-              <span>
-                PAR <br />
-                LEVEL
-              </span>
-              <span>ALERTS</span>
-              <span>
-                BATCH
-                <br />
-                COUNT
-              </span>
-              <span>ACTIONS</span>
-            </>
-          )}
+          <HeaderTable isWaste={activeTab === "waste"} />
         </div>
         <div className="table-records">
           <div className="ingredient-cell">
@@ -195,6 +162,47 @@ const Inventory = () => {
           <span>Edit</span>
         </div>
       </div>
+    </>
+  );
+};
+
+const HeaderTable = ({ isWaste }) => {
+  return (
+    <>
+      {isWaste ? (
+        <>
+          <span>DATE / TIME</span>
+          <span>INGREDIENT</span>
+          <span>BATCH #</span>
+          <span>QUANTITY</span>
+          <span>REASON</span>
+          <span>LOGGED BY</span>
+          <span>NOTE</span>
+          <span>EDIT</span>
+        </>
+      ) : (
+        <>
+          <span>INGREDIENT</span>
+          <span>CATEGORY</span>
+          <span>UNIT</span>
+          <span>
+            REMAINING
+            <br />
+            (ACTIVE)
+          </span>
+          <span>
+            PAR <br />
+            LEVEL
+          </span>
+          <span>ALERTS</span>
+          <span>
+            BATCH
+            <br />
+            COUNT
+          </span>
+          <span>ACTIONS</span>
+        </>
+      )}
     </>
   );
 };
