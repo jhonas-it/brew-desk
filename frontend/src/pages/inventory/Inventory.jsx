@@ -338,8 +338,8 @@ const ReconciliationTable = () => {
       <div className="reconciliation-table-header">
         <span>DATE</span>
         <span>INGREDIENT</span>
-        <span>SYSTEM EXPECTED</span>
-        <span>PHYSICAL COUNT</span>
+        <span>SYSTEM <br/> EXPECTED</span>
+        <span>PHYSICAL <br/> COUNT</span>
         <span>DISCREPANCY</span>
         <span>AUDITOR</span>
       </div>
