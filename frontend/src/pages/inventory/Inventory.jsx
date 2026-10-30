@@ -15,6 +15,14 @@ import {
   ChevronRight,
   FootprintsIcon,
 } from "lucide-react";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 const Inventory = () => {
   const [activeTab, setActive] = useState("ingredients");
@@ -128,10 +136,7 @@ const Inventory = () => {
           </button>
         </div>
         <div className="actions">
-          <button>
-            <Plus size="15px" />
-            Add ingredients
-          </button>
+          <AddIngredientAction />
           <button>
             <Trash size="15px" /> Log waste
           </button>
@@ -338,8 +343,12 @@ const ReconciliationTable = () => {
       <div className="reconciliation-table-header">
         <span>DATE</span>
         <span>INGREDIENT</span>
-        <span>SYSTEM <br/> EXPECTED</span>
-        <span>PHYSICAL <br/> COUNT</span>
+        <span>
+          SYSTEM <br /> EXPECTED
+        </span>
+        <span>
+          PHYSICAL <br /> COUNT
+        </span>
         <span>DISCREPANCY</span>
         <span>AUDITOR</span>
       </div>
@@ -357,6 +366,174 @@ const ReconciliationTable = () => {
           Jhonas <br /> (Owner)
         </span>
       </div>
+    </>
+  );
+};
+
+const AddIngredientAction = () => {
+  return (
+    <>
+      <Dialog>
+        <DialogTrigger>
+          <Plus size="15px" />
+          Add Ingredients
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader className="font-bold text-[23px] text-[#1E1B18]">
+            Add ingredient
+          </DialogHeader>
+          <DialogDescription className="text-[#78716C]">
+            Par level is the normal stock you keep on hand. Low-stock alerts
+            fire at a % of this.
+          </DialogDescription>
+          <hr />
+          <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-2">
+              <span className="text-[#57534E] text-[12px] font-bold">NAME</span>
+              <input
+                type="text"
+                placeholder="e.g. Oat Milk"
+                className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2]"
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-[#57534E] text-[12px] font-bold">
+                CATEGORY
+              </span>
+              <select
+                name="category"
+                id="category"
+                className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2]"
+              >
+                <option
+                  value="Dairy & Alternatives"
+                  className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2]"
+                >
+                  Dairy & Alternatives
+                </option>
+              </select>
+            </div>
+            <div className="flex w-full gap-2">
+              <div className="flex flex-1 flex-col gap-2">
+                <span className="text-[12px] font-bold text-[#57534E]">
+                  UNIT
+                </span>
+                <select
+                  name="unit"
+                  id="unit"
+                  className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
+                >
+                  <option value="ml (Mililiters)">ml (Mililiters)</option>
+                </select>
+              </div>
+
+              <div className="flex flex-1 flex-col gap-2">
+                <span className="text-[12px] font-bold text-[#57534E]">
+                  PAR LEVEL (ML)
+                </span>
+
+                <input
+                  type="text"
+                  placeholder="e.g. 3000"
+                  className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center justify-end gap-[12px] mt-8">
+            <button className="border border-[#D6D3D1] px-[20px] w-[90px] h-[40px] rounded-[12px] text-[14px] font-medium font-[#44403C] cursor-pointer hover:bg-[#C3C1C1]">
+              Cancel
+            </button>
+            <button className="border border-[#D6D3D1] px-[16px] h-[40px] rounded-[12px] text-[12px] text-[white] font-bold font-[#44403C] cursor-pointer bg-[#EA580C] hover:bg-[#B24B16]">
+              Add Ingredient
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
+
+const LogWasteAction = () => {
+  return (
+    <>
+      <Dialog>
+        <DialogTrigger>
+          <Plus size="15px" />
+          Add Ingredients
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader className="font-bold text-[23px] text-[#1E1B18]">
+            Add ingredient
+          </DialogHeader>
+          <DialogDescription className="text-[#78716C]">
+            Par level is the normal stock you keep on hand. Low-stock alerts
+            fire at a % of this.
+          </DialogDescription>
+          <hr />
+          <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-2">
+              <span className="text-[#57534E] text-[12px] font-bold">NAME</span>
+              <input
+                type="text"
+                placeholder="e.g. Oat Milk"
+                className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2]"
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-[#57534E] text-[12px] font-bold">
+                CATEGORY
+              </span>
+              <select
+                name="category"
+                id="category"
+                className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2]"
+              >
+                <option
+                  value="Dairy & Alternatives"
+                  className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2]"
+                >
+                  Dairy & Alternatives
+                </option>
+              </select>
+            </div>
+            <div className="flex w-full gap-2">
+              <div className="flex flex-1 flex-col gap-2">
+                <span className="text-[12px] font-bold text-[#57534E]">
+                  UNIT
+                </span>
+                <select
+                  name="unit"
+                  id="unit"
+                  className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
+                >
+                  <option value="ml (Mililiters)">ml (Mililiters)</option>
+                </select>
+              </div>
+
+              <div className="flex flex-1 flex-col gap-2">
+                <span className="text-[12px] font-bold text-[#57534E]">
+                  PAR LEVEL (ML)
+                </span>
+
+                <input
+                  type="text"
+                  placeholder="e.g. 3000"
+                  className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center justify-end gap-[12px] mt-8">
+            <button className="border border-[#D6D3D1] px-[20px] w-[90px] h-[40px] rounded-[12px] text-[14px] font-medium font-[#44403C] cursor-pointer hover:bg-[#C3C1C1]">
+              Cancel
+            </button>
+            <button className="border border-[#D6D3D1] px-[16px] h-[40px] rounded-[12px] text-[12px] text-[white] font-bold font-[#44403C] cursor-pointer bg-[#EA580C] hover:bg-[#B24B16]">
+              Add Ingredient
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
