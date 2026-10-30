@@ -137,9 +137,7 @@ const Inventory = () => {
         </div>
         <div className="actions">
           <AddIngredientAction />
-          <button>
-            <Trash size="15px" /> Log waste
-          </button>
+          <LogWasteAction />
           <button className="restock-btn">
             <Box size="15px" />
             Restock
@@ -459,77 +457,88 @@ const LogWasteAction = () => {
     <>
       <Dialog>
         <DialogTrigger>
-          <Plus size="15px" />
-          Add Ingredients
+          <Trash size="15px" /> Log waste
         </DialogTrigger>
         <DialogContent>
           <DialogHeader className="font-bold text-[23px] text-[#1E1B18]">
-            Add ingredient
+            Log waste / spoilage
           </DialogHeader>
           <DialogDescription className="text-[#78716C]">
-            Par level is the normal stock you keep on hand. Low-stock alerts
-            fire at a % of this.
+            Removes the lost quantity from the selected batch and records it in
+            the Waste Report.
           </DialogDescription>
           <hr />
           <div className="flex flex-col gap-5">
             <div className="flex flex-col gap-2">
-              <span className="text-[#57534E] text-[12px] font-bold">NAME</span>
-              <input
-                type="text"
-                placeholder="e.g. Oat Milk"
-                className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2]"
-              />
+              <span className="text-[#57534E] text-[12px] font-bold">
+                INGREDIENT
+              </span>
+              <select
+                name="ingredient"
+                id="ingredient"
+                className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
+              >
+                <option value="Espresso Beans">Espresso Beans</option>
+              </select>
             </div>
             <div className="flex flex-col gap-2">
               <span className="text-[#57534E] text-[12px] font-bold">
-                CATEGORY
+                BATCH
               </span>
               <select
-                name="category"
-                id="category"
-                className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2]"
+                name="batch"
+                id="batch"
+                className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
               >
-                <option
-                  value="Dairy & Alternatives"
-                  className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2]"
-                >
-                  Dairy & Alternatives
-                </option>
+                <option value="Select a batch...">Select a batch...</option>
               </select>
             </div>
             <div className="flex w-full gap-2">
               <div className="flex flex-1 flex-col gap-2">
                 <span className="text-[12px] font-bold text-[#57534E]">
-                  UNIT
+                  QUNTITY LOST
                 </span>
-                <select
-                  name="unit"
-                  id="unit"
-                  className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
-                >
-                  <option value="ml (Mililiters)">ml (Mililiters)</option>
-                </select>
-              </div>
-
-              <div className="flex flex-1 flex-col gap-2">
-                <span className="text-[12px] font-bold text-[#57534E]">
-                  PAR LEVEL (ML)
-                </span>
-
                 <input
                   type="text"
                   placeholder="e.g. 3000"
                   className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
                 />
               </div>
+              <div className="flex flex-1 flex-col gap-2">
+                <span className="text-[12px] font-bold text-[#57534E]">
+                  REASON CODE
+                </span>
+                <select
+                  name="reason"
+                  id="reason"
+                  className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
+                >
+                  <option value="Spillage">Spillage</option>
+                </select>
+              </div>
             </div>
+            <div className="flex text-[#64748B] text-[12px] gap-1 items-center">
+              <input type="checkbox" className="w-[10px] h-[10px]" />
+              <span>Quantity Unknown</span>
+            </div>
+          </div>
+
+          <div className="flex flex-1 flex-col gap-2">
+            <span className="text-[12px] font-bold text-[#57534E]">
+              NOTE (OPTIONAL)
+            </span>
+            <input
+              type="text"
+              placeholder="e.g. Dropped during rush"
+              className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
+            />
           </div>
           <div className="flex items-center justify-end gap-[12px] mt-8">
             <button className="border border-[#D6D3D1] px-[20px] w-[90px] h-[40px] rounded-[12px] text-[14px] font-medium font-[#44403C] cursor-pointer hover:bg-[#C3C1C1]">
               Cancel
             </button>
             <button className="border border-[#D6D3D1] px-[16px] h-[40px] rounded-[12px] text-[12px] text-[white] font-bold font-[#44403C] cursor-pointer bg-[#EA580C] hover:bg-[#B24B16]">
-              Add Ingredient
+              Log Waste
             </button>
           </div>
         </DialogContent>
