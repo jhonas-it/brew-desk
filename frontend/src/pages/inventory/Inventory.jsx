@@ -138,10 +138,7 @@ const Inventory = () => {
         <div className="actions">
           <AddIngredientAction />
           <LogWasteAction />
-          <button className="restock-btn">
-            <Box size="15px" />
-            Restock
-          </button>
+          <RestockIngredientAction />
         </div>
       </div>
       {activeTab !== "stock" ? (
@@ -539,6 +536,142 @@ const LogWasteAction = () => {
             </button>
             <button className="border border-[#D6D3D1] px-[16px] h-[40px] rounded-[12px] text-[12px] text-[white] font-bold font-[#44403C] cursor-pointer bg-[#EA580C] hover:bg-[#B24B16]">
               Log Waste
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
+
+const RestockIngredientAction = () => {
+  return (
+    <>
+      <Dialog>
+        <DialogTrigger
+          render={
+            <button className="flex h-[40px] items-center gap-2 rounded-[12px] !bg-[#EA580C] px-[16px] text-[12px] font-bold !text-white hover:!bg-[#B24B16]" />
+          }
+        >
+          <Box size="15px" />
+          Restock
+        </DialogTrigger>
+
+        <DialogContent>
+          <DialogHeader className="text-[23px] font-bold text-[#1E1B18]">
+            Restock ingredient
+          </DialogHeader>
+
+          <DialogDescription className="text-[#78716C]">
+            Creates a new batch. Existing batches are kept as is.
+          </DialogDescription>
+
+          <hr />
+
+          <div className="flex flex-col gap-5">
+            {/* INGREDIENT */}
+            <div className="flex flex-col gap-2">
+              <span className="text-[12px] font-bold text-[#57534E]">
+                INGREDIENT
+              </span>
+
+              <select
+                name="ingredient"
+                id="ingredient"
+                className="h-[50px] w-full rounded-[12px] border-2 border-[#E2E8F0] bg-[#F8FAFC] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
+              >
+                <option value="Espresso Beans">Espresso beans</option>
+              </select>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <span className="text-[12px] font-bold text-[#57534E]">
+                QUANTITY RECEIVED (G)
+              </span>
+
+              <input
+                type="number"
+                placeholder=""
+                className="h-[50px] w-full rounded-[12px] border-2 border-[#E2E8F0] bg-[#F8FAFC] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
+              />
+            </div>
+
+            {/* EXPIRATION DATE */}
+            <div className="flex flex-col gap-2">
+              <span className="text-[12px] font-bold text-[#57534E]">
+                EXPIRATION DATE
+              </span>
+
+              <input
+                type="date"
+                className="h-[50px] w-full rounded-[12px] border-2 border-[#E2E8F0] bg-[#F8FAFC] px-[14px] py-[12px] text-[#44403C] outline-none focus:border-[#96bdf2]"
+              />
+            </div>
+
+            <div className="flex w-full gap-4">
+              {/* UNIT */}
+              <div className="flex flex-1 flex-col gap-2">
+                <span className="text-[12px] font-bold text-[#57534E]">
+                  UNIT
+                </span>
+
+                <select
+                  name="unit"
+                  id="unit"
+                  className="h-[50px] w-full rounded-[12px] border-2 border-[#E2E8F0] bg-[#F8FAFC] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
+                >
+                  <option value="ml">ml (Mililiters)</option>
+                </select>
+              </div>
+
+              {/* PAR LEVEL */}
+              <div className="flex flex-1 flex-col gap-2">
+                <span className="text-[12px] font-bold text-[#57534E]">
+                  PAR LEVEL (ML)
+                </span>
+
+                <input
+                  type="number"
+                  placeholder="e.g. 3000"
+                  className="h-[50px] w-full rounded-[12px] border-2 border-[#E2E8F0] bg-[#F8FAFC] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8 flex items-center justify-end gap-[12px]">
+            <button
+              className="
+                h-[40px] w-[100px]
+                rounded-[12px]
+                border border-[#D6D3D1]
+                bg-white
+                px-[20px]
+                text-[14px]
+                font-medium
+                text-[#44403C]
+                cursor-pointer
+                hover:bg-[#C3C1C1]
+              "
+            >
+              Cancel
+            </button>
+
+            <button
+              className="
+                h-[40px]
+                rounded-[12px]
+                border border-[#D6D3D1]
+                bg-[#EA580C]
+                px-[16px]
+                text-[12px]
+                font-bold
+                text-white
+                cursor-pointer
+                hover:bg-[#B24B16]
+              "
+            >
+              Add Ingredient
             </button>
           </div>
         </DialogContent>
