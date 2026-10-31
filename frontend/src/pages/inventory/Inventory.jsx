@@ -232,7 +232,8 @@ const TableRecords = ({ isWaste }) => {
           <span style={{ fontWeight: "bold", color: "#64748B" }}>
             2 batches
           </span>
-          <span style={{ fontWeight: "bold", color: "#64748B" }}>Edit</span>
+          {/* <span style={{ fontWeight: "bold", color: "#64748B" }}>Edit</span> */}
+          <EditIngredientsAndBatches />
         </>
       )}
     </>
@@ -639,6 +640,85 @@ const RestockIngredientAction = () => {
             </div>
           </div>
 
+          <div className="mt-8 flex items-center justify-end gap-[12px]">
+            <button
+              className="
+                h-[40px] w-[100px]
+                rounded-[12px]
+                border border-[#D6D3D1]
+                bg-white
+                px-[20px]
+                text-[14px]
+                font-medium
+                text-[#44403C]
+                cursor-pointer
+                hover:bg-[#C3C1C1]
+              "
+            >
+              Cancel
+            </button>
+
+            <button
+              className="
+                h-[40px]
+                rounded-[12px]
+                border border-[#D6D3D1]
+                bg-[#EA580C]
+                px-[16px]
+                text-[12px]
+                font-bold
+                text-white
+                cursor-pointer
+                hover:bg-[#B24B16]
+              "
+            >
+              Add Ingredient
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
+
+const EditIngredientsAndBatches = () => {
+  return (
+    <>
+      <Dialog>
+        <DialogTrigger className="text-[#64748B] text-[12px] font-bold border rounded-[8px] w-[46px] px-[10px] py-[4px] cursor-pointer">
+          Edit
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader className="font-bold text-[23px] text-[#1E1B18]">
+            Edit ingredients & batches
+          </DialogHeader>
+          <DialogDescription className="text-[#78716C]">
+            Log new incoming stock batches and adjust active batch details for
+            this specific ingredient below.
+          </DialogDescription>
+          <hr />
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-2">
+              <span className="text-[#57534E] font-bold text-[12px]">
+                PRODUCT NAME
+              </span>
+              <input
+                type="text"
+                placeholder="e.g. Americano"
+                className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2] text-[#A8A29E] font-[600]"
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-[#57534E] font-bold text-[12px]">
+                BATCH ID
+              </span>
+              <input
+                type="text"
+                placeholder="e.g. #WM-0920"
+                className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2] text-[#A8A29E] font-[600]"
+              />
+            </div>
+          </div>
           <div className="mt-8 flex items-center justify-end gap-[12px]">
             <button
               className="
