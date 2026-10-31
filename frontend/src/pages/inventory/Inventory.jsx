@@ -216,7 +216,7 @@ const TableRecords = ({ isWaste }) => {
           <span>1 expired</span>
           <span>Aquiera Cantillon</span>
           <span>Left in the shelf</span>
-          <span style={{ fontWeight: "bold", color: "#64748B" }}>Edit</span>
+          <EditWasteReport />
         </>
       ) : (
         <>
@@ -752,6 +752,102 @@ const EditIngredientsAndBatches = () => {
               "
             >
               Add Ingredient
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
+
+const EditWasteReport = () => {
+  return (
+    <>
+      <Dialog>
+        <DialogTrigger className="text-[#64748B] text-[12px] font-bold border rounded-[8px] w-[46px] px-[10px] py-[4px] cursor-pointer">
+          Edit
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader className="font-bold text-[23px] text-[#1E1B18]">
+            Edit ingredients & batches
+          </DialogHeader>
+          <DialogDescription className="text-[#78716C]">
+            Log new incoming stock batches and adjust active batch details for
+            this specific ingredient below.
+          </DialogDescription>
+          <hr />
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-2">
+              <span className="text-[#57534E] font-bold text-[12px]">
+                PRODUCT NAME
+              </span>
+              <input
+                type="text"
+                placeholder="e.g. Americano"
+                className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2] text-[#A8A29E] font-[600]"
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-[#57534E] font-bold text-[12px]">
+                BATCH ID
+              </span>
+              <input
+                type="text"
+                placeholder="e.g. #WM-0920"
+                className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2] text-[#A8A29E] font-[500]"
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-[#57534E] font-bold text-[12px]">
+                REASON
+              </span>
+              <select
+                name="reason-cb"
+                id="reason-cb"
+                className="text-[12px] font-[600] w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
+              >
+                <option value="Expired">Expired</option>
+                <option value="Spillage">Spillage</option>
+                <option value="Waste">Waste</option>
+                <option value="Others">Others</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="mt-8 flex items-center justify-end gap-[12px]">
+            <button
+              className="
+                h-[40px] w-[100px]
+                rounded-[12px]
+                border border-[#D6D3D1]
+                bg-white
+                px-[20px]
+                text-[14px]
+                font-medium
+                text-[#44403C]
+                cursor-pointer
+                hover:bg-[#C3C1C1]
+              "
+            >
+              Cancel
+            </button>
+
+            <button
+              className="
+                w-[117px]
+                h-[40px]
+                rounded-[12px]
+                border border-[#D6D3D1]
+                bg-[#E00509]
+                px-[16px]
+                text-[12px]
+                font-bold
+                text-white
+                cursor-pointer
+                hover:bg-[#960306]
+              "
+            >
+              Delete
             </button>
           </div>
         </DialogContent>
