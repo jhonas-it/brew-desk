@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./Inventory.css";
 import { addWasteLog } from "@/sevices/inventory.service";
+import { addIngredient } from "@/sevices/inventory.service";
 import {
   PackageOpen,
   ClockAlert,
@@ -366,7 +367,35 @@ const ReconciliationTable = () => {
   );
 };
 
+const addIngredientFunction = async (
+  ingredientName,
+  category,
+  unit,
+  parLevel,
+) => {
+  try {
+    await addIngredient(ingredientName, category, unit, parLevel);
+  } catch (error) {
+    console.log(error);
+  }
+};
 const AddIngredientAction = () => {
+  const [ingredient, setIngredient] = useState({
+    name: "",
+    category: "",
+    unit: "",
+    parLevel: 0,
+  });
+
+  const handleSubmit = async (e) => {
+    (e.preventDefault(),
+      await addIngredientFunction(
+        ingredient.name,
+        ingredient.category,
+        ingredient.unit,
+        ingredient.parLevel,
+      ));
+  };
   return (
     <>
       <Dialog>
@@ -375,73 +404,105 @@ const AddIngredientAction = () => {
           Add Ingredients
         </DialogTrigger>
         <DialogContent>
-          <DialogHeader className="font-bold text-[23px] text-[#1E1B18]">
-            Add ingredient
-          </DialogHeader>
-          <DialogDescription className="text-[#78716C]">
-            Par level is the normal stock you keep on hand. Low-stock alerts
-            fire at a % of this.
-          </DialogDescription>
-          <hr />
-          <div className="flex flex-col gap-5">
-            <div className="flex flex-col gap-2">
-              <span className="text-[#57534E] text-[12px] font-bold">NAME</span>
-              <input
-                type="text"
-                placeholder="e.g. Oat Milk"
-                className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2]"
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <span className="text-[#57534E] text-[12px] font-bold">
-                CATEGORY
-              </span>
-              <select
-                name="category"
-                id="category"
-                className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2]"
-              >
-                <option
-                  value="Dairy & Alternatives"
-                  className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2]"
-                >
-                  Dairy & Alternatives
-                </option>
-              </select>
-            </div>
-            <div className="flex w-full gap-2">
-              <div className="flex flex-1 flex-col gap-2">
-                <span className="text-[12px] font-bold text-[#57534E]">
-                  UNIT
+          <form onSubmit={handleSubmit}>
+            <DialogHeader className="font-bold text-[23px] text-[#1E1B18]">
+              Add ingredient
+            </DialogHeader>
+            <DialogDescription className="text-[#78716C]">
+              Par level is the normal stock you keep on hand. Low-stock alerts
+              fire at a % of this.
+            </DialogDescription>
+            <hr />
+            <div className="flex flex-col gap-5">
+              <div className="flex flex-col gap-2">
+                <span className="text-[#57534E] text-[12px] font-bold">
+                  NAME
                 </span>
-                <select
-                  name="unit"
-                  id="unit"
-                  className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
-                >
-                  <option value="ml (Mililiters)">ml (Mililiters)</option>
-                </select>
-              </div>
-
-              <div className="flex flex-1 flex-col gap-2">
-                <span className="text-[12px] font-bold text-[#57534E]">
-                  PAR LEVEL (ML)
-                </span>
-
                 <input
+                  onChange={(e) => {
+                    setIngredient({ ...ingredient, name: e.target.value });
+                  }}
                   type="text"
-                  placeholder="e.g. 3000"
-                  className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
+                  placeholder="e.g. Oat Milk"
+                  className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2]"
                 />
               </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-[#57534E] text-[12px] font-bold">
+                  CATEGORY
+                </span>
+                <select
+                  onChange={(e) => {
+                    setIngredient({ ...ingredient, category: e.target.value });
+                  }}
+                  name="category"
+                  id="category"
+                  className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2]"
+                >
+                  <option
+                    value=""
+                    className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2]"
+                  >
+                    Select category...
+                  </option>
+                  <option
+                    value="Dairy & Alternatives"
+                    className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2]"
+                  >
+                    Dairy & Alternatives
+                  </option>
+                </select>
+              </div>
+              <div className="flex w-full gap-2">
+                <div className="flex flex-1 flex-col gap-2">
+                  <span className="text-[12px] font-bold text-[#57534E]">
+                    UNIT
+                  </span>
+                  <select
+                    onChange={(e) => {
+                      setIngredient({
+                        ...ingredient,
+                        unit: e.target.value,
+                      });
+                    }}
+                    name="unit"
+                    id="unit"
+                    className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
+                  >
+                    <option value="ml (Mililiters)">ml (Mililiters)</option>
+                    <option value="l (Liters)">l (Liters)</option>
+                  </select>
+                </div>
+
+                <div className="flex flex-1 flex-col gap-2">
+                  <span className="text-[12px] font-bold text-[#57534E]">
+                    PAR LEVEL (ML)
+                  </span>
+
+                  <input
+                    onChange={(e) => {
+                      setIngredient({
+                        ...ingredient,
+                        parLevel: e.target.value,
+                      });
+                    }}
+                    type="text"
+                    placeholder="e.g. 3000"
+                    className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
+                  />
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center justify-end gap-[12px] mt-8">
-            <CloseModal />
-            <button className="border border-[#D6D3D1] px-[16px] h-[40px] rounded-[12px] text-[12px] text-[white] font-bold font-[#44403C] cursor-pointer bg-[#EA580C] hover:bg-[#B24B16]">
-              Add Ingredient
-            </button>
-          </div>
+            <div className="flex items-center justify-end gap-[12px] mt-8">
+              <CloseModal />
+              <button
+                type="submit"
+                className="border border-[#D6D3D1] px-[16px] h-[40px] rounded-[12px] text-[12px] text-[white] font-bold font-[#44403C] cursor-pointer bg-[#EA580C] hover:bg-[#B24B16]"
+              >
+                Add Ingredient
+              </button>
+            </div>
+          </form>
         </DialogContent>
       </Dialog>
     </>
@@ -482,7 +543,6 @@ const LogWasteAction = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(logWaste);
     await addLogWaste(
       logWaste.ingredient,
       logWaste.batch,
