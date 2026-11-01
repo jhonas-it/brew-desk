@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Inventory.css";
 import { addWasteLog } from "@/sevices/inventory.service";
 import { addIngredient } from "@/sevices/inventory.service";
+import { getIngredients } from "@/sevices/inventory.service";
 import {
   PackageOpen,
   ClockAlert,
@@ -697,7 +698,22 @@ const CloseModal = () => {
     />
   );
 };
+
+// TODO: Hindi pa tapos to. Hindi sure kung pano gagawin
 const RestockIngredientAction = () => {
+  const [existingIngredients, setExistingIngredients] = useState([]);
+  const [restockData, setRestockData] = useState({
+    quantityReceived: 0,
+    expirationDate: "12/30/2026",
+    unit: "ml",
+    parLevel: 0,
+  });
+  useEffect(() => {
+    getIngredients((data) => {
+      setExistingIngredients(data);
+    });
+  }, []);
+
   return (
     <>
       <Dialog>
@@ -722,7 +738,6 @@ const RestockIngredientAction = () => {
           <hr />
 
           <div className="flex flex-col gap-5">
-            {/* INGREDIENT */}
             <div className="flex flex-col gap-2">
               <span className="text-[12px] font-bold text-[#57534E]">
                 INGREDIENT
@@ -733,7 +748,11 @@ const RestockIngredientAction = () => {
                 id="ingredient"
                 className="h-[50px] w-full rounded-[12px] border-2 border-[#E2E8F0] bg-[#F8FAFC] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
               >
-                <option value="Espresso Beans">Espresso beans</option>
+                {existingIngredients.map((ingredient) => (
+                  <option key={ingredient.id} value={ingredient.id}>
+                    {ingredient.ingredientName}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -743,47 +762,69 @@ const RestockIngredientAction = () => {
               </span>
 
               <input
+                onChange={(e) => {
+                  setRestockData({
+                    ...restockData,
+                    quantityReceived: e.target.value,
+                  });
+                }}
                 type="number"
                 placeholder=""
                 className="h-[50px] w-full rounded-[12px] border-2 border-[#E2E8F0] bg-[#F8FAFC] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
               />
             </div>
 
-            {/* EXPIRATION DATE */}
             <div className="flex flex-col gap-2">
               <span className="text-[12px] font-bold text-[#57534E]">
                 EXPIRATION DATE
               </span>
 
               <input
+                onChange={(e) => {
+                  setRestockData({
+                    ...restockData,
+                    expirationDate: e.target.value,
+                  });
+                }}
                 type="date"
                 className="h-[50px] w-full rounded-[12px] border-2 border-[#E2E8F0] bg-[#F8FAFC] px-[14px] py-[12px] text-[#44403C] outline-none focus:border-[#96bdf2]"
               />
             </div>
 
             <div className="flex w-full gap-4">
-              {/* UNIT */}
               <div className="flex flex-1 flex-col gap-2">
                 <span className="text-[12px] font-bold text-[#57534E]">
                   UNIT
                 </span>
 
                 <select
+                  onChange={(e) => {
+                    setRestockData({
+                      ...restockData,
+                      unit: e.target.value,
+                    });
+                  }}
                   name="unit"
                   id="unit"
                   className="h-[50px] w-full rounded-[12px] border-2 border-[#E2E8F0] bg-[#F8FAFC] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
                 >
                   <option value="ml">ml (Mililiters)</option>
+                  <option value="ml">l (Liters)</option>
+                  <option value="ml">oz (Ounces)</option>
                 </select>
               </div>
-
-              {/* PAR LEVEL */}
               <div className="flex flex-1 flex-col gap-2">
                 <span className="text-[12px] font-bold text-[#57534E]">
                   PAR LEVEL (ML)
                 </span>
 
                 <input
+                  onChange={(e) => {
+                    setRestockData({
+                      ...restockData,
+                      parLevel: e.target.value,
+                    });
+                  }}
                   type="number"
                   placeholder="e.g. 3000"
                   className="h-[50px] w-full rounded-[12px] border-2 border-[#E2E8F0] bg-[#F8FAFC] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"

@@ -1,4 +1,4 @@
-import { push, ref } from "firebase/database"
+import { onValue, push, ref } from "firebase/database"
 import { db } from "../lib/firebase"
 
 const wasteRef = ref(db, "Waste")
@@ -21,4 +21,21 @@ export const addIngredient = async (ingredientName, category, unit, parLevel) =>
         unit: unit,
         parLevel: parLevel
     });
+}
+
+export const getIngredients = (callback) => {
+    onValue(ingredientRef, (snapshot) => {
+        const ingredientArray = [];
+
+        snapshot.forEach((snap) => {
+            const ingredientData = snap.val();
+            ingredientArray.push({
+                id: snap.key,
+                ...ingredientData
+            })
+        })
+        console.log("INGREDIENT ARRAY:", ingredientArray);
+
+        callback(ingredientArray);
+    })
 }
