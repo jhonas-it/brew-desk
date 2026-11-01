@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./Inventory.css";
+import { addWasteLog } from "@/sevices/inventory.service";
 import {
   PackageOpen,
   ClockAlert,
@@ -450,7 +451,50 @@ const AddIngredientAction = () => {
   );
 };
 
+const addLogWaste = async (
+  ingredient,
+  batch,
+  quantityLost,
+  reasonCode,
+  isUnknown,
+  note,
+) => {
+  try {
+    await addWasteLog(
+      ingredient,
+      batch,
+      quantityLost,
+      reasonCode,
+      isUnknown,
+      note,
+    );
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const LogWasteAction = () => {
+  const [logWaste, setLogWaste] = useState({
+    ingredient: "",
+    batch: "",
+    quantityLost: "",
+    reasonCode: "",
+    isUnknown: false,
+    note: "",
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(logWaste);
+    await addLogWaste(
+      logWaste.ingredient,
+      logWaste.batch,
+      logWaste.quantityLost,
+      logWaste.reasonCode,
+      logWaste.isUnknown,
+      logWaste.note,
+    );
+  };
   return (
     <>
       <Dialog>
@@ -466,79 +510,118 @@ const LogWasteAction = () => {
             the Waste Report.
           </DialogDescription>
           <hr />
-          <div className="flex flex-col gap-5">
-            <div className="flex flex-col gap-2">
-              <span className="text-[#57534E] text-[12px] font-bold">
-                INGREDIENT
-              </span>
-              <select
-                name="ingredient"
-                id="ingredient"
-                className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
-              >
-                <option value="Espresso Beans">Espresso Beans</option>
-              </select>
-            </div>
-            <div className="flex flex-col gap-2">
-              <span className="text-[#57534E] text-[12px] font-bold">
-                BATCH
-              </span>
-              <select
-                name="batch"
-                id="batch"
-                className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
-              >
-                <option value="Select a batch...">Select a batch...</option>
-              </select>
-            </div>
-            <div className="flex w-full gap-2">
-              <div className="flex flex-1 flex-col gap-2">
-                <span className="text-[12px] font-bold text-[#57534E]">
-                  QUNTITY LOST
-                </span>
-                <input
-                  type="text"
-                  placeholder="e.g. 3000"
-                  className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
-                />
-              </div>
-              <div className="flex flex-1 flex-col gap-2">
-                <span className="text-[12px] font-bold text-[#57534E]">
-                  REASON CODE
+          <form onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-5">
+              <div className="flex flex-col gap-2">
+                <span className="text-[#57534E] text-[12px] font-bold">
+                  INGREDIENT
                 </span>
                 <select
-                  name="reason"
-                  id="reason"
+                  onChange={(e) => {
+                    console.log(e.target.value);
+                    setLogWaste({ ...logWaste, ingredient: e.target.value });
+                  }}
+                  name="ingredient"
+                  id="ingredient"
                   className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
                 >
-                  <option value="Spillage">Spillage</option>
+                  <option value="">Select an ingredient...</option>
+                  <option value="Espresso Beans">Espresso Beans</option>
+                  <option value="Coffee Beans">Coffee Beans</option>
                 </select>
               </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-[#57534E] text-[12px] font-bold">
+                  BATCH
+                </span>
+                <select
+                  onChange={(e) => {
+                    console.log(e.target.value);
+                    setLogWaste({ ...logWaste, batch: e.target.value });
+                  }}
+                  name="batch"
+                  id="batch"
+                  className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
+                >
+                  <option value="">Select a batch...</option>
+                  <option value="#WM-001">#WM-001</option>
+                </select>
+              </div>
+              <div className="flex w-full gap-2">
+                <div className="flex flex-1 flex-col gap-2">
+                  <span className="text-[12px] font-bold text-[#57534E]">
+                    QUNTITY LOST
+                  </span>
+                  <input
+                    onChange={(e) => {
+                      console.log(e.target.value);
+                      setLogWaste({
+                        ...logWaste,
+                        quantityLost: e.target.value,
+                      });
+                    }}
+                    type="text"
+                    placeholder="e.g. 3000"
+                    className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
+                  />
+                </div>
+                <div className="flex flex-1 flex-col gap-2">
+                  <span className="text-[12px] font-bold text-[#57534E]">
+                    REASON CODE
+                  </span>
+                  <select
+                    onChange={(e) => {
+                      console.log(e.target.value);
+                      setLogWaste({ ...logWaste, reasonCode: e.target.value });
+                    }}
+                    name="reason"
+                    id="reason"
+                    className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
+                  >
+                    <option value="">Select a reason...</option>
+                    <option value="Spillage">Spillage</option>
+                  </select>
+                </div>
+              </div>
+              <div className="flex text-[#64748B] text-[12px] gap-1 items-center">
+                <input
+                  type="checkbox"
+                  className="w-[10px] h-[10px]"
+                  onChange={(e) => {
+                    console.log(e.target.checked);
+                    setLogWaste({ ...logWaste, isUnknown: e.target.checked });
+                  }}
+                />
+                <span>Quantity Unknown</span>
+              </div>
             </div>
-            <div className="flex text-[#64748B] text-[12px] gap-1 items-center">
-              <input type="checkbox" className="w-[10px] h-[10px]" />
-              <span>Quantity Unknown</span>
-            </div>
-          </div>
 
-          <div className="flex flex-1 flex-col gap-2">
-            <span className="text-[12px] font-bold text-[#57534E]">
-              NOTE (OPTIONAL)
-            </span>
-            <input
-              type="text"
-              placeholder="e.g. Dropped during rush"
-              className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
-            />
-          </div>
-          <div className="flex items-center justify-end gap-[12px] mt-8">
-            <button className="border border-[#D6D3D1] px-[20px] w-[90px] h-[40px] rounded-[12px] text-[14px] font-medium font-[#44403C] cursor-pointer hover:bg-[#C3C1C1]">
-              Cancel
-            </button>
-            <button className="border border-[#D6D3D1] px-[16px] h-[40px] rounded-[12px] text-[12px] text-[white] font-bold font-[#44403C] cursor-pointer bg-[#EA580C] hover:bg-[#B24B16]">
-              Log Waste
-            </button>
-          </div>
+            <div className="flex flex-1 flex-col gap-2">
+              <span className="text-[12px] font-bold text-[#57534E]">
+                NOTE (OPTIONAL)
+              </span>
+              <input
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  setLogWaste({ ...logWaste, note: e.target.value });
+                }}
+                type="text"
+                placeholder="e.g. Dropped during rush"
+                className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
+              />
+            </div>
+            <div className="flex items-center justify-end gap-[12px] mt-8">
+              <button className="border border-[#D6D3D1] px-[20px] w-[90px] h-[40px] rounded-[12px] text-[14px] font-medium font-[#44403C] cursor-pointer hover:bg-[#C3C1C1]">
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="border border-[#D6D3D1] px-[16px] h-[40px] rounded-[12px] text-[12px] text-[white] font-bold font-[#44403C] cursor-pointer bg-[#EA580C] hover:bg-[#B24B16]"
+              >
+                Log Waste
+              </button>
+            </div>
+          </form>
         </DialogContent>
       </Dialog>
     </>
