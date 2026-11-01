@@ -14,15 +14,14 @@ import {
   Coffee,
   Search,
   ChevronRight,
-  FootprintsIcon,
 } from "lucide-react";
 import {
   Dialog,
   DialogTrigger,
   DialogContent,
   DialogHeader,
-  DialogTitle,
   DialogDescription,
+  DialogClose,
 } from "@/components/ui/dialog";
 
 const Inventory = () => {
@@ -438,9 +437,7 @@ const AddIngredientAction = () => {
             </div>
           </div>
           <div className="flex items-center justify-end gap-[12px] mt-8">
-            <button className="border border-[#D6D3D1] px-[20px] w-[90px] h-[40px] rounded-[12px] text-[14px] font-medium font-[#44403C] cursor-pointer hover:bg-[#C3C1C1]">
-              Cancel
-            </button>
+            <CloseModal />
             <button className="border border-[#D6D3D1] px-[16px] h-[40px] rounded-[12px] text-[12px] text-[white] font-bold font-[#44403C] cursor-pointer bg-[#EA580C] hover:bg-[#B24B16]">
               Add Ingredient
             </button>
@@ -611,9 +608,7 @@ const LogWasteAction = () => {
               />
             </div>
             <div className="flex items-center justify-end gap-[12px] mt-8">
-              <button className="border border-[#D6D3D1] px-[20px] w-[90px] h-[40px] rounded-[12px] text-[14px] font-medium font-[#44403C] cursor-pointer hover:bg-[#C3C1C1]">
-                Cancel
-              </button>
+              <CloseModal />
               <button
                 type="submit"
                 className="border border-[#D6D3D1] px-[16px] h-[40px] rounded-[12px] text-[12px] text-[white] font-bold font-[#44403C] cursor-pointer bg-[#EA580C] hover:bg-[#B24B16]"
@@ -628,6 +623,20 @@ const LogWasteAction = () => {
   );
 };
 
+const CloseModal = () => {
+  return (
+    <DialogClose
+      render={
+        <button
+          type="button"
+          className="border border-[#D6D3D1] px-[20px] w-[90px] h-[40px] rounded-[12px] text-[14px] font-medium font-[#44403C] cursor-pointer hover:bg-[#C3C1C1]"
+        >
+          Cancel
+        </button>
+      }
+    />
+  );
+};
 const RestockIngredientAction = () => {
   return (
     <>
@@ -724,23 +733,7 @@ const RestockIngredientAction = () => {
           </div>
 
           <div className="mt-8 flex items-center justify-end gap-[12px]">
-            <button
-              className="
-                h-[40px] w-[100px]
-                rounded-[12px]
-                border border-[#D6D3D1]
-                bg-white
-                px-[20px]
-                text-[14px]
-                font-medium
-                text-[#44403C]
-                cursor-pointer
-                hover:bg-[#C3C1C1]
-              "
-            >
-              Cancel
-            </button>
-
+            <CloseModal />
             <button
               className="
                 h-[40px]
@@ -803,22 +796,7 @@ const EditIngredientsAndBatches = () => {
             </div>
           </div>
           <div className="mt-8 flex items-center justify-end gap-[12px]">
-            <button
-              className="
-                h-[40px] w-[100px]
-                rounded-[12px]
-                border border-[#D6D3D1]
-                bg-white
-                px-[20px]
-                text-[14px]
-                font-medium
-                text-[#44403C]
-                cursor-pointer
-                hover:bg-[#C3C1C1]
-              "
-            >
-              Cancel
-            </button>
+            <CloseModal />
 
             <button
               className="
@@ -914,9 +892,10 @@ const EditWasteReport = () => {
             >
               Cancel
             </button>
-
-            <button
-              className="
+            <DialogClose
+              render={
+                <button
+                  className="
                 w-[117px]
                 h-[40px]
                 rounded-[12px]
@@ -929,9 +908,11 @@ const EditWasteReport = () => {
                 cursor-pointer
                 hover:bg-[#960306]
               "
-            >
-              Delete
-            </button>
+                >
+                  Delete
+                </button>
+              }
+            />
           </div>
         </DialogContent>
       </Dialog>
