@@ -470,8 +470,10 @@ const AddIngredientAction = () => {
                     id="unit"
                     className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
                   >
-                    <option value="ml (Mililiters)">ml (Mililiters)</option>
-                    <option value="l (Liters)">l (Liters)</option>
+                  <option value="ml">ml (Mililiters)</option>
+                  <option value="l">l (Liters)</option>
+                  <option value="oz">oz (Ounces)</option>
+                  <option value="g">g (Grams)</option>
                   </select>
                 </div>
 
@@ -654,7 +656,7 @@ const LogWasteAction = () => {
               </div>
             </div>
 
-            <div className="flex flex-1 flex-col gap-2">
+            <div className="flex flex-1 flex-col gap-2 my-5">
               <span className="text-[12px] font-bold text-[#57534E]">
                 NOTE (OPTIONAL)
               </span>
@@ -704,8 +706,8 @@ const RestockIngredientAction = () => {
   const [existingIngredients, setExistingIngredients] = useState([]);
   const [restockData, setRestockData] = useState({
     quantityReceived: 0,
-    expirationDate: "12/30/2026",
-    unit: "ml",
+    expirationDate: "12/30/9999",
+    unit: "",
     parLevel: 0,
   });
   useEffect(() => {
@@ -809,8 +811,9 @@ const RestockIngredientAction = () => {
                   className="h-[50px] w-full rounded-[12px] border-2 border-[#E2E8F0] bg-[#F8FAFC] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
                 >
                   <option value="ml">ml (Mililiters)</option>
-                  <option value="ml">l (Liters)</option>
-                  <option value="ml">oz (Ounces)</option>
+                  <option value="l">l (Liters)</option>
+                  <option value="oz">oz (Ounces)</option>
+                  <option value="g">g (Grams)</option>
                 </select>
               </div>
               <div className="flex flex-1 flex-col gap-2">
