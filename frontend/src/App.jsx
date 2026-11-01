@@ -1,13 +1,36 @@
-import { useState } from 'react'
-import './App.css'
-import Inventory from './pages/inventory/Inventory'
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import Layout from "./Layout/Layout";
+import Login from "./pages/login/login";
+import Inventory from "./pages/inventory/Inventory";
+import Staffs from "./pages/Staffs/Staffs";
 
-function App() {
+export default function App() {
+  const navigate = useNavigate();
+
+  const handleLoginSuccess = (user) => {
+    navigate("/inventory", { replace: true });
+  };
+
   return (
-    <>
-      <Inventory />
-    </>
-  )
-}
+    <Routes>
+      <Route
+        path="/login"
+        element={<Login onLoginSuccess={handleLoginSuccess} />}
+      />
 
-export default App
+      <Route element={<Layout />}>
+        <Route
+          path="/"
+          element={<Navigate to="/inventory" replace />}
+        />
+        <Route path="/inventory" element={<Inventory />} />
+        <Route path="/staffs" element={<Staffs />} />
+      </Route>
+
+      <Route
+        path="*"
+        element={<Navigate to="/login" replace />}
+      />
+    </Routes>
+  );
+}
