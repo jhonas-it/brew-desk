@@ -1,12 +1,8 @@
-import { useState } from 'react'
-import './App.css'
+
+import Settings from './pages/Settings';
 
 function App() {
-  return (
-    <>
-
-    </>
-  )
+  return <Settings />;
 }
 
-export default App
+export default App;
