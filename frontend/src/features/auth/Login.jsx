@@ -8,7 +8,7 @@ import LoginTopBar from "./LoginTopBar";
 import LoginCover from "./LoginCover";
 import LoginForm from "./LoginForm";
 import WelcomeScreen from "./WelcomeScreen";
-import "./login.css";
+import "./Login.css";
 
 const DEMO_USERS = [
   {

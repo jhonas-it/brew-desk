@@ -2,8 +2,8 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-import Sidebar from "../components/layouts/Sidebar";
-import { logoutUser } from "../services/login.service";
+import Sidebar from "./Sidebar";
+import { logoutUser } from "../features/auth/login.service.js";
 
 import "./Layout.css";
 

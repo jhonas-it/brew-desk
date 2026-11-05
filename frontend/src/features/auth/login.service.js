@@ -1,7 +1,7 @@
 
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { ref, get } from "firebase/database";
-import { auth, db } from "../../lib/firebase";
+import { auth, db } from "../../../lib/firebase";
 
 export async function loginUser(username, password) {
   const normalizedUsername = username.trim().toLowerCase();

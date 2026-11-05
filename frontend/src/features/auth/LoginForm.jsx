@@ -9,7 +9,7 @@ import {
   ArrowRight,
   ShieldCheck,
 } from "lucide-react";
-import { loginUser } from "../../services/login.service";
+import { loginUser } from "./login.service.js";
 
 export default function LoginForm({ active, onLoggedIn }) {
   const [username, setUsername] = useState("");

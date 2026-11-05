@@ -6,13 +6,13 @@ import {
   useNavigate,
 } from "react-router-dom";
 
-import Layout from "./Layout/Layout";
-import Login from "./pages/login/login";
-import Inventory from "./pages/inventory/Inventory";
-import Staffs from "./pages/Staffs/Staffs";
+import Layout from "../layouts/Layout";
+import Login from "../features/auth/Login";
+import Inventory from "../features/inventory/Inventory";
+import Staffs from "../features/staff/Staffs";
 import ProtectedRoute from "./ProtectedRoute";
-import POSPage from "./features/pos/POSPage";
-import { Toaster } from "./components/ui/sonner";
+import POSPage from "../features/pos/POSPage";
+import { Toaster } from "../components/ui/sonner";
 
 function ComingSoon({ title }) {
   return (

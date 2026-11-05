@@ -3,7 +3,7 @@ import {
   deleteUser,
 } from "firebase/auth";
 import { ref, get, set, remove } from "firebase/database";
-import { secondaryAuth, db } from "../../lib/firebase";
+import { secondaryAuth, db } from "../../../lib/firebase";
 
 export async function getStaffList() {
   const usersSnapshot = await get(ref(db, "users"));

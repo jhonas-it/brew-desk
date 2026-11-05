@@ -9,7 +9,7 @@ import {
   createStaffAccount,
   updateStaffAccount,
   deleteStaffAccount,
-} from '../../services/staff.service'
+} from './staff.service.js'
 import { toast } from 'sonner'
 import './Staffs.css'
 

@@ -1,4 +1,4 @@
-import brewDeskLogo from "../../assets/images/brew desk icon.svg";
+import brewDeskLogo from "../assets/images/brew desk icon.svg";
 import {
     Flame,
     LayoutDashboard,
