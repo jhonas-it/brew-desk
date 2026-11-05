@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import "./Inventory.css";
-import { addWasteLog } from "@/sevices/inventory.service";
+import {
+  addWasteLog,
+  removeWasteLog,
+  updateWasteLog,
+} from "@/sevices/inventory.service";
 import { addIngredient } from "@/sevices/inventory.service";
 import { getIngredients } from "@/sevices/inventory.service";
 import { getWasteLog } from "@/sevices/inventory.service";
@@ -241,7 +245,7 @@ const TableRecords = ({ isWaste }) => {
               <span>{wasteLog.reasonCode}</span>
               <span>-</span>
               <span>{wasteLog.note}</span>
-              <EditWasteReport />
+              <EditWasteReport wasteLog={wasteLog} />
             </Fragment>
           ))}
         </>
@@ -1017,7 +1021,27 @@ const EditIngredientsAndBatches = ({ ingredient }) => {
   );
 };
 
-const EditWasteReport = () => {
+const EditWasteReport = ({ wasteLog }) => {
+  const [formData, setFormData] = useState({
+    ingredientName: wasteLog.ingredient || "",
+    batchId: wasteLog.batch || "",
+    reasonCode: wasteLog.reasonCode || "",
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await updateWasteLog(
+        wasteLog.id,
+        formData.ingredientName,
+        formData.batchId,
+        formData.reasonCode,
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <Dialog>
@@ -1025,59 +1049,84 @@ const EditWasteReport = () => {
           Edit
         </DialogTrigger>
         <DialogContent>
-          <DialogHeader className="font-bold text-[23px] text-[#1E1B18]">
-            Edit Waste Report
-          </DialogHeader>
-          <DialogDescription className="text-[#78716C]">
-            {/* TODO: Create a new description for waste report */}
-            Log new incoming stock batches and adjust active batch details for
-            this specific ingredient below.
-          </DialogDescription>
-          <hr />
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-              <span className="text-[#57534E] font-bold text-[12px]">
-                PRODUCT NAME
-              </span>
-              <input
-                type="text"
-                placeholder="e.g. Americano"
-                className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2] text-[#A8A29E] font-[600]"
-              />
+          <form onSubmit={handleSubmit}>
+            <DialogHeader className="font-bold text-[23px] text-[#1E1B18]">
+              Edit Waste Report
+            </DialogHeader>
+            <DialogDescription className="text-[#78716C]">
+              {/* TODO: Create a new description for waste report */}
+              Log new incoming stock batches and adjust active batch details for
+              this specific ingredient below.
+            </DialogDescription>
+            <hr />
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-2">
+                <span className="text-[#57534E] font-bold text-[12px]">
+                  PRODUCT NAME
+                </span>
+                <input
+                  onChange={(e) => {
+                    setFormData({
+                      ...formData,
+                      ingredientName: e.target.value,
+                    });
+                  }}
+                  value={formData.ingredientName}
+                  type="text"
+                  placeholder="e.g. Americano"
+                  className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2] text-[#A8A29E] font-[600]"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-[#57534E] font-bold text-[12px]">
+                  BATCH ID
+                </span>
+                <input
+                  onChange={(e) => {
+                    setFormData({
+                      ...formData,
+                      batchId: e.target.value,
+                    });
+                  }}
+                  value={formData.batchId}
+                  type="text"
+                  placeholder="e.g. #WM-0920"
+                  className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2] text-[#A8A29E] font-[500]"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-[#57534E] font-bold text-[12px]">
+                  REASON
+                </span>
+                <select
+                  onChange={(e) => {
+                    setFormData({
+                      ...formData,
+                      reasonCode: e.target.value,
+                    });
+                  }}
+                  value={formData.reasonCode}
+                  name="reason-cb"
+                  id="reason-cb"
+                  className="text-[12px] font-[600] w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
+                >
+                  <option value="Expired">Expired</option>
+                  <option value="Spillage">Spillage</option>
+                  <option value="Waste">Waste</option>
+                  <option value="Others">Others</option>
+                </select>
+              </div>
             </div>
-            <div className="flex flex-col gap-2">
-              <span className="text-[#57534E] font-bold text-[12px]">
-                BATCH ID
-              </span>
-              <input
-                type="text"
-                placeholder="e.g. #WM-0920"
-                className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2] text-[#A8A29E] font-[500]"
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <span className="text-[#57534E] font-bold text-[12px]">
-                REASON
-              </span>
-              <select
-                name="reason-cb"
-                id="reason-cb"
-                className="text-[12px] font-[600] w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
-              >
-                <option value="Expired">Expired</option>
-                <option value="Spillage">Spillage</option>
-                <option value="Waste">Waste</option>
-                <option value="Others">Others</option>
-              </select>
-            </div>
-          </div>
 
-          <div className="mt-8 flex items-center justify-end gap-[12px]">
-            <CloseModal />
-            <DialogClose
-              render={
-                <button
-                  className="
+            <div className="mt-8 flex items-center justify-end gap-[12px]">
+              <CloseModal />
+              <DialogClose
+                render={
+                  <button
+                    onClick={async () => {
+                      await removeWasteLog(wasteLog.id);
+                    }}
+                    className="
                 w-[117px]
                 h-[40px]
                 rounded-[12px]
@@ -1090,18 +1139,19 @@ const EditWasteReport = () => {
                 cursor-pointer
                 hover:bg-[#960306]
               "
-                >
-                  Delete
-                </button>
-              }
-            />
-            <button
-              type="submit"
-              className="border border-[#D6D3D1] px-[16px] h-[40px] rounded-[12px] text-[12px] text-[white] font-bold font-[#44403C] cursor-pointer bg-[#EA580C] hover:bg-[#B24B16]"
-            >
-              Update Report
-            </button>
-          </div>
+                  >
+                    Delete
+                  </button>
+                }
+              />
+              <button
+                type="submit"
+                className="border border-[#D6D3D1] px-[16px] h-[40px] rounded-[12px] text-[12px] text-[white] font-bold font-[#44403C] cursor-pointer bg-[#EA580C] hover:bg-[#B24B16]"
+              >
+                Update Report
+              </button>
+            </div>
+          </form>
         </DialogContent>
       </Dialog>
     </>

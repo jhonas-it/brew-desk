@@ -1,4 +1,4 @@
-import { onValue, push, ref, update } from "firebase/database"
+import { onValue, push, ref, update, remove } from "firebase/database"
 import { db } from "../lib/firebase"
 
 const wasteRef = ref(db, "Waste")
@@ -60,4 +60,18 @@ export const updateIngredient = async (id, ingredientName, batchId) => {
         ingredientName,
         batchId
     });
+}
+
+export const updateWasteLog = async (id, productName, batchId, reasonCode) => {
+    const wasteLogItemRef = ref(db, `Waste/${id}`)
+    await update(wasteLogItemRef, {
+        ingredient: productName,
+        batch: batchId,
+        reasonCode: reasonCode
+    });
+}
+
+export const removeWasteLog = async (id) => {
+    const wasteLogItemRef = ref(db, `Waste/${id}`);
+    await remove(wasteLogItemRef);
 }
