@@ -1,0 +1,742 @@
+/* =====================================================
+   Products page — styled to match the POS page
+   ===================================================== */
+
+/* ---------- Page shell (same as .bd-pos-page) ---------- */
+.bd-products-page {
+  height: 100vh;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 9px 12px;
+  background: #f6f7f8;
+  color: #172033;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+/* ---------- Header card (same as .bd-pos-header) ---------- */
+.bd-products-heading {
+  min-width: 0;
+}
+
+.bd-products-header {
+  min-height: 57px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 15px;
+  box-sizing: border-box;
+  background: #fff;
+  border: 1px solid #eee4dd;
+  border-radius: 10px;
+}
+
+.bd-products-header h1 {
+  margin: 0;
+  color: #202020;
+  font-size: 25px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.bd-products-header p {
+  margin: 2px 0 0;
+  color: #8491a5;
+  font-size: 10px;
+}
+
+/* Orange clock pill (same as .bd-pos-clock) */
+.bd-products-clock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 11px 14px;
+  border-radius: 10px;
+  background: #f4511e;
+  color: #fff;
+  white-space: nowrap;
+  font-size: 10px;
+}
+
+.bd-products-clock strong {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.bd-products-clock span {
+  color: #fff;
+  font-size: 10px;
+}
+
+/* ---------- Stat cards ---------- */
+.pd-stats {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.pd-stat {
+  padding: 12px 13px;
+  background: #fff;
+  border: 1px solid #e8e9ed;
+  border-radius: 13px;
+}
+
+.pd-stat-top {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.pd-stat-icon {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: #eff3f8;
+  color: #53637a;
+}
+
+.pd-stat-icon.gray {
+  background: #eff3f8;
+  color: #53637a;
+}
+
+.pd-stat-icon.red {
+  background: #ffe9e2;
+  color: #f4511e;
+}
+
+.pd-stat-icon.amber {
+  background: #fff0cb;
+  color: #b16c16;
+}
+
+.pd-stat-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #202020;
+}
+
+.pd-stat-label {
+  margin: 9px 0 3px;
+  font-size: 10px;
+  color: #91a0b4;
+}
+
+.pd-stat-value {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: #172033;
+}
+
+/* ---------- Main section (same card style as .bd-product-section) ---------- */
+.bd-products-panel {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 13px;
+  background: #fff;
+  border: 1px solid #e8e9ed;
+  border-radius: 13px;
+}
+
+.bd-section-header {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.bd-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.bd-section-header h2 {
+  margin: 0;
+  color: #f4511e;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.bd-active-count {
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: #eff3f8;
+  color: #53637a;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.bd-section-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Search (same as .bd-product-search) */
+.bd-product-search {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 10px;
+  border: 1px solid #e1e7ee;
+  border-radius: 9px;
+  color: #8b9bb0;
+  background: #f8fafc;
+}
+
+.bd-product-search input {
+  width: 190px;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 11px;
+  font-family: inherit;
+  color: #172033;
+}
+
+/* Add button */
+.bd-add-product {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 12px;
+  border: none;
+  border-radius: 9px;
+  background: #f4511e;
+  color: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.bd-add-product:hover {
+  background: #dc4414;
+}
+
+/* Category tabs (same as .bd-category-tabs) */
+.bd-category-tabs {
+  flex-shrink: 0;
+  display: flex;
+  gap: 4px;
+  padding: 5px;
+  margin-bottom: 12px;
+  overflow-x: auto;
+  background: #e5e5e9;
+  border-radius: 10px;
+}
+
+.bd-category-tabs button {
+  flex: 1;
+  min-width: 74px;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 9px;
+  background: transparent;
+  color: #303036;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+}
+
+.bd-category-tabs button:hover {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.bd-category-tabs .bd-category-active {
+  background: #f4511e;
+  color: #fff;
+  font-weight: 700;
+}
+
+.bd-products-error {
+  flex-shrink: 0;
+  margin: 0 0 10px;
+}
+
+/* ---------- Table ---------- */
+.pd-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  border: 1px solid #e1e7ef;
+  border-radius: 10px;
+}
+
+.pd-table {
+  min-width: 700px;
+}
+
+.pd-row {
+  display: grid;
+  grid-template-columns: minmax(220px, 2.2fr) 1.2fr 1fr 1.3fr 0.9fr;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border-bottom: 1px solid #edf0f3;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pd-row:not(.pd-head):hover {
+  background: #fafbfc;
+}
+
+.pd-row.pd-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  min-height: 38px;
+  background: #fafbfc;
+  border-bottom: 1px solid #e1e7ef;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #6d7d92;
+}
+
+.pd-center {
+  text-align: center;
+}
+
+.pd-right {
+  text-align: right;
+  padding-right: 28px;
+}
+
+.pd-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.pd-chevron {
+  display: grid;
+  place-items: center;
+  padding: 4px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #53637a;
+  cursor: pointer;
+}
+
+.pd-chevron:hover {
+  background: #f1f5f9;
+}
+
+.pd-chevron svg {
+  transition: transform 0.15s;
+}
+
+.pd-chevron.open svg {
+  transform: rotate(90deg);
+}
+
+/* Category chip (same as .bd-product-category) */
+.pd-cat {
+  width: fit-content;
+  margin: 0 auto;
+  padding: 2px 10px;
+  border: 1px solid #eaded6;
+  border-radius: 20px;
+  color: #777;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.pd-price {
+  font-weight: 800;
+  color: #172033;
+}
+
+/* Status */
+.pd-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #07855c;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.pd-status .off {
+  color: #96a3b5;
+}
+
+.pd-switch {
+  position: relative;
+  width: 30px;
+  height: 18px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: #c9ced6;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.pd-switch::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+  transition: transform 0.15s;
+}
+
+.pd-switch[aria-checked="true"] {
+  background: #19a974;
+}
+
+.pd-switch[aria-checked="true"]::after {
+  transform: translateX(12px);
+}
+
+/* Edit button (same as .bd-order-action) */
+.pd-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 5px 12px;
+  border: 1px solid #dce5df;
+  border-radius: 6px;
+  background: #fff;
+  color: #147a53;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.pd-edit:hover {
+  background: #e4f9ed;
+}
+
+.pd-empty {
+  padding: 50px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+/* ---------- Expanded recipe row ---------- */
+.pd-detail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  padding: 14px 16px 18px 44px;
+  background: #fafbfc;
+  border-bottom: 1px solid #edf0f3;
+  font-size: 11px;
+}
+
+.pd-detail h4 {
+  margin: 0 0 8px;
+  color: #6d7d92;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.pd-detail p {
+  margin: 0 0 6px;
+  color: #26354c;
+}
+
+.pd-recipe {
+  min-width: 260px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pd-recipe li {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 6px 0;
+  border-bottom: 1px dashed #dde3ea;
+  color: #26354c;
+}
+
+/* ---------- Add / Edit modal ---------- */
+.pd-form .modal-head h3 {
+  font-size: 26px;
+}
+
+.pd-form .modal-head p {
+  font-size: 15px;
+  margin-top: 6px;
+}
+
+.pd-body {
+  padding: 22px 28px 26px;
+  max-height: calc(100vh - 260px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pd-top {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 48px;
+  align-items: start;
+}
+
+.pd-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.pd-form .field label,
+.pd-form .field .label {
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.pd-form .input,
+.pd-form .select {
+  height: 44px;
+  padding: 0 16px;
+  font-size: 15px;
+  border-radius: 12px;
+  background-color: #f8f9fc;
+}
+
+.pd-form .select {
+  background-position: right 16px center;
+}
+
+.pd-form .row {
+  gap: 24px;
+}
+
+.pd-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  margin: 0;
+  font-size: 15px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+.pd-check input {
+  width: 18px;
+  height: 18px;
+  accent-color: #f4511e;
+}
+
+.pd-image {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid #eee4dd;
+  border-radius: 12px;
+  background: #fff;
+  color: #9c795a;
+  cursor: pointer;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.pd-image:hover {
+  border-color: #f4511e;
+}
+
+.pd-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pd-sizes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pd-size {
+  padding: 9px 18px;
+  border: 1px solid #e1e7ee;
+  border-radius: 12px;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  color: #3b4258;
+  cursor: pointer;
+}
+
+.pd-size[aria-pressed="true"] {
+  background: #ffe9e2;
+  border-color: #f4511e;
+  color: #f4511e;
+}
+
+.pd-recipe-row {
+  display: grid;
+  grid-template-columns: 1fr 190px 32px;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.pd-qty {
+  position: relative;
+}
+
+.pd-qty .input {
+  padding-right: 44px;
+}
+
+.pd-qty .unit {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: #8491a5;
+  pointer-events: none;
+}
+
+.pd-trash {
+  display: grid;
+  place-items: center;
+  padding: 6px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #f4511e;
+  cursor: pointer;
+}
+
+.pd-trash:hover {
+  background: #ffe9e2;
+}
+
+.pd-add-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0;
+  border: 0;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 600;
+  color: #f4511e;
+  cursor: pointer;
+}
+
+.pd-form .modal-foot {
+  padding: 16px 28px;
+  gap: 12px;
+}
+
+.pd-form .btn,
+.pd-form .btn.primary,
+.pd-form .btn.ghost {
+  height: 44px;
+  min-width: 0;
+  padding: 0 26px;
+  font-size: 15px;
+  border-radius: 12px;
+}
+
+.pd-form .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ---------- Responsive (mirrors POS breakpoints) ---------- */
+@media (max-width: 1050px) {
+  .pd-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 750px) {
+  .bd-products-page {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .bd-products-header {
+    flex-wrap: wrap;
+  }
+
+  .bd-products-panel {
+    min-height: 420px;
+  }
+
+  .bd-section-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .bd-section-actions {
+    flex-wrap: wrap;
+  }
+
+  .bd-product-search {
+    flex: 1;
+  }
+
+  .bd-product-search input {
+    width: 100%;
+  }
+
+  .pd-top {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .pd-image {
+    max-width: 240px;
+  }
+
+  .pd-recipe-row {
+    grid-template-columns: minmax(0, 1fr) 100px 32px;
+    gap: 8px;
+  }
+
+  .pd-body {
+    padding: 18px;
+  }
+
+  .pd-form .modal-foot {
+    padding: 14px 18px;
+  }
+}
