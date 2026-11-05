@@ -937,7 +937,6 @@ const EditIngredientsAndBatches = ({ ingredient }) => {
         formData.ingredientName,
         formData.batchId,
       );
-      
     } catch (error) {
       console.log(error);
     }
@@ -1027,9 +1026,10 @@ const EditWasteReport = () => {
         </DialogTrigger>
         <DialogContent>
           <DialogHeader className="font-bold text-[23px] text-[#1E1B18]">
-            Edit ingredients & batches
+            Edit Waste Report
           </DialogHeader>
           <DialogDescription className="text-[#78716C]">
+            {/* TODO: Create a new description for waste report */}
             Log new incoming stock batches and adjust active batch details for
             this specific ingredient below.
           </DialogDescription>
@@ -1073,22 +1073,7 @@ const EditWasteReport = () => {
           </div>
 
           <div className="mt-8 flex items-center justify-end gap-[12px]">
-            <button
-              className="
-                h-[40px] w-[100px]
-                rounded-[12px]
-                border border-[#D6D3D1]
-                bg-white
-                px-[20px]
-                text-[14px]
-                font-medium
-                text-[#44403C]
-                cursor-pointer
-                hover:bg-[#C3C1C1]
-              "
-            >
-              Cancel
-            </button>
+            <CloseModal />
             <DialogClose
               render={
                 <button
@@ -1110,6 +1095,12 @@ const EditWasteReport = () => {
                 </button>
               }
             />
+            <button
+              type="submit"
+              className="border border-[#D6D3D1] px-[16px] h-[40px] rounded-[12px] text-[12px] text-[white] font-bold font-[#44403C] cursor-pointer bg-[#EA580C] hover:bg-[#B24B16]"
+            >
+              Update Report
+            </button>
           </div>
         </DialogContent>
       </Dialog>
