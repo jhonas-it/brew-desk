@@ -5,11 +5,11 @@
 }
 
 .main {
-  padding: 16px;
+  padding: 10px 14px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
   min-width: 0;
 }
 

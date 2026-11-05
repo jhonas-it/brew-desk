@@ -1,0 +1,518 @@
+/* ---------- Stat cards ---------- */
+.pd-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.pd-stat {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 15px 16px 16px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.pd-stat-top { display: flex; align-items: center; gap: 10px; }
+
+.pd-stat-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+}
+
+.pd-stat-title { font-size: 15px; font-weight: 500; }
+.pd-stat-label { margin: 10px 0 4px; font-size: 11px; color: var(--muted); }
+.pd-stat-value { margin: 0; font-size: 16px; font-weight: 700; }
+
+/* ---------- Tabs + Add button ---------- */
+.pd-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.pd-tabs {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 6px;
+  background: #eef1f6;
+  border: 1px solid #e3e8f0;
+  border-radius: 14px;
+}
+
+.pd-tab {
+  border: 0;
+  background: transparent;
+  padding: 9px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #3b4258;
+}
+
+.pd-tab:hover {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.pd-tab.active {
+  background: var(--orange);
+  color: #fff;
+  font-weight: 600;
+}
+
+.pd-add {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.pd-add:hover {
+  background: #faf9f8;
+}
+
+/* ---------- Table panel ---------- */
+.pd-panel {
+  background: var(--surface);
+  border-radius: 16px;
+  flex: 1;
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pd-search {
+  position: relative;
+  width: 300px;
+  max-width: calc(100% - 40px);
+  margin: 16px 20px;
+}
+
+.pd-search svg {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6b7a99;
+}
+
+.pd-search input {
+  width: 100%;
+  height: 40px;
+  padding: 0 16px 0 40px;
+  border: 1px solid #dfe4ee;
+  border-radius: 999px;
+  background: #f7f9fc;
+  font-size: 14px;
+}
+
+.pd-search input::placeholder {
+  color: var(--faint);
+}
+
+.pd-scroll {
+  flex: 1;
+  overflow-x: auto;
+}
+
+.pd-table {
+  min-width: 760px;
+}
+
+.pd-row {
+  display: grid;
+  grid-template-columns: minmax(240px, 2.2fr) 1.3fr 1fr 1.4fr 1fr;
+  align-items: center;
+  min-height: 53px;
+  padding: 0 32px;
+  border-bottom: 1px solid var(--line-soft);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.pd-row.pd-head {
+  min-height: 58px;
+  background: #f8f9fb;
+  border-top: 1px solid var(--line-soft);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.pd-center {
+  text-align: center;
+}
+
+.pd-right {
+  text-align: right;
+  padding-right: 28px;
+}
+
+.pd-name {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.pd-chevron {
+  border: 0;
+  background: transparent;
+  padding: 4px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+}
+
+.pd-chevron:hover {
+  background: #f1efec;
+}
+
+.pd-chevron svg {
+  transition: transform 0.15s;
+}
+
+.pd-chevron.open svg {
+  transform: rotate(90deg);
+}
+
+.pd-cat {
+  color: #64748b;
+  font-weight: 400;
+}
+
+.pd-price {
+  font-weight: 700;
+}
+
+.pd-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.pd-status .off {
+  color: var(--faint);
+}
+
+.pd-switch {
+  position: relative;
+  width: 34px;
+  height: 20px;
+  border: 0;
+  border-radius: 999px;
+  background: #c9c5c0;
+  padding: 0;
+  transition: background 0.15s;
+}
+
+.pd-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.7);
+  transition: transform 0.15s;
+}
+
+.pd-switch[aria-checked='true'] {
+  background: var(--green);
+}
+
+.pd-switch[aria-checked='true']::after {
+  transform: translateX(14px);
+}
+
+.pd-edit {
+  border: 0;
+  background: transparent;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.pd-edit:hover {
+  background: #f1efec;
+  color: var(--orange);
+}
+
+.pd-empty {
+  padding: 64px 24px;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* Expanded recipe row */
+.pd-detail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 48px;
+  padding: 16px 32px 22px 68px;
+  background: #fbfbfc;
+  border-bottom: 1px solid var(--line-soft);
+  font-size: 14px;
+}
+
+.pd-detail h4 {
+  margin: 0 0 10px;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.pd-detail p {
+  margin: 0 0 6px;
+  color: var(--ink-2);
+}
+
+.pd-recipe {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-width: 260px;
+}
+
+.pd-recipe li {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--line);
+  color: var(--ink-2);
+}
+
+/* ---------- Add / Edit modal ---------- */
+.pd-form .modal-head h3 {
+  font-size: 26px;
+}
+
+.pd-form .modal-head p {
+  font-size: 15px;
+  margin-top: 6px;
+}
+
+.pd-body {
+  padding: 22px 28px 26px;
+  max-height: calc(100vh - 260px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pd-top {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 48px;
+  align-items: start;
+}
+
+.pd-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.pd-form .field label,
+.pd-form .field .label {
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.pd-form .input,
+.pd-form .select {
+  height: 44px;
+  padding: 0 16px;
+  font-size: 15px;
+  border-radius: 12px;
+  background-color: #f8f9fc;
+}
+
+.pd-form .select {
+  background-position: right 16px center;
+}
+
+.pd-form .row {
+  gap: 24px;
+}
+
+.pd-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  margin: 0;
+  font-size: 15px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+.pd-check input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--orange);
+}
+
+.pd-image {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.pd-image:hover {
+  border-color: var(--orange);
+}
+
+.pd-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pd-sizes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.pd-size {
+  padding: 9px 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  color: #3b4258;
+}
+
+.pd-size[aria-pressed='true'] {
+  background: var(--orange-soft);
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+.pd-recipe-row {
+  display: grid;
+  grid-template-columns: 1fr 190px 32px;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.pd-qty {
+  position: relative;
+}
+
+.pd-qty .input {
+  padding-right: 44px;
+}
+
+.pd-qty .unit {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.pd-trash {
+  border: 0;
+  background: transparent;
+  color: var(--orange);
+  padding: 6px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+}
+
+.pd-trash:hover {
+  background: var(--orange-soft);
+}
+
+.pd-add-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: transparent;
+  padding: 6px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--orange);
+}
+
+.pd-form .modal-foot {
+  padding: 16px 28px;
+  gap: 12px;
+}
+
+.pd-form .btn,
+.pd-form .btn.primary,
+.pd-form .btn.ghost {
+  height: 44px;
+  min-width: 0;
+  padding: 0 26px;
+  font-size: 15px;
+  border-radius: 12px;
+}
+
+.pd-form .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1100px) {
+  .pd-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .pd-top {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .pd-image {
+    max-width: 240px;
+  }
+s
+  .pd-recipe-row {
+    grid-template-columns: 1fr 120px 32px;
+  }
+}

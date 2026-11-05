@@ -1,11 +1,46 @@
+import { NavLink } from 'react-router-dom'
 import Icon from './Icon'
 import './Sidebar.css'
+
 import logo from '../assets/icons/logo.png'
 import inventoryIcon from '../assets/icons/inventory.png'
 import productsIcon from '../assets/icons/products.png'
 import salesIcon from '../assets/icons/sales.png'
 import settingsIcon from '../assets/icons/settings.png'
 import staffsIcon from '../assets/icons/staffs-white.png'
+
+const MAIN_ITEMS = [
+  { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', dot: 'green' },
+  { id: 'pos', label: 'POS', icon: 'cart', count: 24 },
+  { id: 'inventory', label: 'Inventory', img: inventoryIcon, dot: 'red' },
+  { id: 'products', label: 'Products', img: productsIcon },
+  { id: 'sales', label: 'Sales', img: salesIcon },
+]
+
+const STORE_ITEMS = [
+  { id: 'staffs', label: 'Staffs', img: staffsIcon, white: true },
+  { id: 'settings', label: 'Settings', img: settingsIcon },
+]
+
+function NavItem({ item }) {
+  return (
+    <NavLink
+      to={`/${item.id}`}
+      className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
+    >
+      <span className="nav-icon">
+        {item.icon ? (
+          <Icon name={item.icon} />
+        ) : (
+          <img className={item.white ? 'white-icon' : undefined} src={item.img} alt="" />
+        )}
+      </span>
+      <span className="grow">{item.label}</span>
+      {item.dot && <span className={`dot ${item.dot}`} />}
+      {item.count && <span className="count">{item.count}</span>}
+    </NavLink>
+  )
+}
 
 export default function Sidebar() {
   return (
@@ -17,60 +52,14 @@ export default function Sidebar() {
 
       <nav className="nav">
         <p className="nav-label">Main menu</p>
-
-        <button className="nav-item">
-          <span className="nav-icon">
-            <Icon name="dashboard" />
-          </span>
-          <span className="grow">Dashboard</span>
-          <span className="dot green" />
-        </button>
-
-        <button className="nav-item">
-          <span className="nav-icon">
-            <Icon name="cart" />
-          </span>
-          <span className="grow">POS</span>
-          <span className="count">24</span>
-        </button>
-
-        <button className="nav-item">
-          <span className="nav-icon">
-            <img src={inventoryIcon} alt="" />
-          </span>
-          <span className="grow">Inventory</span>
-          <span className="dot red" />
-        </button>
-
-        <button className="nav-item">
-          <span className="nav-icon">
-            <img src={productsIcon} alt="" />
-          </span>
-          <span className="grow">Products</span>
-        </button>
-
-        <button className="nav-item">
-          <span className="nav-icon">
-            <img src={salesIcon} alt="" />
-          </span>
-          <span className="grow">Sales</span>
-        </button>
+        {MAIN_ITEMS.map((item) => (
+          <NavItem key={item.id} item={item} />
+        ))}
 
         <p className="nav-label">Store management</p>
-
-        <button className="nav-item active" aria-current="page">
-          <span className="nav-icon">
-            <img className="white-icon" src={staffsIcon} alt="" />
-          </span>
-          <span className="grow">Staffs</span>
-        </button>
-
-        <button className="nav-item">
-          <span className="nav-icon">
-            <img src={settingsIcon} alt="" />
-          </span>
-          <span className="grow">Settings</span>
-        </button>
+        {STORE_ITEMS.map((item) => (
+          <NavItem key={item.id} item={item} />
+        ))}
       </nav>
 
       <div className="me">

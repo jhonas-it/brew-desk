@@ -54,7 +54,12 @@
   color: var(--ink-2);
   font-size: 16px;
   text-align: left;
+  
+  text-decoration: none; 
+  
+  box-sizing: border-box;
 }
+
 
 .nav-item:hover {
   background: #f1efec;
@@ -93,6 +98,11 @@
 /* the Staffs icon is white, so darken it when the button isn't active */
 .nav-item:not(.active) .nav-icon .white-icon {
   filter: brightness(0) opacity(0.4);
+}
+
+/* gray PNG icons turn white when their button is active */
+.nav-item.active .nav-icon img:not(.white-icon) {
+  filter: brightness(0) invert(1);
 }
 
 .dot {

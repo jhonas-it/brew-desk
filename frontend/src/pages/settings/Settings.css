@@ -1,0 +1,160 @@
+/* ---------- Layout ---------- */
+.st-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ---------- Cards ---------- */
+.st-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.st-card-head {
+  padding: 22px 28px 20px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.st-card-head h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--orange);
+}
+
+.st-card-head p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.st-card-body {
+  padding: 28px 28px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ---------- Fields ---------- */
+.st-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.st-field {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.st-field label {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--ink-2);
+}
+
+.st-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  font-size: 16px;
+  color: var(--ink);
+  box-sizing: border-box;
+}
+
+.st-input:focus {
+  outline: none;
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px var(--orange-soft);
+}
+
+.st-input.invalid {
+  border-color: #e5484d;
+}
+
+.st-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Hide the number spinners so the input matches the design */
+.st-input[type='number']::-webkit-outer-spin-button,
+.st-input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.st-input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.st-hint {
+  margin: 10px 0 0;
+  max-width: 420px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.st-error {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: #e5484d;
+}
+
+/* ---------- Save button ---------- */
+.st-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 6px;
+}
+
+.st-save {
+  height: 44px;
+  padding: 0 24px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--orange);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.15s;
+}
+
+.st-save:hover {
+  filter: brightness(0.95);
+}
+
+.st-save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.st-saved {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--green);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 760px) {
+  .st-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .st-card-head,
+  .st-card-body {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}

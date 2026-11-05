@@ -24,6 +24,10 @@
   max-width: 520px;
 }
 
+.modal.wide {
+  max-width: 940px;
+}
+
 .modal-head {
   display: flex;
   justify-content: space-between;
