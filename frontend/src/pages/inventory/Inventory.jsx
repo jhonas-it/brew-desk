@@ -496,10 +496,10 @@ const ReconciliationTable = () => {
         <span>DISCREPANCY</span>
         <span>AUDITOR</span>
       </div>
-
+      {/* TODO: Add Pagination */}
       <div className="reconciliation-table-records">
         {existingReconciliation.map((reconciliation) => (
-          <Fragment key={reconciliation.id}>
+          <div className="reconciliation-record" key={reconciliation.id}>
             <span style={{ color: "#64748B" }}>
               {new Date(reconciliation.date).toLocaleDateString("en-US", {
                 month: "short",
@@ -535,7 +535,7 @@ const ReconciliationTable = () => {
               {reconciliation.discrepancy} {reconciliation.unit}
             </span>
             <span style={{ color: "#334155" }}>{reconciliation.auditor}</span>
-          </Fragment>
+          </div>
         ))}
       </div>
     </>
