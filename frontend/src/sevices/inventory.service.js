@@ -123,3 +123,26 @@ export const updateIngredientStock = async (id, currentQuantity) => {
         currentQuantity
     });
 }
+
+export const addBatch = async (
+    ingredientId,
+    batchId,
+    quantity,
+    expirationDate,
+    unit
+) => {
+    const batchRef = ref(
+        db,
+        `POS/Products/Inventory/${ingredientId}/batches`
+    );
+
+    const newBatch = {
+        batchId,
+        quantity: Number(quantity),
+        expirationDate,
+        receivedAt: new Date().toISOString(),
+        unit
+    };
+
+    await push(batchRef, newBatch);
+}

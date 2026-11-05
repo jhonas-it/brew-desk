@@ -40,7 +40,12 @@ import {
 
 const Inventory = () => {
   const [activeTab, setActive] = useState("ingredients");
-
+  const [existingWasteLog, setExistingWasteLog] = useState([]);
+  useEffect(() => {
+    getWasteLog((data) => {
+      setExistingWasteLog(data);
+    });
+  }, []);
   const firstHeaderData = [
     {
       title: "Out of Stocks Items",
@@ -79,32 +84,40 @@ const Inventory = () => {
   const wasteHeaderData = [
     {
       title: "Expired",
-      subtitle: "Entried Recorded",
-      value: "4",
+      subtitle: "Entries Recorded",
+      value: existingWasteLog.filter(
+        (wasteLog) => wasteLog.reasonCode === "Expired",
+      ).length,
       bgColor: "#FDE4E4",
       icon: ClockAlert,
       iconColor: "#FF0000",
     },
     {
       title: "Spillage",
-      subtitle: "Entried Recorded",
-      value: "3",
+      subtitle: "Entries Recorded",
+      value: existingWasteLog.filter(
+        (wasteLog) => wasteLog.reasonCode === "Spillage",
+      ).length,
       bgColor: "#F7E4CA",
       icon: Droplet,
       iconColor: "#c38213",
     },
     {
       title: "Waste",
-      subtitle: "Entried Recorded",
-      value: "2",
+      subtitle: "Entries Recorded",
+      value: existingWasteLog.filter(
+        (wasteLog) => wasteLog.reasonCode === "Waste",
+      ).length,
       bgColor: "#B8FFAE",
       icon: Recycle,
       iconColor: "#027706",
     },
     {
       title: "Others",
-      subtitle: "Entried Recorded",
-      value: "3",
+      subtitle: "Entries Recorded",
+      value: existingWasteLog.filter(
+        (wasteLog) => wasteLog.reasonCode === "Others",
+      ).length,
       bgColor: "#cccccc",
       icon: Coffee,
       iconColor: "black",
@@ -860,7 +873,9 @@ const LogWasteAction = () => {
                     className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
                   >
                     <option value="">Select a reason...</option>
-                    <option value="Spillage">Spillage</option>
+                    <option value="Expired">Expired</option>
+                    <option value="Waste">Waste</option>
+                    <option value="Others">Others</option>
                   </select>
                 </div>
               </div>
