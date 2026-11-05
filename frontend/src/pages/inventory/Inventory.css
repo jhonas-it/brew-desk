@@ -358,3 +358,47 @@
 .reconciliation-record > span {
   font-size: 12px;
 }
+
+.batch-accordion {
+  grid-column: 1 / -1;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #fafbfc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.batch-accordion-header,
+.batch-accordion-record {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 8px;
+}
+
+.batch-accordion-header {
+  font-size: 11px;
+  font-weight: bold;
+  color: #94a3b8;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.batch-accordion-record {
+  font-size: 12px;
+  color: #475569;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.batch-accordion-record:last-child {
+  border-bottom: none;
+}
+
+.batch-empty {
+  padding: 16px 8px;
+  font-size: 12px;
+  color: #94a3b8;
+  text-align: center;
+}

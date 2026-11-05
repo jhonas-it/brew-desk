@@ -1,19 +1,19 @@
 import { useState, useEffect } from "react";
 import "./Inventory.css";
+import { Fragment } from "react";
 import {
+  addBatch,
   addWasteLog,
   removeWasteLog,
   updateWasteLog,
-} from "@/sevices/inventory.service";
-import { addIngredient } from "@/sevices/inventory.service";
-import { getIngredients } from "@/sevices/inventory.service";
-import { getWasteLog } from "@/sevices/inventory.service";
-import { Fragment } from "react";
-import { updateIngredient } from "@/sevices/inventory.service";
-import {
+  addIngredient,
+  getIngredients,
+  getWasteLog,
+  updateIngredient,
   addReconciliation,
   getReconciliation,
   updateIngredientStock,
+  getBatches,
 } from "@/sevices/inventory.service";
 import {
   PackageOpen,
@@ -28,6 +28,7 @@ import {
   Coffee,
   Search,
   ChevronRight,
+  ChevronDown,
 } from "lucide-react";
 import {
   Dialog,
@@ -253,6 +254,9 @@ const HeaderTable = ({ isWaste }) => {
 const TableRecords = ({ isWaste }) => {
   const [existingingredients, setExistingIngredients] = useState([]);
   const [existingWasteLog, setExistingWasteLog] = useState([]);
+  const [expandedIngredient, setExpandedIngredient] = useState(null);
+  const [existingBatches, setExistingBatches] = useState([]);
+
   useEffect(() => {
     getIngredients((data) => {
       setExistingIngredients(data);
@@ -265,12 +269,25 @@ const TableRecords = ({ isWaste }) => {
     });
   }, []);
 
+  useEffect(() => {
+    if (!expandedIngredient) {
+      setExistingBatches([]);
+      return;
+    }
+
+    const unsubscribe = getBatches(expandedIngredient, (data) => {
+      setExistingBatches(data);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [expandedIngredient]);
+
   return (
     <>
       {isWaste ? (
         <>
-          {/* TODO: Add `Batch #`, Coheren `quantity` value, `Logged By` */}
-
           {existingWasteLog.map((wasteLog) => (
             <Fragment key={wasteLog.id}>
               <span style={{ color: "#64748B" }}>
@@ -290,23 +307,68 @@ const TableRecords = ({ isWaste }) => {
         <>
           {existingingredients.map((ingredient) => (
             <Fragment key={ingredient.id}>
-              <div className="ingredient-cell">
-                <ChevronRight size="15px" />
+              <div
+                className="ingredient-cell"
+                onClick={() => {
+                  setExpandedIngredient(
+                    expandedIngredient === ingredient.id ? null : ingredient.id,
+                  );
+                }}
+                style={{ cursor: "pointer" }}
+              >
+                {expandedIngredient === ingredient.id ? (
+                  <ChevronDown size="15px" />
+                ) : (
+                  <ChevronRight size="15px" />
+                )}
+
                 <span>{ingredient.ingredientName}</span>
               </div>
+
               <span style={{ color: "#64748B" }}>{ingredient.category}</span>
+
               <span style={{ color: "#64748B" }}>{ingredient.unit}</span>
+
               <span style={{ fontWeight: "600" }}>
                 {ingredient.currentQuantity || 0} {ingredient.unit}
               </span>
+
               <span style={{ color: "#64748B", fontWeight: "600" }}>
                 {ingredient.parLevel}
               </span>
+
               <span>1 expiring soon</span>
+
               <span style={{ fontWeight: "bold", color: "#64748B" }}>
-                2 batches
+                {Object.keys(ingredient.batches || {}).length} batches
               </span>
+
               <EditIngredientsAndBatches ingredient={ingredient} />
+
+              {expandedIngredient === ingredient.id && (
+                <div className="batch-accordion">
+                  <div className="batch-accordion-header">
+                    <span>Batch ID</span>
+                    <span>Quantity</span>
+                  </div>
+
+                  {existingBatches.length > 0 ? (
+                    existingBatches.map((batch) => (
+                      <div className="batch-accordion-record" key={batch.id}>
+                        <span>{batch.batchId}</span>
+
+                        <span>
+                          {batch.quantity} {batch.unit}
+                        </span>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="batch-empty">
+                      No batches recorded for this ingredient.
+                    </div>
+                  )}
+                </div>
+              )}
             </Fragment>
           ))}
         </>
@@ -957,19 +1019,70 @@ const CloseModal = () => {
 };
 
 // TODO: Hindi pa tapos to. Hindi sure kung pano gagawin
+
 const RestockIngredientAction = () => {
   const [existingIngredients, setExistingIngredients] = useState([]);
+  const [selectedIngredientId, setSelectedIngredientId] = useState("");
+
   const [restockData, setRestockData] = useState({
-    quantityReceived: 0,
-    expirationDate: "12/30/9999",
+    quantityReceived: "",
+    expirationDate: "",
     unit: "",
-    parLevel: 0,
   });
+
   useEffect(() => {
     getIngredients((data) => {
       setExistingIngredients(data);
     });
   }, []);
+
+  const selectedIngredient = existingIngredients.find(
+    (ingredient) => ingredient.id === selectedIngredientId,
+  );
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!selectedIngredient) {
+      alert("Please select an ingredient.");
+      return;
+    }
+
+    if (
+      restockData.quantityReceived === "" ||
+      Number(restockData.quantityReceived) <= 0
+    ) {
+      alert("Please enter a valid quantity.");
+      return;
+    }
+
+    if (!restockData.expirationDate) {
+      alert("Please select an expiration date.");
+      return;
+    }
+
+    try {
+      const batchId = await addBatch(
+        selectedIngredient.id,
+        restockData.quantityReceived,
+        restockData.expirationDate,
+        selectedIngredient.unit,
+      );
+
+      console.log(`Batch ${batchId} added successfully!`);
+
+      setSelectedIngredientId("");
+
+      setRestockData({
+        quantityReceived: "",
+        expirationDate: "",
+        unit: "",
+      });
+    } catch (error) {
+      console.error("Error adding batch:", error);
+      alert("Failed to add batch. Please try again.");
+    }
+  };
 
   return (
     <>
@@ -994,122 +1107,143 @@ const RestockIngredientAction = () => {
 
           <hr />
 
-          <div className="flex flex-col gap-5">
-            <div className="flex flex-col gap-2">
-              <span className="text-[12px] font-bold text-[#57534E]">
-                INGREDIENT
-              </span>
-
-              <select
-                name="ingredient"
-                id="ingredient"
-                className="h-[50px] w-full rounded-[12px] border-2 border-[#E2E8F0] bg-[#F8FAFC] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
-              >
-                {existingIngredients.map((ingredient) => (
-                  <option key={ingredient.id} value={ingredient.id}>
-                    {ingredient.ingredientName}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <span className="text-[12px] font-bold text-[#57534E]">
-                QUANTITY RECEIVED (G)
-              </span>
-
-              <input
-                onChange={(e) => {
-                  setRestockData({
-                    ...restockData,
-                    quantityReceived: e.target.value,
-                  });
-                }}
-                type="number"
-                placeholder=""
-                className="h-[50px] w-full rounded-[12px] border-2 border-[#E2E8F0] bg-[#F8FAFC] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
-              />
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <span className="text-[12px] font-bold text-[#57534E]">
-                EXPIRATION DATE
-              </span>
-
-              <input
-                onChange={(e) => {
-                  setRestockData({
-                    ...restockData,
-                    expirationDate: e.target.value,
-                  });
-                }}
-                type="date"
-                className="h-[50px] w-full rounded-[12px] border-2 border-[#E2E8F0] bg-[#F8FAFC] px-[14px] py-[12px] text-[#44403C] outline-none focus:border-[#96bdf2]"
-              />
-            </div>
-
-            <div className="flex w-full gap-4">
-              <div className="flex flex-1 flex-col gap-2">
+          <form onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-5">
+              <div className="flex flex-col gap-2">
                 <span className="text-[12px] font-bold text-[#57534E]">
-                  UNIT
+                  INGREDIENT
                 </span>
 
                 <select
+                  name="ingredient"
+                  id="ingredient"
+                  value={selectedIngredientId}
                   onChange={(e) => {
+                    const ingredientId = e.target.value;
+
+                    const selected = existingIngredients.find(
+                      (ingredient) => ingredient.id === ingredientId,
+                    );
+
+                    setSelectedIngredientId(ingredientId);
+
                     setRestockData({
                       ...restockData,
-                      unit: e.target.value,
+                      unit: selected?.unit || "",
                     });
                   }}
-                  name="unit"
-                  id="unit"
                   className="h-[50px] w-full rounded-[12px] border-2 border-[#E2E8F0] bg-[#F8FAFC] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
                 >
-                  <option value="ml">ml (Mililiters)</option>
-                  <option value="l">l (Liters)</option>
-                  <option value="oz">oz (Ounces)</option>
-                  <option value="g">g (Grams)</option>
+                  <option value="">Select an ingredient...</option>
+
+                  {existingIngredients.map((ingredient) => (
+                    <option key={ingredient.id} value={ingredient.id}>
+                      {ingredient.ingredientName}
+                    </option>
+                  ))}
                 </select>
               </div>
-              <div className="flex flex-1 flex-col gap-2">
+
+              <div className="flex flex-col gap-2">
                 <span className="text-[12px] font-bold text-[#57534E]">
-                  PAR LEVEL (ML)
+                  QUANTITY RECEIVED
                 </span>
 
                 <input
+                  value={restockData.quantityReceived}
                   onChange={(e) => {
                     setRestockData({
                       ...restockData,
-                      parLevel: e.target.value,
+                      quantityReceived: e.target.value,
                     });
                   }}
                   type="number"
-                  placeholder="e.g. 3000"
+                  min="0"
+                  placeholder="Enter quantity"
                   className="h-[50px] w-full rounded-[12px] border-2 border-[#E2E8F0] bg-[#F8FAFC] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
                 />
               </div>
-            </div>
-          </div>
 
-          <div className="mt-8 flex items-center justify-end gap-[12px]">
-            <CloseModal />
-            <button
-              className="
-                h-[40px]
-                rounded-[12px]
-                border border-[#D6D3D1]
-                bg-[#EA580C]
-                px-[16px]
-                text-[12px]
-                font-bold
-                text-white
-                cursor-pointer
-                hover:bg-[#B24B16]
-              "
-            >
-              Add Ingredient
-            </button>
-          </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-[12px] font-bold text-[#57534E]">
+                  EXPIRATION DATE
+                </span>
+
+                <input
+                  value={restockData.expirationDate}
+                  onChange={(e) => {
+                    setRestockData({
+                      ...restockData,
+                      expirationDate: e.target.value,
+                    });
+                  }}
+                  type="date"
+                  className="h-[50px] w-full rounded-[12px] border-2 border-[#E2E8F0] bg-[#F8FAFC] px-[14px] py-[12px] text-[#44403C] outline-none focus:border-[#96bdf2]"
+                />
+              </div>
+
+              <div className="flex w-full gap-4">
+                <div className="flex flex-1 flex-col gap-2">
+                  <span className="text-[12px] font-bold text-[#57534E]">
+                    UNIT
+                  </span>
+
+                  <select
+                    value={restockData.unit}
+                    disabled
+                    name="unit"
+                    id="unit"
+                    className="h-[50px] w-full rounded-[12px] border-2 border-[#E2E8F0] bg-[#F8FAFC] px-[14px] py-[12px] outline-none"
+                  >
+                    <option value="">Select an ingredient first</option>
+                    <option value="ml">ml (Mililiters)</option>
+                    <option value="l">l (Liters)</option>
+                    <option value="oz">oz (Ounces)</option>
+                    <option value="g">g (Grams)</option>
+                  </select>
+                </div>
+
+                <div className="flex flex-1 flex-col gap-2">
+                  <span className="text-[12px] font-bold text-[#57534E]">
+                    CURRENT STOCK
+                  </span>
+
+                  <input
+                    type="text"
+                    disabled
+                    value={
+                      selectedIngredient
+                        ? `${selectedIngredient.currentQuantity || 0} ${selectedIngredient.unit}`
+                        : "-"
+                    }
+                    className="h-[50px] w-full rounded-[12px] border-2 border-[#E2E8F0] bg-[#F8FAFC] px-[14px] py-[12px] outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 flex items-center justify-end gap-[12px]">
+              <CloseModal />
+
+              <button
+                type="submit"
+                className="
+                  h-[40px]
+                  rounded-[12px]
+                  border border-[#D6D3D1]
+                  bg-[#EA580C]
+                  px-[16px]
+                  text-[12px]
+                  font-bold
+                  text-white
+                  cursor-pointer
+                  hover:bg-[#B24B16]
+                "
+              >
+                Restock Ingredient
+              </button>
+            </div>
+          </form>
         </DialogContent>
       </Dialog>
     </>
