@@ -3,6 +3,7 @@ import "./Inventory.css";
 import { addWasteLog } from "@/sevices/inventory.service";
 import { addIngredient } from "@/sevices/inventory.service";
 import { getIngredients } from "@/sevices/inventory.service";
+import { getWasteLog } from "@/sevices/inventory.service";
 import { Fragment } from "react";
 import {
   PackageOpen,
@@ -209,10 +210,16 @@ const HeaderTable = ({ isWaste }) => {
 
 const TableRecords = ({ isWaste }) => {
   const [existingingredients, setExistingIngredients] = useState([]);
-
+  const [existingWasteLog, setExistingWasteLog] = useState([]);
   useEffect(() => {
     getIngredients((data) => {
       setExistingIngredients(data);
+    });
+  }, []);
+
+  useEffect(() => {
+    getWasteLog((data) => {
+      setExistingWasteLog(data);
     });
   }, []);
 
@@ -220,14 +227,22 @@ const TableRecords = ({ isWaste }) => {
     <>
       {isWaste ? (
         <>
-          <span style={{ color: "#64748B" }}>Today 09:15 AM</span>
-          <span style={{ color: "#64748B" }}>Coffee</span>
-          <span style={{ color: "#64748B" }}>#WM-0919</span>
-          <span>Batch still Active</span>
-          <span>1 expired</span>
-          <span>Aquiera Cantillon</span>
-          <span>Left in the shelf</span>
-          <EditWasteReport />
+          {/* TODO: Add `Batch #`, Coheren `quantity` value, `Logged By` */}
+
+          {existingWasteLog.map((wasteLog) => (
+            <Fragment key={wasteLog.id}>
+              <span style={{ color: "#64748B" }}>
+                {formatWasteTime(wasteLog.time)}
+              </span>
+              <span style={{ color: "#64748B" }}>{wasteLog.ingredient}</span>
+              <span style={{ color: "#64748B" }}>-</span>
+              <span>Batch still Active</span>
+              <span>{wasteLog.reasonCode}</span>
+              <span>-</span>
+              <span>{wasteLog.note}</span>
+              <EditWasteReport />
+            </Fragment>
+          ))}
         </>
       ) : (
         <>
@@ -526,22 +541,48 @@ const AddIngredientAction = () => {
   );
 };
 
+const formatWasteTime = (timestamp) => {
+  const date = new Date(timestamp);
+  const now = new Date();
+
+  const isToday = date.toDateString() === now.toDateString();
+
+  const formattedTime = date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+
+  if (isToday) {
+    return `Today ${formattedTime}`;
+  }
+
+  return `${date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  })} ${formattedTime}`;
+};
+
 const addLogWaste = async (
+  time,
   ingredient,
   batch,
   quantityLost,
   reasonCode,
-  isUnknown,
+  loggedBy,
   note,
+  isUnknown,
 ) => {
   try {
     await addWasteLog(
+      time,
       ingredient,
       batch,
       quantityLost,
       reasonCode,
-      isUnknown,
+      loggedBy,
       note,
+      isUnknown,
     );
   } catch (error) {
     console.log(error);
@@ -550,23 +591,28 @@ const addLogWaste = async (
 
 const LogWasteAction = () => {
   const [logWaste, setLogWaste] = useState({
+    time: "",
     ingredient: "",
     batch: "",
     quantityLost: "",
     reasonCode: "",
-    isUnknown: false,
+    loggedBy: "",
     note: "",
+    isUnknown: false,
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const time = new Date().toISOString();
     await addLogWaste(
+      time,
       logWaste.ingredient,
       logWaste.batch,
       logWaste.quantityLost,
       logWaste.reasonCode,
-      logWaste.isUnknown,
+      logWaste.loggedBy,
       logWaste.note,
+      logWaste.isUnknown,
     );
   };
   return (
