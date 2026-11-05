@@ -15,6 +15,7 @@ import {
   ChevronRight,
   FootprintsIcon,
 } from "lucide-react";
+import PageHeader from "../../components/PageHeader";
 
 const Inventory = () => {
   const [activeTab, setActive] = useState("ingredients");
@@ -93,6 +94,11 @@ const Inventory = () => {
     activeTab === "waste" ? wasteHeaderData : firstHeaderData;
   return (
     <>
+      <PageHeader
+        title="Inventory"
+        subtitle="Keep track of your inventory and waste."
+      />
+
       <div className="header-inventory">
         {useHeaderData.map((item) => (
           <HeaderContainer
@@ -338,8 +344,12 @@ const ReconciliationTable = () => {
       <div className="reconciliation-table-header">
         <span>DATE</span>
         <span>INGREDIENT</span>
-        <span>SYSTEM <br/> EXPECTED</span>
-        <span>PHYSICAL <br/> COUNT</span>
+        <span>
+          SYSTEM <br /> EXPECTED
+        </span>
+        <span>
+          PHYSICAL <br /> COUNT
+        </span>
         <span>DISCREPANCY</span>
         <span>AUDITOR</span>
       </div>

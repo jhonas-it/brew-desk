@@ -9,21 +9,12 @@ import {
   ArrowRight,
   ShieldCheck,
 } from "lucide-react";
-
-const DEMO_USERS = [
-  {
-    username: "allen",
-    pin: "1234",
-    name: "Allen Caraan",
-    role: "OWNER",
-    avatar: null,
-  },
-];
+import { loginUser } from "../../services/login.service";
 
 export default function LoginForm({ active, onLoggedIn }) {
   const [username, setUsername] = useState("");
-  const [pin, setPin] = useState("");
-  const [showPin, setShowPin] = useState(false);
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [shake, setShake] = useState(false);
   const usernameRef = useRef(null);
@@ -39,12 +30,9 @@ export default function LoginForm({ active, onLoggedIn }) {
     return () => clearTimeout(timer);
   }, [active]);
 
-  const handlePinChange = (e) => {
-    setPin(e.target.value.replace(/\D/g, "").slice(0, 4));
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (loading) return;
 
     if (!username.trim()) {
@@ -52,30 +40,26 @@ export default function LoginForm({ active, onLoggedIn }) {
       return;
     }
 
-    if (pin.length !== 4) {
-      toast.error("Your PIN must be 4 digits");
+    if (!password) {
+      toast.error("Please enter your password");
       return;
     }
 
     setLoading(true);
 
-    setTimeout(() => {
-      const match = DEMO_USERS.find(
-        (u) => u.username === username.trim().toLowerCase() && u.pin === pin
-      );
+    try {
+      const matchedUser = await loginUser(username, password);
 
+      toast.dismiss();
+      onLoggedIn(matchedUser);
+    } catch (error) {
+      toast.error(error.message || "Login failed");
+      setPassword("");
+      setShake(true);
+      setTimeout(() => setShake(false), 400);
+    } finally {
       setLoading(false);
-
-      if (!match) {
-        toast.error("Wrong username or PIN");
-        setPin("");
-        setShake(true);
-        setTimeout(() => setShake(false), 400);
-        return;
-      }
-
-      onLoggedIn(match);
-    }, 700);
+    }
   };
 
   return (
@@ -109,38 +93,37 @@ export default function LoginForm({ active, onLoggedIn }) {
 
       <div className="field">
         <div className="label-row">
-          <label htmlFor="login-pin">PIN</label>
+          <label htmlFor="login-password">Password</label>
           <button
             type="button"
             className="link"
             onClick={() =>
-              toast.info("Please ask your manager to reset your PIN")
+              toast.info("Please ask your manager to reset your password")
             }
           >
-            Forgot PIN?
+            Forgot Password?
           </button>
         </div>
 
         <div className="input-box">
           <LockKeyhole size={20} />
+
           <input
-            id="login-pin"
-            type={showPin ? "text" : "password"}
-            inputMode="numeric"
-            placeholder="Enter 4-digit PIN"
-            autoComplete="off"
-            maxLength={4}
-            value={pin}
-            onChange={handlePinChange}
+            id="login-password"
+            type={showPassword ? "text" : "password"}
+            placeholder="Enter Password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
 
           <button
             type="button"
             className="eye"
-            onClick={() => setShowPin((s) => !s)}
-            aria-label={showPin ? "Hide PIN" : "Show PIN"}
+            onClick={() => setShowPassword((s) => !s)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
           >
-            {showPin ? <EyeOff size={20} /> : <Eye size={20} />}
+            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
         </div>
       </div>

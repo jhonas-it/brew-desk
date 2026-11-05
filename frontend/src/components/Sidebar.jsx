@@ -6,8 +6,27 @@ import productsIcon from '../assets/icons/products.png'
 import salesIcon from '../assets/icons/sales.png'
 import settingsIcon from '../assets/icons/settings.png'
 import staffsIcon from '../assets/icons/staffs-white.png'
+import { useNavigate } from 'react-router-dom'
+import { logoutUser } from '../services/login.service'
+import { useState } from 'react'
+import { NavLink } from 'react-router-dom'
 
 export default function Sidebar() {
+
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
+  const [loggingOut, setLoggingOut] = useState(false)
+  const navigate = useNavigate()
+
+  const handleLogout = async () => {
+    try {
+      setLoggingOut(true)
+      await logoutUser()
+      navigate('/login', { replace: true })
+    } catch (error) {
+      console.error('Logout failed:', error)
+      setLoggingOut(false)
+    }
+  }
   return (
     <aside className="sidebar">
       <div className="brand">
@@ -34,13 +53,18 @@ export default function Sidebar() {
           <span className="count">24</span>
         </button>
 
-        <button className="nav-item">
+        <NavLink
+          to="/inventory"
+          className={({ isActive }) =>
+            `nav-item${isActive ? ' active' : ''}`
+          }
+        >
           <span className="nav-icon">
             <img src={inventoryIcon} alt="" />
           </span>
           <span className="grow">Inventory</span>
           <span className="dot red" />
-        </button>
+        </NavLink>
 
         <button className="nav-item">
           <span className="nav-icon">
@@ -58,12 +82,17 @@ export default function Sidebar() {
 
         <p className="nav-label">Store management</p>
 
-        <button className="nav-item active" aria-current="page">
+        <NavLink
+          to="/staffs"
+          className={({ isActive }) =>
+            `nav-item${isActive ? ' active' : ''}`
+          }
+        >
           <span className="nav-icon">
             <img className="white-icon" src={staffsIcon} alt="" />
           </span>
           <span className="grow">Staffs</span>
-        </button>
+        </NavLink>
 
         <button className="nav-item">
           <span className="nav-icon">
@@ -82,10 +111,46 @@ export default function Sidebar() {
             <span>Shift Active</span>
           </div>
         </div>
-        <button className="icon-btn" aria-label="Log out">
+        <button
+          className="icon-btn"
+          aria-label="Log out"
+          title="Log out"
+          onClick={() => setShowLogoutConfirm(true)}
+        >
           <Icon name="logout" />
         </button>
       </div>
+      {showLogoutConfirm && (
+        <div className="logout-overlay">
+          <div
+            className="logout-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="logout-title"
+          >
+            <h3 id="logout-title">Confirm Logout</h3>
+            <p>Are you sure you want to log out of Brew Desk?</p>
+
+            <div className="logout-actions">
+              <button
+                type="button"
+                onClick={() => setShowLogoutConfirm(false)}
+                disabled={loggingOut}
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                onClick={handleLogout}
+                disabled={loggingOut}
+              >
+                {loggingOut ? 'Logging out...' : 'Yes, Log Out'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </aside>
   )
 }

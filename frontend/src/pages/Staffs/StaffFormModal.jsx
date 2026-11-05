@@ -3,15 +3,25 @@ import Modal from '../../components/Modal'
 import Icon from '../../components/Icon'
 import { ROLES } from './staffData'
 
-export default function StaffFormModal({ mode, staff, existingEmails, onSave, onClose }) {
+export default function StaffFormModal({
+  mode,
+  staff,
+  existingEmails,
+  existingUsernames,
+  onSave,
+  onClose,
+}) {
+
   const isEdit = mode === 'edit'
   const [form, setForm] = useState({
     role: staff?.role ?? '',
     name: staff?.name ?? '',
+    username: staff?.username ?? '',
     email: staff?.email ?? '',
-    pin: staff?.pin ?? '',
+    password: '',
     active: staff?.active ?? true,
   })
+
   const [errors, setErrors] = useState({})
 
   const set = (key, value) => {
@@ -21,12 +31,30 @@ export default function StaffFormModal({ mode, staff, existingEmails, onSave, on
 
   const validate = () => {
     const e = {}
+    const username = form.username.trim().toLowerCase()
+    if (!username) {
+      e.username = 'Enter a username.'
+    } else if (!/^[a-z0-9._-]{3,20}$/.test(username)) {
+      e.username = 'Use 3–20 letters, numbers, dots, underscores, or hyphens.'
+    } else if (
+      existingUsernames.some(
+        (u) =>
+          u.toLowerCase() === username &&
+          u.toLowerCase() !== (staff?.username ?? '').toLowerCase()
+      )
+    ) {
+      e.username = 'This username is already in use.'
+    }  
     if (!form.role) e.role = 'Choose a role.'
     if (!form.name.trim()) e.name = 'Enter a name.'
-    if (!/^\S+@\S+\.\S+$/.test(form.email)) e.email = 'Enter a valid email address.'
-    else if (existingEmails.includes(form.email.trim().toLowerCase()))
+    if (!/^\S+@\S+\.\S+$/.test(form.email.trim())) {
+      e.email = 'Enter a valid email address.'
+    } else if (existingEmails.includes(form.email.trim().toLowerCase())) {
       e.email = 'This email is already in use.'
-    if (!/^\d{4}$/.test(form.pin)) e.pin = 'PIN must be 4 digits.'
+    }
+    if (!isEdit && form.password.length < 6) {
+      e.password = 'Password must be at least 6 characters.'
+    }
     return e
   }
 
@@ -47,7 +75,7 @@ export default function StaffFormModal({ mode, staff, existingEmails, onSave, on
             <p>
               {isEdit
                 ? "Modify the name, assigned role, and email address to manage this user's profile and system permissions."
-                : 'Adds a new staff user to the system by setting their role, name, email address, PIN, and account status.'}
+                : 'Adds a new staff user by setting their role, name, email address, password, and account status.'}
             </p>
           </div>
           <button type="button" className="icon-btn" onClick={onClose} aria-label="Close">
@@ -89,6 +117,23 @@ export default function StaffFormModal({ mode, staff, existingEmails, onSave, on
           </div>
 
           <div className="field">
+            <label htmlFor="username">Username</label>
+            <input
+              id="username"
+              autoComplete="username"
+              className={`input${errors.username ? ' invalid' : ''}`}
+              placeholder="e.g. juan123"
+              value={form.username}
+              onChange={(e) =>
+                set('username', e.target.value.toLowerCase().trim())
+              }
+            />
+            {errors.username && (
+              <p className="error">{errors.username}</p>
+            )}
+          </div>
+
+          <div className="field">
             <label htmlFor="email">Email address</label>
             <input
               id="email"
@@ -103,18 +148,19 @@ export default function StaffFormModal({ mode, staff, existingEmails, onSave, on
 
           <div className="row">
             <div className="field">
-              <label htmlFor="pin">PIN</label>
+              <label htmlFor="password">Password</label>
               <input
-                id="pin"
+                id="password"
                 type="password"
-                inputMode="numeric"
-                maxLength={4}
-                className={`input pin-input${errors.pin ? ' invalid' : ''}`}
-                placeholder="****"
-                value={form.pin}
-                onChange={(e) => set('pin', e.target.value.replace(/\D/g, ''))}
+                autoComplete="new-password"
+                className={`input${errors.password ? ' invalid' : ''}`}
+                placeholder="At least 6 characters"
+                value={form.password}
+                onChange={(e) => set('password', e.target.value)}
               />
-              {errors.pin && <p className="error">{errors.pin}</p>}
+              {errors.password && (
+                <p className="error">{errors.password}</p>
+              )}
             </div>
 
             <div className="field">

@@ -3,11 +3,12 @@ import Layout from "./Layout/Layout";
 import Login from "./pages/login/login";
 import Inventory from "./pages/inventory/Inventory";
 import Staffs from "./pages/Staffs/Staffs";
+import ProtectedRoute from "./ProtectedRoute";
 
 export default function App() {
   const navigate = useNavigate();
 
-  const handleLoginSuccess = (user) => {
+  const handleLoginSuccess = () => {
     navigate("/inventory", { replace: true });
   };
 
@@ -18,13 +19,15 @@ export default function App() {
         element={<Login onLoginSuccess={handleLoginSuccess} />}
       />
 
-      <Route element={<Layout />}>
-        <Route
-          path="/"
-          element={<Navigate to="/inventory" replace />}
-        />
-        <Route path="/inventory" element={<Inventory />} />
-        <Route path="/staffs" element={<Staffs />} />
+      <Route element={<ProtectedRoute />}>
+        <Route element={<Layout />}>
+          <Route
+            path="/"
+            element={<Navigate to="/inventory" replace />}
+          />
+          <Route path="/inventory" element={<Inventory />} />
+          <Route path="/staffs" element={<Staffs />} />
+        </Route>
       </Route>
 
       <Route
