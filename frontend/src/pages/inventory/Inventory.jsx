@@ -41,6 +41,12 @@ import {
 const Inventory = () => {
   const [activeTab, setActive] = useState("ingredients");
   const [existingWasteLog, setExistingWasteLog] = useState([]);
+  const [existingIngredients, setExistingIngredients] = useState([]);
+  useEffect(() => {
+    getIngredients((data) => {
+      setExistingIngredients(data);
+    });
+  }, []);
   useEffect(() => {
     getWasteLog((data) => {
       setExistingWasteLog(data);
@@ -50,7 +56,11 @@ const Inventory = () => {
     {
       title: "Out of Stocks Items",
       subtitle: "Count of Items currently out of stock",
-      value: "40",
+      value: existingIngredients.filter(
+        (ingredient) =>
+          ingredient.currentQuantity !== undefined &&
+          Number(ingredient.currentQuantity) <= 0,
+      ).length,
       bgColor: "#d5d5d5",
       icon: PackageOpen,
       iconColor: "black",
@@ -58,15 +68,24 @@ const Inventory = () => {
     {
       title: "Expired Date",
       subtitle: "No. of Items past their expiration date",
-      value: "40",
+      value: "0",
       bgColor: "#FDE4E4",
       icon: ClockAlert,
       iconColor: "#FF0000",
     },
     {
       title: "Low Stock Items",
-      subtitle: "No. of Items that are running low",
-      value: "8",
+      subtitle: "Count of Items that are running low",
+      value: existingIngredients.filter((ingredient) => {
+        const currentQuantity = Number(ingredient.currentQuantity);
+        const parLevel = Number(ingredient.parLevel);
+
+        return (
+          ingredient.currentQuantity !== undefined &&
+          currentQuantity > 0 &&
+          currentQuantity <= parLevel
+        );
+      }).length,
       bgColor: "#FCF4EA",
       icon: Gauge,
       iconColor: "#FFA100",
@@ -74,7 +93,7 @@ const Inventory = () => {
     {
       title: "Total Items",
       subtitle: "Total Items in Stock",
-      value: "120",
+      value: existingIngredients.length,
       bgColor: "#E2FFDF",
       icon: Boxes,
       iconColor: "#017605",
