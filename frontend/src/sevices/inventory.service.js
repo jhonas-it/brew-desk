@@ -3,6 +3,8 @@ import { db } from "../lib/firebase"
 
 const wasteRef = ref(db, "Waste")
 const ingredientRef = ref(db, "POS/Products/Inventory")
+const reconciliationRef = ref(db, "Reconciliation");
+
 export const addWasteLog = async (time, ingredient, batch, quantityLost, reasonCode, loggedBy, note, isUnknown) => {
     await push(wasteRef, {
         time: time,
@@ -74,4 +76,50 @@ export const updateWasteLog = async (id, productName, batchId, reasonCode) => {
 export const removeWasteLog = async (id) => {
     const wasteLogItemRef = ref(db, `Waste/${id}`);
     await remove(wasteLogItemRef);
+}
+
+export const addReconciliation = async (
+    date,
+    ingredientId,
+    ingredient,
+    systemExpected,
+    physicalCount,
+    discrepancy,
+    auditor,
+    unit
+) => {
+    await push(reconciliationRef, {
+        date,
+        ingredientId,
+        ingredient,
+        systemExpected,
+        physicalCount,
+        discrepancy,
+        auditor,
+        unit
+    });
+}
+
+export const getReconciliation = (callback) => {
+    onValue(reconciliationRef, (snapshot) => {
+        const reconciliationArray = [];
+
+        snapshot.forEach((snap) => {
+            const reconciliationData = snap.val();
+            reconciliationArray.push({
+                id: snap.key,
+                ...reconciliationData
+            });
+        });
+
+        callback(reconciliationArray);
+    });
+}
+
+export const updateIngredientStock = async (id, currentQuantity) => {
+    const ingredientItemRef = ref(db, `POS/Products/Inventory/${id}`);
+
+    await update(ingredientItemRef, {
+        currentQuantity
+    });
 }

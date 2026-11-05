@@ -11,6 +11,11 @@ import { getWasteLog } from "@/sevices/inventory.service";
 import { Fragment } from "react";
 import { updateIngredient } from "@/sevices/inventory.service";
 import {
+  addReconciliation,
+  getReconciliation,
+  updateIngredientStock,
+} from "@/sevices/inventory.service";
+import {
   PackageOpen,
   ClockAlert,
   Gauge,
@@ -259,7 +264,9 @@ const TableRecords = ({ isWaste }) => {
               </div>
               <span style={{ color: "#64748B" }}>{ingredient.category}</span>
               <span style={{ color: "#64748B" }}>{ingredient.unit}</span>
-              <span style={{ fontWeight: "600" }}>2,600 g</span>
+              <span style={{ fontWeight: "600" }}>
+                {ingredient.currentQuantity || 0} {ingredient.unit}
+              </span>
               <span style={{ color: "#64748B", fontWeight: "600" }}>
                 {ingredient.parLevel}
               </span>
@@ -311,6 +318,58 @@ const HeaderContainer = ({
 };
 
 const StockReconciliation = () => {
+  const [existingIngredients, setExistingIngredients] = useState([]);
+  const [selectedIngredient, setSelectedIngredient] = useState("");
+  const [physicalCount, setPhysicalCount] = useState("");
+
+  useEffect(() => {
+    getIngredients((data) => {
+      setExistingIngredients(data);
+    });
+  }, []);
+
+  const selectedIngredientData = existingIngredients.find(
+    (ingredient) => ingredient.id === selectedIngredient,
+  );
+
+  const systemExpected = Number(selectedIngredientData?.currentQuantity || 0);
+
+  const discrepancy = Number(physicalCount || 0) - systemExpected;
+
+  const handleReconciliation = async (adjustStock) => {
+    if (!selectedIngredientData || physicalCount === "") {
+      alert("Please select an ingredient and enter the physical count.");
+      return;
+    }
+
+    const date = new Date().toISOString();
+
+    try {
+      await addReconciliation(
+        date,
+        selectedIngredientData.id,
+        selectedIngredientData.ingredientName,
+        systemExpected,
+        Number(physicalCount),
+        discrepancy,
+        "Unknown",
+        selectedIngredientData.unit,
+      );
+
+      if (adjustStock) {
+        await updateIngredientStock(
+          selectedIngredientData.id,
+          Number(physicalCount),
+        );
+      }
+
+      setPhysicalCount("");
+      console.log("Reconciliation recorded successfully!");
+    } catch (error) {
+      console.error("Error recording reconciliation:", error);
+    }
+  };
+
   return (
     <>
       <div className="stock-reconciliation">
@@ -322,6 +381,7 @@ const StockReconciliation = () => {
                 Compare shelf count to system expected stock.
               </p>
             </div>
+
             <div className="ingredient">
               <p
                 style={{
@@ -332,26 +392,68 @@ const StockReconciliation = () => {
               >
                 Ingredient
               </p>
-              <select name="ingredient-cb" id="ingredient-cb">
-                <option value="Espresso Beans">Espresso Beans</option>
-                <option value="Mascaporne">Mascaporne</option>
-                <option value="Frappe Base Powder">Frappe Base Powder</option>
+
+              <select
+                name="ingredient-cb"
+                id="ingredient-cb"
+                value={selectedIngredient}
+                onChange={(e) => {
+                  setSelectedIngredient(e.target.value);
+                  setPhysicalCount("");
+                }}
+              >
+                <option value="">Select an ingredient...</option>
+
+                {existingIngredients.map((ingredient) => (
+                  <option key={ingredient.id} value={ingredient.id}>
+                    {ingredient.ingredientName}
+                  </option>
+                ))}
               </select>
+
               <div className="recorded-quantity">
                 <span>Recorded Quantity:</span>
-                <strong>2,600 g</strong>
+                <strong>
+                  {selectedIngredientData
+                    ? `${systemExpected} ${selectedIngredientData.unit || ""}`
+                    : "-"}
+                </strong>
               </div>
             </div>
+
             <div className="physical-count">
-              <span>Physical count (g)</span>
-              <input type="number" placeholder="Enter measured quantity" />
+              <span>Physical count</span>
+              <input
+                type="number"
+                min="0"
+                placeholder="Enter measured quantity"
+                value={physicalCount}
+                onChange={(e) => {
+                  setPhysicalCount(e.target.value);
+                }}
+              />
             </div>
           </div>
+
           <div className="bottom">
-            <button className="record-adjust-btn">Record & Adjust Stock</button>
-            <button className="count-only-btn">Record Count Only</button>
+            <button
+              type="button"
+              className="record-adjust-btn"
+              onClick={() => handleReconciliation(true)}
+            >
+              Record & Adjust Stock
+            </button>
+
+            <button
+              type="button"
+              className="count-only-btn"
+              onClick={() => handleReconciliation(false)}
+            >
+              Record Count Only
+            </button>
           </div>
         </div>
+
         <section className="right-panel">
           <div className="header">
             <span style={{ fontWeight: "bold", fontSize: "14px" }}>
@@ -361,7 +463,9 @@ const StockReconciliation = () => {
               Audit and discrepancy adjustments
             </span>
           </div>
+
           <hr style={{ border: "2px solid #F1F5F9" }} />
+
           <ReconciliationTable />
         </section>
       </div>
@@ -370,6 +474,14 @@ const StockReconciliation = () => {
 };
 
 const ReconciliationTable = () => {
+  const [existingReconciliation, setExistingReconciliation] = useState([]);
+
+  useEffect(() => {
+    getReconciliation((data) => {
+      setExistingReconciliation(data.reverse());
+    });
+  }, []);
+
   return (
     <>
       <div className="reconciliation-table-header">
@@ -384,19 +496,47 @@ const ReconciliationTable = () => {
         <span>DISCREPANCY</span>
         <span>AUDITOR</span>
       </div>
+
       <div className="reconciliation-table-records">
-        <span style={{ color: "#64748B" }}>
-          Oct 20, <br /> 2024
-        </span>
-        <span style={{ fontWeight: "bold", color: "#1E293B" }}>
-          Espreso Beans
-        </span>
-        <span style={{ color: "#475569" }}>2,750 g</span>
-        <span style={{ color: "#1E293B" }}>2,600 g</span>
-        <span style={{ fontWeight: "bold" }}>-150 g</span>
-        <span style={{ color: "#334155" }}>
-          Jhonas <br /> (Owner)
-        </span>
+        {existingReconciliation.map((reconciliation) => (
+          <Fragment key={reconciliation.id}>
+            <span style={{ color: "#64748B" }}>
+              {new Date(reconciliation.date).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </span>
+
+            <span style={{ fontWeight: "bold", color: "#1E293B" }}>
+              {reconciliation.ingredient}
+            </span>
+
+            <span style={{ color: "#475569" }}>
+              {reconciliation.systemExpected} {reconciliation.unit}
+            </span>
+
+            <span style={{ color: "#1E293B" }}>
+              {reconciliation.physicalCount} {reconciliation.unit}
+            </span>
+
+            <span
+              style={{
+                fontWeight: "bold",
+                color:
+                  reconciliation.discrepancy < 0
+                    ? "#DC2626"
+                    : reconciliation.discrepancy > 0
+                      ? "#16A34A"
+                      : "#64748B",
+              }}
+            >
+              {reconciliation.discrepancy > 0 ? "+" : ""}
+              {reconciliation.discrepancy} {reconciliation.unit}
+            </span>
+            <span style={{ color: "#334155" }}>{reconciliation.auditor}</span>
+          </Fragment>
+        ))}
       </div>
     </>
   );
