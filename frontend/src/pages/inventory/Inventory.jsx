@@ -735,6 +735,12 @@ const addLogWaste = async (
 };
 
 const LogWasteAction = () => {
+  const [existingIngredients, setExistingIngredients] = useState([]);
+  useEffect(() => {
+    getIngredients((data) => {
+      setExistingIngredients(data);
+    });
+  }, []);
   const [logWaste, setLogWaste] = useState({
     time: "",
     ingredient: "",
@@ -782,17 +788,27 @@ const LogWasteAction = () => {
                   INGREDIENT
                 </span>
                 <select
+                  value={logWaste.ingredient}
                   onChange={(e) => {
-                    console.log(e.target.value);
-                    setLogWaste({ ...logWaste, ingredient: e.target.value });
+                    setLogWaste({
+                      ...logWaste,
+                      ingredient: e.target.value,
+                    });
                   }}
                   name="ingredient"
                   id="ingredient"
                   className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
                 >
                   <option value="">Select an ingredient...</option>
-                  <option value="Espresso Beans">Espresso Beans</option>
-                  <option value="Coffee Beans">Coffee Beans</option>
+
+                  {existingIngredients.map((ingredient) => (
+                    <option
+                      key={ingredient.id}
+                      value={ingredient.ingredientName}
+                    >
+                      {ingredient.ingredientName}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="flex flex-col gap-2">
