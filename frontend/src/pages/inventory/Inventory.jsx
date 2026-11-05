@@ -3,6 +3,7 @@ import "./Inventory.css";
 import { addWasteLog } from "@/sevices/inventory.service";
 import { addIngredient } from "@/sevices/inventory.service";
 import { getIngredients } from "@/sevices/inventory.service";
+import { Fragment } from "react";
 import {
   PackageOpen,
   ClockAlert,
@@ -207,6 +208,14 @@ const HeaderTable = ({ isWaste }) => {
 };
 
 const TableRecords = ({ isWaste }) => {
+  const [existingingredients, setExistingIngredients] = useState([]);
+
+  useEffect(() => {
+    getIngredients((data) => {
+      setExistingIngredients(data);
+    });
+  }, []);
+
   return (
     <>
       {isWaste ? (
@@ -222,20 +231,25 @@ const TableRecords = ({ isWaste }) => {
         </>
       ) : (
         <>
-          <div className="ingredient-cell">
-            <ChevronRight size="15px" />
-            <span>Espresso Beans</span>
-          </div>
-          <span style={{ color: "#64748B" }}>Coffee</span>
-          <span style={{ color: "#64748B" }}>g</span>
-          <span style={{ fontWeight: "600" }}>2,600 g</span>
-          <span style={{ color: "#64748B", fontWeight: "600" }}>3,000 g</span>
-          <span>1 expiring soon</span>
-          <span style={{ fontWeight: "bold", color: "#64748B" }}>
-            2 batches
-          </span>
-          {/* <span style={{ fontWeight: "bold", color: "#64748B" }}>Edit</span> */}
-          <EditIngredientsAndBatches />
+          {existingingredients.map((ingredient) => (
+            <Fragment key={ingredient.id}>
+              <div className="ingredient-cell">
+                <ChevronRight size="15px" />
+                <span>{ingredient.ingredientName}</span>
+              </div>
+              <span style={{ color: "#64748B" }}>{ingredient.category}</span>
+              <span style={{ color: "#64748B" }}>{ingredient.unit}</span>
+              <span style={{ fontWeight: "600" }}>2,600 g</span>
+              <span style={{ color: "#64748B", fontWeight: "600" }}>
+                {ingredient.parLevel}
+              </span>
+              <span>1 expiring soon</span>
+              <span style={{ fontWeight: "bold", color: "#64748B" }}>
+                2 batches
+              </span>
+              <EditIngredientsAndBatches />
+            </Fragment>
+          ))}
         </>
       )}
     </>
@@ -470,10 +484,10 @@ const AddIngredientAction = () => {
                     id="unit"
                     className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
                   >
-                  <option value="ml">ml (Mililiters)</option>
-                  <option value="l">l (Liters)</option>
-                  <option value="oz">oz (Ounces)</option>
-                  <option value="g">g (Grams)</option>
+                    <option value="ml">ml (Mililiters)</option>
+                    <option value="l">l (Liters)</option>
+                    <option value="oz">oz (Ounces)</option>
+                    <option value="g">g (Grams)</option>
                   </select>
                 </div>
 

@@ -34,8 +34,6 @@ export const getIngredients = (callback) => {
                 ...ingredientData
             })
         })
-        console.log("INGREDIENT ARRAY:", ingredientArray);
-
         callback(ingredientArray);
     })
 }
