@@ -39,7 +39,44 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 
+const getBatchAlerts = (ingredient) => {
+  let expired = 0;
+  let expiringSoon = 0;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const sevenDaysLater = new Date(today);
+  sevenDaysLater.setDate(today.getDate() + 7);
+
+  Object.values(ingredient.batches || {}).forEach((batch) => {
+    const expirationDate = new Date(batch.expirationDate);
+
+    if (Number(batch.quantity) <= 0) return;
+
+    if (expirationDate < today) {
+      expired++;
+    } else if (expirationDate <= sevenDaysLater) {
+      expiringSoon++;
+    }
+  });
+
+  return { expired, expiringSoon };
+};
+
 const Inventory = () => {
+  const isBatchExpired = (expirationDate) => {
+    if (!expirationDate) return false;
+
+    const expiration = new Date(
+      `${String(expirationDate).slice(0, 10)}T00:00:00`,
+    );
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return !isNaN(expiration.getTime()) && expiration < today;
+  };
   const [activeTab, setActive] = useState("ingredients");
   const [existingWasteLog, setExistingWasteLog] = useState([]);
   const [existingIngredients, setExistingIngredients] = useState([]);
@@ -69,7 +106,16 @@ const Inventory = () => {
     {
       title: "Expired Date",
       subtitle: "No. of Items past their expiration date",
-      value: "0",
+      value: existingIngredients.reduce((total, ingredient) => {
+        const batches = Object.values(ingredient.batches || {});
+
+        const expiredBatches = batches.filter(
+          (batch) =>
+            isBatchExpired(batch.expirationDate) && Number(batch.quantity) > 0,
+        );
+
+        return total + expiredBatches.length;
+      }, 0),
       bgColor: "#FDE4E4",
       icon: ClockAlert,
       iconColor: "#FF0000",
@@ -337,7 +383,24 @@ const TableRecords = ({ isWaste }) => {
                 {ingredient.parLevel}
               </span>
 
-              <span>1 expiring soon</span>
+              <span className="flex flex-wrap items-center gap-2">
+                {getBatchAlerts(ingredient).expired > 0 && (
+                  <span className="rounded-full bg-red-100 px-2 py-1 text-xs text-red-700">
+                    {getBatchAlerts(ingredient).expired} expired
+                  </span>
+                )}
+
+                {getBatchAlerts(ingredient).expiringSoon > 0 && (
+                  <span className="rounded-full bg-amber-100 px-2 py-1 text-xs text-amber-700">
+                    {getBatchAlerts(ingredient).expiringSoon} expiring soon
+                  </span>
+                )}
+
+                {getBatchAlerts(ingredient).expired === 0 &&
+                  getBatchAlerts(ingredient).expiringSoon === 0 && (
+                    <span>-----</span>
+                  )}
+              </span>
 
               <span style={{ fontWeight: "bold", color: "#64748B" }}>
                 {Object.keys(ingredient.batches || {}).length} batches
