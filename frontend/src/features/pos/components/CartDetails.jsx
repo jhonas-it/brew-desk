@@ -382,7 +382,6 @@ export default function CartDetails() {
               // Prepared for future Firestore integration.
               transactionDraft,
             };
-            console.warn("CHECKOUT TEST: Callback executed!");
 
             console.log(
               "Brew Desk transaction draft (NOT SAVED):",

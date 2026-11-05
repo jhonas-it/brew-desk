@@ -1,0 +1,332 @@
+
+/* BREW DESK — STAFFS */
+
+.bd-staffs-page {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #f5f6f8;
+  box-sizing: border-box;
+}
+
+/* Page header */
+.bd-staffs-page > :first-child {
+  width: 100%;
+  margin: 0;
+  border: 1px solid #e4e7ec;
+  border-radius: 12px;
+  background: #fff;
+}
+
+/* Summary cards */
+.bd-staffs-page .stats {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.bd-staffs-page .stat {
+  min-width: 0;
+  background: #fff;
+  border: 1px solid #e4e7ec;
+  border-radius: 12px;
+  padding: 15px 17px;
+}
+
+.bd-staffs-page .stat-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.bd-staffs-page .stat-title {
+  color: #f4511e;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.bd-staffs-page .stat-value {
+  margin-top: 5px;
+  color: #0f172a;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.bd-staffs-page .stat-foot {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #edf0f4;
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+.bd-staffs-page .check {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #e8f8ee;
+  border: 1px solid #c4ebd6;
+  color: #16a36a;
+}
+
+/* Roster container */
+.bd-staffs-page .roster {
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e4e7ec;
+  border-radius: 12px;
+}
+
+/* Roster toolbar */
+.bd-staffs-page .roster-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 16px;
+}
+
+.bd-staffs-page .roster-head h2 {
+  margin: 0;
+  color: #f4511e;
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: none;
+}
+
+.bd-staffs-page .tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.bd-staffs-page .btn-add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 8px 14px;
+  background: #f4511e;
+  border: 1px solid #f4511e;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.bd-staffs-page .btn-add:hover {
+  background: #df4617;
+}
+
+.bd-staffs-page .search {
+  position: relative;
+  width: 230px;
+  max-width: 100%;
+}
+
+.bd-staffs-page .search svg {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.bd-staffs-page .search input {
+  width: 100%;
+  height: 34px;
+  padding: 7px 10px 7px 36px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  outline: none;
+  color: #334155;
+  font-size: 11px;
+}
+
+.bd-staffs-page .search input:focus {
+  border-color: #f4511e;
+}
+
+/* Roster table */
+.bd-staffs-page .table-wrap {
+  width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  flex: 1;
+}
+
+.bd-staffs-page table {
+  width: 100%;
+  min-width: 820px;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+.bd-staffs-page thead th {
+  padding: 13px 15px;
+  background: #f8fafc;
+  border-top: 1px solid #edf0f4;
+  border-bottom: 1px solid #e4e7ec;
+  text-align: left;
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.bd-staffs-page tbody td {
+  padding: 16px 15px;
+  border-bottom: 1px solid #edf0f4;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.bd-staffs-page tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.bd-staffs-page tbody tr:hover {
+  background: #fafbfc;
+}
+
+.bd-staffs-page .pin {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.bd-staffs-page .pin svg {
+  color: #64748b;
+}
+
+.bd-staffs-page .status-inactive {
+  color: #94a3b8;
+}
+
+.bd-staffs-page .protected {
+  color: #64748b;
+}
+
+/* Edit / delete actions */
+.bd-staffs-page .actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.bd-staffs-page .actions button {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  padding: 5px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 7px;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.bd-staffs-page .actions button:hover {
+  background: #fff1ea;
+  color: #f4511e;
+  border-color: #f4511e;
+}
+
+.bd-staffs-page .actions .del:hover {
+  background: #fff1f2;
+  border-color: #fecdd3;
+  color: #e11d48;
+}
+
+.bd-staffs-page .empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+/* Delete modal */
+.delete-body {
+  padding: 24px 30px;
+}
+
+.delete-body .input {
+  height: 48px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.delete-target {
+  margin: 0 0 16px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.delete-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .bd-staffs-page .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .bd-staffs-page {
+    padding: 10px;
+  }
+
+  .bd-staffs-page .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .bd-staffs-page .roster-head {
+    align-items: stretch;
+  }
+
+  .bd-staffs-page .tools {
+    width: 100%;
+  }
+
+  .bd-staffs-page .search {
+    flex: 1;
+    min-width: 160px;
+  }
+
+  .delete-body {
+    padding: 20px;
+  }
+}

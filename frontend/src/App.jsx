@@ -1,46 +1,96 @@
 
-import { useState } from "react";
-import Sidebar from "./components/layouts/Sidebar";
+import {
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
+
+import Layout from "./Layout/Layout";
+import Login from "./pages/login/login";
+import Inventory from "./pages/inventory/Inventory";
+import Staffs from "./pages/Staffs/Staffs";
+import ProtectedRoute from "./ProtectedRoute";
 import POSPage from "./features/pos/POSPage";
 import { Toaster } from "./components/ui/sonner";
-import { toast } from "sonner";
 
-function App() {
-  const [activePage, setActivePage] = useState("pos");
-
+function ComingSoon({ title }) {
   return (
-    <div className="flex min-h-screen">
-      <Sidebar
-        activePage={activePage}
-        onNavigate={setActivePage}
-        onLogout={() =>
-          toast.info("Logout is not connected yet.")
-        }
-        user={{
-          name: "Allen Caraan",
-          role: "owner",
-          shiftActive: true,
-        }}
-      />
-
-      <main className="min-w-0 flex-1">
-        {activePage === "pos" ? (
-          <POSPage />
-        ) : (
-          <div className="p-8">
-            <h1 className="text-2xl font-bold capitalize">
-              {activePage}
-            </h1>
-            <p className="text-gray-500">
-              This module will be connected later.
-            </p>
-          </div>
-        )}
-      </main>
-
-      <Toaster position="top-right" richColors />
+    <div className="p-8">
+      <h1 className="text-2xl font-bold">{title}</h1>
+      <p className="mt-2 text-gray-500">
+        This module will be connected later.
+      </p>
     </div>
   );
 }
 
-export default App;
+export default function App() {
+  const navigate = useNavigate();
+
+  const handleLoginSuccess = () => {
+    navigate("/pos", { replace: true });
+  };
+
+  return (
+    <>
+      <Routes>
+        <Route
+          path="/login"
+          element={
+            <Login onLoginSuccess={handleLoginSuccess} />
+          }
+        />
+
+        <Route element={<ProtectedRoute />}>
+          <Route element={<Layout />}>
+            <Route
+              index
+              element={<Navigate to="/pos" replace />}
+            />
+
+            <Route path="pos" element={<POSPage />} />
+
+            <Route
+              path="dashboard"
+              element={<ComingSoon title="Dashboard" />}
+            />
+
+            <Route
+              path="inventory"
+              element={<Inventory />}
+            />
+
+            <Route
+              path="products"
+              element={<ComingSoon title="Products" />}
+            />
+
+            <Route 
+            path="staffs" 
+            element={<Staffs />} 
+            
+            />
+
+            <Route
+              path="settings"
+              element={<ComingSoon title="Settings" />}
+            />
+
+            <Route
+              path="*"
+              element={<Navigate to="/pos" replace />}
+            />
+          </Route>
+        </Route>
+
+        <Route
+          path="*"
+          element={<Navigate to="/login" replace />}
+        />
+      </Routes>
+
+      <Toaster position="top-right" richColors />
+    </>
+  );
+}

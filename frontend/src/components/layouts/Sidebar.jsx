@@ -41,7 +41,7 @@ const mainMenu = [
 
 const managementMenu = [
     {
-        id: "staff",
+        id: "staffs",
         label: "Staffs",
         icon: UsersRound,
         roles: ["owner"],
