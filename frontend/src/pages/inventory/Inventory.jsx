@@ -5,6 +5,7 @@ import { addIngredient } from "@/sevices/inventory.service";
 import { getIngredients } from "@/sevices/inventory.service";
 import { getWasteLog } from "@/sevices/inventory.service";
 import { Fragment } from "react";
+import { updateIngredient } from "@/sevices/inventory.service";
 import {
   PackageOpen,
   ClockAlert,
@@ -262,7 +263,7 @@ const TableRecords = ({ isWaste }) => {
               <span style={{ fontWeight: "bold", color: "#64748B" }}>
                 2 batches
               </span>
-              <EditIngredientsAndBatches />
+              <EditIngredientsAndBatches ingredient={ingredient} />
             </Fragment>
           ))}
         </>
@@ -921,7 +922,26 @@ const RestockIngredientAction = () => {
   );
 };
 
-const EditIngredientsAndBatches = () => {
+const EditIngredientsAndBatches = ({ ingredient }) => {
+  const [formData, setFormData] = useState({
+    ingredientName: ingredient.ingredientName || "",
+    batchId: ingredient.batchId || "",
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      await updateIngredient(
+        ingredient.id,
+        formData.ingredientName,
+        formData.batchId,
+      );
+      
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
       <Dialog>
@@ -929,41 +949,53 @@ const EditIngredientsAndBatches = () => {
           Edit
         </DialogTrigger>
         <DialogContent>
-          <DialogHeader className="font-bold text-[23px] text-[#1E1B18]">
-            Edit ingredients & batches
-          </DialogHeader>
-          <DialogDescription className="text-[#78716C]">
-            Log new incoming stock batches and adjust active batch details for
-            this specific ingredient below.
-          </DialogDescription>
-          <hr />
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-              <span className="text-[#57534E] font-bold text-[12px]">
-                PRODUCT NAME
-              </span>
-              <input
-                type="text"
-                placeholder="e.g. Americano"
-                className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2] text-[#A8A29E] font-[600]"
-              />
+          <form onSubmit={handleSubmit}>
+            <DialogHeader className="font-bold text-[23px] text-[#1E1B18]">
+              Edit ingredients & batches
+            </DialogHeader>
+            <DialogDescription className="text-[#78716C]">
+              Log new incoming stock batches and adjust active batch details for
+              this specific ingredient below.
+            </DialogDescription>
+            <hr />
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-2">
+                <span className="text-[#57534E] font-bold text-[12px]">
+                  PRODUCT NAME
+                </span>
+                <input
+                  onChange={(e) => {
+                    setFormData({
+                      ...formData,
+                      ingredientName: e.target.value,
+                    });
+                  }}
+                  value={formData.ingredientName}
+                  type="text"
+                  placeholder="e.g. Americano"
+                  className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2] text-[#A8A29E] font-[600]"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-[#57534E] font-bold text-[12px]">
+                  BATCH ID
+                </span>
+                <input
+                  onChange={(e) => {
+                    setFormData({ ...formData, batchId: e.target.value });
+                  }}
+                  value={formData.batchId}
+                  type="text"
+                  placeholder="e.g. #WM-0920"
+                  className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2] text-[#A8A29E] font-[600]"
+                />
+              </div>
             </div>
-            <div className="flex flex-col gap-2">
-              <span className="text-[#57534E] font-bold text-[12px]">
-                BATCH ID
-              </span>
-              <input
-                type="text"
-                placeholder="e.g. #WM-0920"
-                className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2] text-[#A8A29E] font-[600]"
-              />
-            </div>
-          </div>
-          <div className="mt-8 flex items-center justify-end gap-[12px]">
-            <CloseModal />
+            <div className="mt-8 flex items-center justify-end gap-[12px]">
+              <CloseModal />
 
-            <button
-              className="
+              <button
+                className="
                 h-[40px]
                 rounded-[12px]
                 border border-[#D6D3D1]
@@ -975,10 +1007,11 @@ const EditIngredientsAndBatches = () => {
                 cursor-pointer
                 hover:bg-[#B24B16]
               "
-            >
-              Add Ingredient
-            </button>
-          </div>
+              >
+                Add Ingredient
+              </button>
+            </div>
+          </form>
         </DialogContent>
       </Dialog>
     </>

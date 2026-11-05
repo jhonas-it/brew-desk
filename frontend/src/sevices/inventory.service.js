@@ -1,4 +1,4 @@
-import { onValue, push, ref } from "firebase/database"
+import { onValue, push, ref, update } from "firebase/database"
 import { db } from "../lib/firebase"
 
 const wasteRef = ref(db, "Waste")
@@ -52,4 +52,12 @@ export const getIngredients = (callback) => {
         })
         callback(ingredientArray);
     })
+}
+
+export const updateIngredient = async (id, ingredientName, batchId) => {
+    const ingredientItemRef = ref(db, `POS/Products/Inventory/${id}`)
+    await update(ingredientItemRef, {
+        ingredientName,
+        batchId
+    });
 }
