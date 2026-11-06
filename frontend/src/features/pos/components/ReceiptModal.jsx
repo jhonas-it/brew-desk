@@ -21,6 +21,8 @@ export default function ReceiptModal({
   open,
   onClose,
   data,
+  onComplete,
+  saving = false,
 }) {
   if (!data) return null;
 
@@ -50,9 +52,12 @@ export default function ReceiptModal({
   const date = new Date(previewedAt || Date.now());
 
   return (
-    <Dialog open={open} onOpenChange={(value) => {
-      if (!value) onClose();
-    }}>
+    <Dialog
+      open={open}
+      onOpenChange={(value) => {
+        if (!value && !saving) onClose();
+      }}
+    >
       <DialogContent className="bd-receipt-dialog">
         <DialogHeader className="bd-receipt-screen-header">
           <DialogTitle>Receipt Preview</DialogTitle>
@@ -202,23 +207,39 @@ export default function ReceiptModal({
         </div>
 
         <div className="bd-receipt-actions">
+          {/* Close Button */}
           <button
             type="button"
             className="bd-receipt-close"
             onClick={onClose}
+            disabled={saving}
           >
             <X size={15} />
             Close
           </button>
 
+          {/* Print Preview Button */}
           <button
             type="button"
             className="bd-receipt-print"
             onClick={() => window.print()}
+            disabled={saving}
           >
             <Printer size={15} />
             Print Preview
           </button>
+
+          {/* Complete Transaction Button */}
+          {data.paymentMethod === "Cash" && (
+            <button
+              type="button"
+              className="bd-receipt-print"
+              onClick={onComplete}
+              disabled={saving}
+            >
+              {saving ? "Saving..." : "Complete Transaction"}
+            </button>
+          )}
         </div>
       </DialogContent>
     </Dialog>

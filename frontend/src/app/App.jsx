@@ -15,6 +15,7 @@ import POSPage from "../features/pos/POSPage";
 import Settings from "../features/settings/Settings";
 import { Toaster } from "../components/ui/sonner";
 import Products from "../features/products/Products";
+import Transactions from "../features/sales/Transactions";
 
 function ComingSoon({ title }) {
   return (
@@ -52,6 +53,8 @@ export default function App() {
             />
 
             <Route path="pos" element={<POSPage />} />
+
+            <Route path="sales" element={<Transactions />} />
 
             <Route
               path="dashboard"

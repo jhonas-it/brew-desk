@@ -12,6 +12,7 @@ import {
 import { toast } from "sonner";
 import "./POSPage.css";
 import CartDetails from "./components/CartDetails";
+import { useOutletContext } from "react-router-dom";
 
 const initialOrders = [
     { id: "12DOB-01A", items: 5, time: "4:26 PM", status: "Preparing" },
@@ -72,28 +73,29 @@ function OrderQueueCard({ order, onChangeStatus }) {
 export default function POSPage() {
     const [expanded, setExpanded] = useState(false);
     const [orders, setOrders] = useState(initialOrders);
+    const { user } = useOutletContext();
     const [currentTime, setCurrentTime] = useState(new Date());
-    
-  // Shopping cart state
-  const cartItems = usePOSCart((state) => state.items);
 
-  const changeQuantity = usePOSCart(
-    (state) => state.changeQuantity
-  );
+    // Shopping cart state
+    const cartItems = usePOSCart((state) => state.items);
 
-  const removeItem = usePOSCart(
-    (state) => state.removeItem
-  );
+    const changeQuantity = usePOSCart(
+        (state) => state.changeQuantity
+    );
 
-  const clearCart = usePOSCart(
-    (state) => state.clearCart
-  );
+    const removeItem = usePOSCart(
+        (state) => state.removeItem
+    );
 
-  // Calculate cart subtotal
-  const subtotal = cartItems.reduce(
-    (total, item) => total + item.unitPrice * item.quantity,
-    0
-  );
+    const clearCart = usePOSCart(
+        (state) => state.clearCart
+    );
+
+    // Calculate cart subtotal
+    const subtotal = cartItems.reduce(
+        (total, item) => total + item.unitPrice * item.quantity,
+        0
+    );
 
 
     useEffect(() => {
@@ -239,7 +241,7 @@ export default function POSPage() {
                     )}
                 </section>
 
-               <CartDetails />
+                <CartDetails user={user} />
             </div>
         </div>
     );

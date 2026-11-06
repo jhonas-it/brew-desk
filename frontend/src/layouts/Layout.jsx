@@ -34,6 +34,7 @@ export default function Layout() {
 
         if (!userSnapshot.exists()) {
           setUser({
+            uid: firebaseUser.uid,
             name: firebaseUser.displayName || "User",
             role: "cashier",
             shiftActive: false,
@@ -56,6 +57,7 @@ export default function Layout() {
         toast.error("Unable to load your account information.");
 
         setUser({
+          uid: firebaseUser.uid,
           name: firebaseUser.displayName || "User",
           role: "cashier",
           shiftActive: false,
@@ -104,7 +106,7 @@ export default function Layout() {
       />
 
       <main className="main">
-        <Outlet />
+        <Outlet context={{ user }} />
       </main>
       {showLogoutModal && (
         <div
