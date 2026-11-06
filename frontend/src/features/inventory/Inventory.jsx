@@ -39,6 +39,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import PageHeader from "../../components/PageHeader";
+import { useAuth } from "../../context/AuthContext";
 
 const getBatchAlerts = (ingredient) => {
   let expired = 0;
@@ -383,10 +384,10 @@ const TableRecords = ({ isWaste, query }) => {
                 {formatWasteTime(wasteLog.time)}
               </span>
               <span style={{ color: "#64748B" }}>{wasteLog.ingredient}</span>
-              <span style={{ color: "#64748B" }}>-</span>
+              <span style={{ color: "#64748B" }}>{wasteLog.batch}</span>
               <span>Batch still Active</span>
               <span>{wasteLog.reasonCode}</span>
-              <span>-</span>
+              <span>{wasteLog.loggedBy}</span>
               <span>{wasteLog.note}</span>
               <EditWasteReport wasteLog={wasteLog} />
             </Fragment>
@@ -937,6 +938,7 @@ const addLogWaste = async (
 const LogWasteAction = () => {
   const [existingIngredients, setExistingIngredients] = useState([]);
   const [availableBatches, setAvailableBatches] = useState([]);
+  const { user } = useAuth();
   useEffect(() => {
     getIngredients((data) => {
       setExistingIngredients(data);
@@ -976,7 +978,7 @@ const LogWasteAction = () => {
       logWaste.batch,
       logWaste.quantityLost,
       logWaste.reasonCode,
-      logWaste.loggedBy,
+      user?.name || "Unknown",
       logWaste.note,
       logWaste.isUnknown,
     );
