@@ -278,3 +278,25 @@ export const getReconciliation = (callback) => {
         callback(reconciliationArray);
     });
 };
+
+export const deductIngredientStock = async (id, quantity) => {
+    const ingredientItemRef = ref(
+        db,
+        `POS/Products/Inventory/${id}`
+    );
+
+    const result = await runTransaction(ingredientItemRef, (ingredient) => {
+        if (!ingredient) return;
+
+        ingredient.currentQuantity =
+            Number(ingredient.currentQuantity) - Number(quantity);
+
+        if (ingredient.currentQuantity < 0) return;
+
+        return ingredient;
+    });
+
+    if (!result.committed) {
+        throw new Error("Insufficient stock.");
+    }
+};
