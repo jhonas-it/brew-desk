@@ -65,8 +65,8 @@ const getBatchAlerts = (ingredient) => {
   return { expired, expiringSoon };
 };
 
-
 const Inventory = () => {
+  const [searchQuery, setSearchQuery] = useState("");
   const isBatchExpired = (expirationDate) => {
     if (!expirationDate) return false;
 
@@ -245,13 +245,19 @@ const Inventory = () => {
         <div className="table-wrapper">
           <div className="search-container">
             <Search size="20px" color="#475569" />
-            <input type="text" placeholder="Search products..." />
+            <input
+              type="search"
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              aria-label="Search inventory"
+            />
           </div>
           <div className="table-header">
             <HeaderTable isWaste={activeTab === "waste"} />
           </div>
           <div className="table-records">
-            <TableRecords isWaste={activeTab === "waste"} />
+            <TableRecords isWaste={activeTab === "waste"} query={searchQuery} />
           </div>
         </div>
       ) : (
@@ -304,12 +310,42 @@ const HeaderTable = ({ isWaste }) => {
   );
 };
 
-const TableRecords = ({ isWaste }) => {
+const TableRecords = ({ isWaste, query }) => {
   const [existingingredients, setExistingIngredients] = useState([]);
   const [existingWasteLog, setExistingWasteLog] = useState([]);
   const [expandedIngredient, setExpandedIngredient] = useState(null);
   const [existingBatches, setExistingBatches] = useState([]);
+  const search = query.trim().toLowerCase();
+  const filteredIngredients = existingingredients.filter((ingredient) => {
+    const batchIds = Object.values(ingredient.batches || {})
+      .map((batch) => batch.batchId)
+      .join(" ");
 
+    return [
+      ingredient.ingredientName,
+      ingredient.category,
+      ingredient.unit,
+      batchIds,
+    ].some((value) =>
+      String(value || "")
+        .toLowerCase()
+        .includes(search),
+    );
+  });
+
+  const filteredWasteLog = existingWasteLog.filter((wasteLog) => {
+    return [
+      wasteLog.ingredient,
+      wasteLog.batch,
+      wasteLog.reasonCode,
+      wasteLog.loggedBy,
+      wasteLog.note,
+    ].some((value) =>
+      String(value || "")
+        .toLowerCase()
+        .includes(search),
+    );
+  });
   useEffect(() => {
     getIngredients((data) => {
       setExistingIngredients(data);
@@ -341,7 +377,7 @@ const TableRecords = ({ isWaste }) => {
     <>
       {isWaste ? (
         <>
-          {existingWasteLog.map((wasteLog) => (
+          {filteredWasteLog.map((wasteLog) => (
             <Fragment key={wasteLog.id}>
               <span style={{ color: "#64748B" }}>
                 {formatWasteTime(wasteLog.time)}
@@ -358,7 +394,7 @@ const TableRecords = ({ isWaste }) => {
         </>
       ) : (
         <>
-          {existingingredients.map((ingredient) => (
+          {filteredIngredients.map((ingredient) => (
             <Fragment key={ingredient.id}>
               <div
                 className="ingredient-cell"
