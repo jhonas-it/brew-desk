@@ -827,11 +827,30 @@ const AddIngredientAction = () => {
                   >
                     Select category...
                   </option>
-                  <option
-                    value="Dairy & Alternatives"
-                    className="px-[14px] py-[12px] border-2 border-[#E2E8F0] rounded-[12px] outline-none focus:border-[#96bdf2]"
-                  >
+                  <option value="Dairy & Alternatives">
                     Dairy & Alternatives
+                  </option>
+                  <option value="Coffee Beans">Coffee Beans</option>
+                  <option value="Dairy Products">Dairy Products</option>
+                  <option value="Non-Dairy Milk">Non-Dairy Milk</option>
+                  <option value="Syrups and Flavorings">
+                    Syrups and Flavorings
+                  </option>
+                  <option value="Sweeteners">Sweeteners</option>
+                  <option value="Powders and Mixes">Powders and Mixes</option>
+                  <option value="Tea and Other Beverages">
+                    Tea and Other Beverages
+                  </option>
+                  <option value="Fruits and Purees">Fruits and Purees</option>
+                  <option value="Toppings and Add-ons">
+                    Toppings and Add-ons
+                  </option>
+                  <option value="Baking and Pastry Ingredients">
+                    Baking and Pastry Ingredients
+                  </option>
+                  <option value="Ice and Water">Ice and Water</option>
+                  <option value="Packaging and Consumables">
+                    Packaging and Consumables
                   </option>
                 </select>
               </div>
