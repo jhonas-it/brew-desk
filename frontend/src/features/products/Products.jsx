@@ -15,17 +15,14 @@ import {
 import { AnimatePresence, motion } from "motion/react";
 import ProductFormModal from "./ProductFormModal.jsx";
 import RecipeDetail from "./RecipeDetail.jsx";
-import {
-  DRINKS,
-  INGREDIENTS,
-  TABS,
-  peso,
-} from "./products.constants.js";
+import { DRINKS, TABS, peso } from "./products.constants.js";
+import { subscribeToIngredients } from "./ingredients.services.js";
 import "./Products.css";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
-  const [ingredients] = useState(INGREDIENTS);
+  const [ingredients, setIngredients] = useState([]);
+  const [ingredientsLoading, setIngredientsLoading] = useState(true);
   const [selectedSizes, setSelectedSizes] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -48,11 +45,25 @@ export default function Products() {
       },
       (err) => {
         console.error("Failed to load products:", err);
-        setError(
-          "Failed to load products. Please try again."
-        );
+        setError("Failed to load products. Please try again.");
         setLoading(false);
-      }
+      },
+    );
+
+    return () => unsubscribe();
+  }, []);
+
+  // Subscribe to ingredients from Firebase RTDB.
+  useEffect(() => {
+    const unsubscribe = subscribeToIngredients(
+      (data) => {
+        setIngredients(data);
+        setIngredientsLoading(false);
+      },
+      (err) => {
+        console.error("Failed to load ingredients:", err);
+        setIngredientsLoading(false);
+      },
     );
 
     return () => unsubscribe();
@@ -84,22 +95,18 @@ export default function Products() {
     const search = query.trim().toLowerCase();
 
     return products
-      .filter((product) =>
-        tab === "All" ? true : product.category === tab
-      )
+      .filter((product) => (tab === "All" ? true : product.category === tab))
       .filter(
         (product) =>
           !search ||
           product.name.toLowerCase().includes(search) ||
-          product.category.toLowerCase().includes(search)
+          product.category.toLowerCase().includes(search),
       );
   }, [products, tab, query]);
 
   // Product statistics.
   const total = products.length;
-  const active = products.filter(
-    (product) => product.active
-  ).length;
+  const active = products.filter((product) => product.active).length;
 
   const stats = [
     {
@@ -134,13 +141,8 @@ export default function Products() {
         active: !product.active,
       });
     } catch (err) {
-      console.error(
-        "Failed to update product status:",
-        err
-      );
-      setError(
-        "Could not update the status. Please try again."
-      );
+      console.error("Failed to update product status:", err);
+      setError("Could not update the status. Please try again.");
     }
   };
 
@@ -176,10 +178,7 @@ export default function Products() {
       close();
     } catch (err) {
       console.error("Failed to save product:", err);
-      setError(
-        err.message ||
-          "Failed to save product. Please try again."
-      );
+      setError(err.message || "Failed to save product. Please try again.");
       throw err;
     }
   };
@@ -190,10 +189,7 @@ export default function Products() {
       <header className="bd-products-header">
         <div className="bd-products-heading">
           <h1>Products</h1>
-          <p>
-            Manage menu items, pricing, and ingredients for
-            each product.
-          </p>
+          <p>Manage menu items, pricing, and ingredients for each product.</p>
         </div>
 
         <div className="bd-products-clock">
@@ -211,24 +207,16 @@ export default function Products() {
           return (
             <div className="pd-stat" key={stat.title}>
               <div className="pd-stat-top">
-                <span
-                  className={`pd-stat-icon ${stat.tone}`}
-                >
+                <span className={`pd-stat-icon ${stat.tone}`}>
                   <StatIcon size={18} />
                 </span>
 
-                <span className="pd-stat-title">
-                  {stat.title}
-                </span>
+                <span className="pd-stat-title">{stat.title}</span>
               </div>
 
-              <p className="pd-stat-label">
-                {stat.label}
-              </p>
+              <p className="pd-stat-label">{stat.label}</p>
 
-              <p className="pd-stat-value">
-                {stat.value}
-              </p>
+              <p className="pd-stat-value">{stat.value}</p>
             </div>
           );
         })}
@@ -240,9 +228,7 @@ export default function Products() {
           <div className="bd-section-heading">
             <h2>Product Lists</h2>
 
-            <span className="bd-active-count">
-              {visible.length} shown
-            </span>
+            <span className="bd-active-count">{visible.length} shown</span>
           </div>
 
           <div className="bd-section-actions">
@@ -254,9 +240,7 @@ export default function Products() {
                 placeholder="Search products..."
                 aria-label="Search products"
                 value={query}
-                onChange={(event) =>
-                  setQuery(event.target.value)
-                }
+                onChange={(event) => setQuery(event.target.value)}
               />
             </label>
 
@@ -283,9 +267,7 @@ export default function Products() {
               type="button"
               role="tab"
               aria-selected={tab === value}
-              className={
-                tab === value ? "bd-category-active" : ""
-              }
+              className={tab === value ? "bd-category-active" : ""}
               onClick={() => setTab(value)}
             >
               {label}
@@ -293,11 +275,7 @@ export default function Products() {
           ))}
         </div>
 
-        {error && (
-          <p className="error bd-products-error">
-            {error}
-          </p>
-        )}
+        {error && <p className="error bd-products-error">{error}</p>}
 
         {/* PRODUCT TABLE */}
         <div className="pd-scroll">
@@ -314,13 +292,11 @@ export default function Products() {
               const isOpen = open.has(product.id);
 
               const selectedSize =
-                selectedSizes[product.id] ||
-                product.sizes?.[0];
+                selectedSizes[product.id] || product.sizes?.[0];
 
               const displayedPrice =
                 isOpen && DRINKS.includes(product.category)
-                  ? product.sizePrices?.[selectedSize] ??
-                    product.price
+                  ? (product.sizePrices?.[selectedSize] ?? product.price)
                   : product.price;
 
               return (
@@ -330,9 +306,7 @@ export default function Products() {
                       <button
                         type="button"
                         className="pd-chevron"
-                        onClick={() =>
-                          toggleOpen(product.id)
-                        }
+                        onClick={() => toggleOpen(product.id)}
                         aria-expanded={isOpen}
                         aria-label={`Toggle recipe for ${product.name}`}
                       >
@@ -348,10 +322,7 @@ export default function Products() {
                             display: "inline-flex",
                           }}
                         >
-                          <ChevronRight
-                            size={14}
-                            strokeWidth={2.5}
-                          />
+                          <ChevronRight size={14} strokeWidth={2.5} />
                         </motion.span>
                       </button>
 
@@ -359,9 +330,7 @@ export default function Products() {
                     </div>
 
                     <div className="pd-center">
-                      <span className="pd-cat">
-                        {product.category}
-                      </span>
+                      <span className="pd-cat">{product.category}</span>
                     </div>
 
                     <div className="pd-right pd-price">
@@ -376,19 +345,11 @@ export default function Products() {
                           aria-checked={product.active}
                           aria-label={`${product.name} status`}
                           className="pd-switch"
-                          onClick={() =>
-                            toggleActive(product)
-                          }
+                          onClick={() => toggleActive(product)}
                         />
 
-                        <span
-                          className={
-                            product.active ? "" : "off"
-                          }
-                        >
-                          {product.active
-                            ? "Active"
-                            : "Inactive"}
+                        <span className={product.active ? "" : "off"}>
+                          {product.active ? "Active" : "Inactive"}
                         </span>
                       </span>
                     </div>
@@ -397,9 +358,7 @@ export default function Products() {
                       <button
                         type="button"
                         className="pd-edit"
-                        onClick={() =>
-                          setModal({ product })
-                        }
+                        onClick={() => setModal({ product })}
                       >
                         Edit
                       </button>
@@ -437,9 +396,7 @@ export default function Products() {
                         <RecipeDetail
                           product={product}
                           ingredients={ingredients}
-                          selectedSize={
-                            selectedSizes[product.id]
-                          }
+                          selectedSize={selectedSizes[product.id]}
                           onSizeChange={(size) =>
                             setSelectedSizes((previous) => ({
                               ...previous,
@@ -456,9 +413,7 @@ export default function Products() {
           </div>
 
           {loading ? (
-            <div className="pd-empty">
-              Loading products...
-            </div>
+            <div className="pd-empty">Loading products...</div>
           ) : (
             visible.length === 0 && (
               <div className="pd-empty">
