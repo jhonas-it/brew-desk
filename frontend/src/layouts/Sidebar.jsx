@@ -15,12 +15,6 @@ import "./Sidebar.css";
 
 const mainMenu = [
     {
-        id: "dashboard",
-        label: "Dashboard",
-        icon: LayoutDashboard,
-        roles: ["owner", "manager"],
-    },
-    {
         id: "pos",
         label: "POS",
         icon: ShoppingCart,
@@ -30,7 +24,7 @@ const mainMenu = [
         id: "sales",
         label: "Sales",
         icon: ReceiptText,
-        roles: ["owner", "manager", "cashier"],
+        roles: ["owner", "manager"],
     },
 
     {
@@ -66,15 +60,11 @@ export default function Sidebar({
     activePage = "pos",
     onNavigate = () => { },
     onLogout = () => { },
-    user = {
-        name: "Allen Caraan",
-        role: "owner",
-        shiftActive: true,
-    },
+    user = null,
     queueCount = null,
 }) {
     const role = String(user?.role || "cashier").toLowerCase();
-
+    console.log("Current Sidebar user:", user);
     const renderMenu = (items) =>
         items
             .filter((item) => item.roles.includes(role))
@@ -151,12 +141,12 @@ export default function Sidebar({
                             </span>
 
                             <span className="bd-profile-shift">
-                                {user.shiftActive
+                                {user.active === true
                                     ? "Shift Active"
                                     : "Shift Inactive"}
                             </span>
                         </div>
-                    </div>
+                    </div>  
 
                     <button
                         type="button"

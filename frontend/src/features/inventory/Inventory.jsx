@@ -29,6 +29,7 @@ import {
   Search,
   ChevronRight,
   ChevronDown,
+  Clock3,
 } from "lucide-react";
 import {
   Dialog,
@@ -80,6 +81,29 @@ const Inventory = () => {
 
     return !isNaN(expiration.getTime()) && expiration < today;
   };
+
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const time = currentTime.toLocaleTimeString("en-PH", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+
+  const date = currentTime.toLocaleDateString("en-PH", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+
   const [activeTab, setActive] = useState("ingredients");
   const [existingWasteLog, setExistingWasteLog] = useState([]);
   const [existingIngredients, setExistingIngredients] = useState([]);
@@ -197,11 +221,21 @@ const Inventory = () => {
     activeTab === "waste" ? wasteHeaderData : firstHeaderData;
   return (
     <>
-      <div className="bd-pos-page">
-        <PageHeader
-          title="Inventory"
-          subtitle="Keep track of your inventory and waste."
-        />
+      <div className="bd-inv-page">
+        <header className="bd-inv-header">
+          <div>
+            <h1>Inventory</h1>
+            <p>
+              Track ingredients, monitor stock levels, and manage inventory.
+            </p>
+          </div>
+
+          <div className="bd-inv-clock">
+            <Clock3 size={15} />
+            <strong>{time}</strong>
+            <span>{date}</span>
+          </div>
+        </header>
 
         <div className="header-inventory">
           {useHeaderData.map((item) => (
@@ -1437,7 +1471,7 @@ const EditIngredientsAndBatches = ({ ingredient }) => {
   return (
     <>
       <Dialog>
-        <DialogTrigger className="text-[#64748B] text-[12px] font-bold border rounded-[8px] w-[46px] px-[10px] py-[4px] cursor-pointer">
+        <DialogTrigger className="cursor-pointer justify-self-start self-center mx-[11px] !h-auto !w-auto rounded-[6px] border !border-[#dce5df] !bg-white !px-3 !py-[5px] !text-[10px] !font-semibold !leading-tight !text-[#26354c] hover:!bg-[#e4f9ed]">
           Edit
         </DialogTrigger>
         <DialogContent>
@@ -1534,7 +1568,7 @@ const EditWasteReport = ({ wasteLog }) => {
   return (
     <>
       <Dialog>
-        <DialogTrigger className="text-[#64748B] text-[12px] font-bold border rounded-[8px] w-[46px] px-[10px] py-[4px] cursor-pointer">
+        <DialogTrigger className="cursor-pointer justify-self-start self-center mx-[11px] !h-auto !w-auto rounded-[6px] border !border-[#dce5df] !bg-white !px-3 !py-[5px] !text-[10px] !font-semibold !leading-tight !text-[#26354c] hover:!bg-[#e4f9ed]">
           Edit
         </DialogTrigger>
         <DialogContent>
