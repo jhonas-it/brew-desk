@@ -40,6 +40,7 @@ export function AuthProvider({ children }) {
           uid: currentUser.uid,
           name: profile.name,
           role: profile.role,
+          active: profile.active,
           avatar: profile.avatar ?? null,
         });
       } catch (error) {

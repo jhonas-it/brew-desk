@@ -48,11 +48,16 @@ export function buildTransactionDraft({
     if (!Number.isInteger(quantity) || quantity <= 0) {
       throw new Error("Invalid product quantity.");
     }
-
     return {
       cartKey: item.key,
+
+      // Firestore product and selected variant
+      productId: item.productId,
+      variantId: item.variantId,
+
       productName: item.name,
       variantName: item.variantName || null,
+
       quantity,
       unitPrice,
       lineTotal: toMoney(unitPrice * quantity),

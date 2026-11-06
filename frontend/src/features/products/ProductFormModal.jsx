@@ -412,18 +412,20 @@ export default function ProductFormModal({
             >
               <option value="">Select ingredient</option>
 
-              {ingredients.map((ingredient) => (
-                <option
-                  key={ingredient.id}
-                  value={String(ingredient.id)}
-                  disabled={
-                    pickedIds.includes(String(ingredient.id)) &&
-                    String(ingredient.id) !== String(row.ingredientId)
-                  }
-                >
-                  {ingredient.name}
-                </option>
-              ))}
+              {[...ingredients]
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map((ingredient) => (
+                  <option
+                    key={ingredient.id}
+                    value={String(ingredient.id)}
+                    disabled={
+                      pickedIds.includes(String(ingredient.id)) &&
+                      String(ingredient.id) !== String(row.ingredientId)
+                    }
+                  >
+                    {ingredient.name}
+                  </option>
+                ))}
             </select>
 
             <div className="pd-qty">

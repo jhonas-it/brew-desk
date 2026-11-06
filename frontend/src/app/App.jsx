@@ -12,14 +12,8 @@ import Products from "../features/products/Products";
 import Transactions from "../features/sales/Transactions";
 import { AuthProvider } from "../context/AuthContext";
 
-function ComingSoon({ title }) {
-  return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold">{title}</h1>
-      <p className="mt-2 text-gray-500">This module will be connected later.</p>
-    </div>
-  );
-}
+const OWNER_MANAGER = ["owner", "manager"];
+const OWNER_ONLY = ["owner"];
 
 export default function App() {
   const navigate = useNavigate();
@@ -43,25 +37,16 @@ export default function App() {
 
               <Route path="pos" element={<POSPage />} />
 
-            <Route path="sales" element={<Transactions />} />
+              <Route element={<ProtectedRoute allowedRoles={OWNER_MANAGER} />}>
+                <Route path="sales" element={<Transactions />} />
+                <Route path="inventory" element={<Inventory />} />
+                <Route path="products" element={<Products />} />
+              </Route>
 
-            <Route
-              path="dashboard"
-              element={<ComingSoon title="Dashboard" />}
-            />
-
-              <Route
-                path="dashboard"
-                element={<ComingSoon title="Dashboard" />}
-              />
-
-              <Route path="inventory" element={<Inventory />} />
-
-              <Route path="products" element={<Products />} />
-
-              <Route path="staffs" element={<Staffs />} />
-
-              <Route path="settings" element={<Settings />} />
+              <Route element={<ProtectedRoute allowedRoles={OWNER_ONLY} />}>
+                <Route path="staffs" element={<Staffs />} />
+                <Route path="settings" element={<Settings />} />
+              </Route>
 
               <Route path="*" element={<Navigate to="/pos" replace />} />
             </Route>

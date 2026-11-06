@@ -27,7 +27,7 @@ import { calculateCheckout } from "./DiscountCalculator";
 import "./CartDetails.css";
 import ReceiptModal from "./ReceiptModal";
 import { buildTransactionDraft } from "../services/buildTransactionDraft";
-import { saveTransaction } from "../../sales/Transaction.service";
+import { completePOSCheckout, generateCheckoutId } from "../services/checkout.service";
 const formatPrice = (amount) =>
   new Intl.NumberFormat("en-PH", {
     style: "currency",
@@ -146,47 +146,23 @@ export default function CartDetails({ user }) {
   async function handleCompleteTransaction() {
     if (!receiptPreview?.transactionDraft || savingTransaction) return;
     if (!user?.uid) {
-      toast.error("Cashier information is still loading. Please try again.");
+      toast.error("Cashier information is still loading.");
       return;
     }
-    
+    if (receiptPreview.transactionDraft.payment.method !== "Cash") {
+      toast.error("GCash payment verification is not implemented.");
+      return;
+    }
+
     setSavingTransaction(true);
-
     try {
-      const draft = receiptPreview.transactionDraft;
-
-      // GCash cannot be marked as paid without verification.
-      if (draft.payment.method !== "Cash") {
-        toast.error("GCash payment verification is not available yet.");
-        return;
-      }
-
-      const now = new Date();
-
-      const datePart = [
-        now.getFullYear(),
-        String(now.getMonth() + 1).padStart(2, "0"),
-        String(now.getDate()).padStart(2, "0"),
-      ].join("");
-
-      const receiptId = `RCP-${datePart}-${crypto.randomUUID()
-        .slice(0, 8)
-        .toUpperCase()}`;
-
-      const completedTransaction = {
-        ...draft,
-        receiptId,
-        cashierId: user?.uid || null,
-        cashierName: user?.name || "Unknown",
-        cashierRole: user?.role || "cashier",
-        status: "completed",
-        paymentStatus: "paid",
-        createdAt: now.toISOString(),
-      };
-
-      await saveTransaction(completedTransaction);
-
-      // Clear the cart only after Firestore confirms the save.
+      const result = await completePOSCheckout({
+        checkoutId: receiptPreview.checkoutId,
+        items: receiptPreview.items,
+        transactionDraft: receiptPreview.transactionDraft,
+        cashier: user,
+      });
+      if (result.status !== "completed") throw new Error("Checkout was not completed.");
       clearCart();
       setReceiptPreview(null);
       setOrderType("Dine in");
@@ -195,11 +171,13 @@ export default function CartDetails({ user }) {
       setDiscountType("none");
       setBeneficiary(blankBeneficiary());
       setEligibleQuantities({});
-
-      toast.success("Transaction saved successfully!");
+      toast.success(`Sale saved and ingredients deducted! ${result.receiptId}`);
     } catch (error) {
-      console.error("Transaction save failed:", error);
-      toast.error(error.message || "Unable to save transaction.");
+      console.error("Checkout failed:", error);
+      toast.error(error.message || "Checkout failed. Check the sale before retrying.", {
+        duration: 8000,
+      });
+      // Preserve receipt and checkout ID to prevent a second deduction on retry.
     } finally {
       setSavingTransaction(false);
     }
@@ -436,6 +414,7 @@ export default function CartDetails({ user }) {
 
             // Keep the existing receipt preview structure.
             const receiptData = {
+              checkoutId: generateCheckoutId(),
               items: items.map((item) => ({ ...item })),
               orderType,
               breakdown: { ...breakdown },

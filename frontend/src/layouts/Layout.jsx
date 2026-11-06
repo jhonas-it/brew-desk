@@ -37,7 +37,7 @@ export default function Layout() {
             uid: firebaseUser.uid,
             name: firebaseUser.displayName || "User",
             role: "cashier",
-            shiftActive: false,
+            active: false,
           });
 
           return;
@@ -50,7 +50,7 @@ export default function Layout() {
           name: profile.name || firebaseUser.displayName || "User",
           role: String(profile.role || "cashier").toLowerCase(),
           avatar: profile.avatar ?? null,
-          shiftActive: profile.shiftActive ?? false,
+          active: profile.active === true,
         });
       } catch (error) {
         console.error("Failed to load user profile:", error);
@@ -60,7 +60,7 @@ export default function Layout() {
           uid: firebaseUser.uid,
           name: firebaseUser.displayName || "User",
           role: "cashier",
-          shiftActive: false,
+          active: false,
         });
       }
     });
@@ -100,7 +100,7 @@ export default function Layout() {
           user || {
             name: "Loading...",
             role: "cashier",
-            shiftActive: false,
+            active: false,
           }
         }
       />

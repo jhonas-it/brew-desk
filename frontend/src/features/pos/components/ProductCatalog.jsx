@@ -1,5 +1,5 @@
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Search,
   Coffee,
@@ -9,18 +9,36 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-import { mockProducts } from "../data/mockProducts";
+import { subscribeToProducts } from "../../products/products.service.js";
 import { usePOSCart } from "../store/usePOSCart";
 import VariantModal from "./VariantModal";
 
-const categories = [
-  "All",
-  "Coffee",
-  "Non-Coffee",
-  "Meals",
-  "Pastries",
-  "Desserts",
-];
+// Convert the Firestore Products format to the existing POS cart format.
+// Keep the variant recipe attached so checkout can use it later.
+function toPOSProduct(product) {
+  const sizes = Array.isArray(product.sizes) ? product.sizes : [];
+  const variants = sizes.length
+    ? sizes.map((size) => ({
+        id: size.toLowerCase(),
+        name: size,
+        price: Number(product.sizePrices?.[size]),
+        recipe: product.recipesBySize?.[size] ?? product.recipe ?? [],
+      }))
+    : [{
+        id: "regular",
+        name: "Regular",
+        price: Number(product.price),
+        recipe: product.recipe ?? [],
+      }];
+
+  return {
+    ...product,
+    imageUrl: product.image || product.imageUrl || "",
+    variants: variants.filter((variant) =>
+      Number.isFinite(variant.price) && variant.price > 0
+    ),
+  };
+}
 
 const formatPrice = (price) =>
   new Intl.NumberFormat("en-PH", {
@@ -30,14 +48,40 @@ const formatPrice = (price) =>
 
 export default function ProductCatalog() {
   const [category, setCategory] = useState("All");
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [quantities, setQuantities] = useState({});
   const [selectedProduct, setSelectedProduct] = useState(null);
 
+  useEffect(() => {
+    const unsubscribe = subscribeToProducts(
+      (data) => {
+        setProducts(data
+          .filter((product) => product.active === true && product.showOnPos !== false)
+          .map(toPOSProduct)
+          .filter((product) => product.variants.length > 0));
+        setLoading(false);
+        setError("");
+      },
+      (err) => {
+        console.error("Could not load POS products:", err);
+        setError("Unable to load products from Firestore.");
+        setLoading(false);
+      }
+    );
+    return () => unsubscribe();
+  }, []);
+
+  const categories = useMemo(() => [
+    "All", ...new Set(products.map((product) => product.category).filter(Boolean))
+  ], [products]);
+
   const addItem = usePOSCart((state) => state.addItem);
 
   const filteredProducts = useMemo(() => {
-    return mockProducts.filter((product) => {
+    return products.filter((product) => {
       const matchesCategory =
         category === "All" || product.category === category;
 
@@ -47,7 +91,7 @@ export default function ProductCatalog() {
 
       return matchesCategory && matchesSearch;
     });
-  }, [category, search]);
+  }, [products, category, search]);
 
   function updateQuantity(productId, change) {
     setQuantities((previous) => ({
@@ -137,6 +181,9 @@ export default function ProductCatalog() {
         ))}
       </div>
 
+      {loading && <div className="bd-product-empty">Loading products...</div>}
+      {error && <div className="bd-product-empty" role="alert">{error}</div>}
+
       <div className="bd-products-grid">
         {filteredProducts.map((product) => {
           const quantity = quantities[product.id] || 0;
@@ -211,7 +258,7 @@ export default function ProductCatalog() {
         })}
       </div>
 
-      {filteredProducts.length === 0 && (
+      {!loading && !error && filteredProducts.length === 0 && (
         <div className="bd-product-empty">
           No matching products found.
         </div>
