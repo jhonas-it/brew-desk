@@ -562,8 +562,6 @@ const StockReconciliation = () => {
   const [existingIngredients, setExistingIngredients] = useState([]);
   const [selectedIngredient, setSelectedIngredient] = useState("");
   const [physicalCount, setPhysicalCount] = useState("");
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const [pendingAdjustStock, setPendingAdjustStock] = useState(false);
 
   useEffect(() => {
     getIngredients((data) => {
@@ -578,15 +576,6 @@ const StockReconciliation = () => {
   const systemExpected = Number(selectedIngredientData?.currentQuantity || 0);
 
   const discrepancy = Number(physicalCount || 0) - systemExpected;
-
-  const requestReconciliation = (adjustStock) => {
-    if (!selectedIngredientData || physicalCount === "") {
-      alert("Please select an ingredient and enter the physical count.");
-      return;
-    }
-    setPendingAdjustStock(adjustStock);
-    setConfirmOpen(true);
-  };
 
   const handleReconciliation = async (adjustStock) => {
     if (!selectedIngredientData || physicalCount === "") {
@@ -691,7 +680,7 @@ const StockReconciliation = () => {
             <button
               type="button"
               className="record-adjust-btn"
-              onClick={() => requestReconciliation(true)}
+              onClick={() => handleReconciliation(true)}
             >
               Record & Adjust Stock
             </button>
@@ -699,7 +688,7 @@ const StockReconciliation = () => {
             <button
               type="button"
               className="count-only-btn"
-              onClick={() => requestReconciliation(false)}
+              onClick={() => handleReconciliation(false)}
             >
               Record Count Only
             </button>
@@ -721,21 +710,6 @@ const StockReconciliation = () => {
           <ReconciliationTable />
         </section>
       </div>
-      <ConfirmActionDialog
-        open={confirmOpen}
-        onOpenChange={setConfirmOpen}
-        title={pendingAdjustStock ? "Confirm stock adjustment" : "Confirm stock count"}
-        description={
-          pendingAdjustStock
-            ? `Record ${physicalCount} ${selectedIngredientData?.unit || ""} as the physical count for ${selectedIngredientData?.ingredientName || "this ingredient"} and adjust the system stock from ${systemExpected} to ${physicalCount}?`
-            : `Save the physical count of ${physicalCount} ${selectedIngredientData?.unit || ""} for ${selectedIngredientData?.ingredientName || "this ingredient"} without changing the system stock?`
-        }
-        confirmLabel={pendingAdjustStock ? "Record & Adjust Stock" : "Record Count"}
-        onConfirm={async () => {
-          await handleReconciliation(pendingAdjustStock);
-          setConfirmOpen(false);
-        }}
-      />
     </>
   );
 };
@@ -828,28 +802,19 @@ const AddIngredientAction = () => {
     unit: "",
     parLevel: 0,
   });
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [confirmOpen, setConfirmOpen] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setConfirmOpen(true);
-  };
-
-  const handleConfirm = async () => {
-    await addIngredientFunction(
-      ingredient.name,
-      ingredient.category,
-      ingredient.unit,
-      ingredient.parLevel,
-    );
-    setConfirmOpen(false);
-    setDialogOpen(false);
-    setIngredient({ name: "", category: "", unit: "", parLevel: 0 });
+  const handleSubmit = async (e) => {
+    (e.preventDefault(),
+      await addIngredientFunction(
+        ingredient.name,
+        ingredient.category,
+        ingredient.unit,
+        ingredient.parLevel,
+      ));
   };
   return (
     <>
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      <Dialog>
         <DialogTrigger>
           <Plus size="15px" />
           Add Ingredients
@@ -977,14 +942,6 @@ const AddIngredientAction = () => {
           </form>
         </DialogContent>
       </Dialog>
-      <ConfirmActionDialog
-        open={confirmOpen}
-        onOpenChange={setConfirmOpen}
-        title="Confirm new ingredient"
-        // description={`Add ${ingredient.name || "this ingredient"} to your inventory?`}
-        confirmLabel="Confirm"
-        onConfirm={handleConfirm}
-      />
     </>
   );
 };
@@ -1041,8 +998,6 @@ const LogWasteAction = () => {
   const [existingIngredients, setExistingIngredients] = useState([]);
   const [availableBatches, setAvailableBatches] = useState([]);
   const { user } = useAuth();
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [confirmOpen, setConfirmOpen] = useState(false);
   useEffect(() => {
     getIngredients((data) => {
       setExistingIngredients(data);
@@ -1073,12 +1028,8 @@ const LogWasteAction = () => {
 
     return () => unsubscribe();
   }, [selectedIngredient?.id]);
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setConfirmOpen(true);
-  };
-
-  const handleConfirm = async () => {
     const time = new Date().toISOString();
     await addLogWaste(
       time,
@@ -1090,22 +1041,10 @@ const LogWasteAction = () => {
       logWaste.note,
       logWaste.isUnknown,
     );
-    setConfirmOpen(false);
-    setDialogOpen(false);
-    setLogWaste({
-      time: "",
-      ingredient: "",
-      batch: "",
-      quantityLost: "",
-      reasonCode: "",
-      loggedBy: "",
-      note: "",
-      isUnknown: false,
-    });
   };
   return (
     <>
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      <Dialog>
         <DialogTrigger>
           <Trash size="15px" /> Log waste
         </DialogTrigger>
@@ -1260,54 +1199,9 @@ const LogWasteAction = () => {
           </form>
         </DialogContent>
       </Dialog>
-      <ConfirmActionDialog
-        open={confirmOpen}
-        onOpenChange={setConfirmOpen}
-        title="Confirm Log Waste"
-        // description={`Add ${ingredient.name || "this ingredient"} to your inventory?`}
-        confirmLabel="Log Waste"
-        onConfirm={handleConfirm}
-      />
     </>
   );
 };
-
-
-const ConfirmActionDialog = ({
-  open,
-  onOpenChange,
-  title,
-  description,
-  confirmLabel = "Confirm",
-  onConfirm,
-}) => (
-  <Dialog open={open} onOpenChange={onOpenChange}>
-    <DialogContent className="max-w-[420px]">
-      <DialogHeader className="font-bold text-[20px] text-[#1E1B18]">
-        {title}
-      </DialogHeader>
-      <DialogDescription className="text-[#78716C]">
-        {description}
-      </DialogDescription>
-      <div className="mt-6 flex justify-end gap-3">
-        <button
-          type="button"
-          onClick={() => onOpenChange(false)}
-          className="h-[40px] rounded-[10px] border border-[#D6D3D1] px-4 text-[12px] font-semibold hover:bg-[#F5F5F4]"
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          onClick={onConfirm}
-          className="h-[40px] rounded-[10px] bg-[#EA580C] px-4 text-[12px] font-bold text-white hover:bg-[#B24B16]"
-        >
-          {confirmLabel}
-        </button>
-      </div>
-    </DialogContent>
-  </Dialog>
-);
 
 const CloseModal = () => {
   return (
@@ -1329,8 +1223,6 @@ const CloseModal = () => {
 const RestockIngredientAction = () => {
   const [existingIngredients, setExistingIngredients] = useState([]);
   const [selectedIngredientId, setSelectedIngredientId] = useState("");
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const [restockData, setRestockData] = useState({
     quantityReceived: "",
@@ -1369,10 +1261,6 @@ const RestockIngredientAction = () => {
       return;
     }
 
-    setConfirmOpen(true);
-  };
-
-  const handleConfirm = async () => {
     try {
       const batchId = await addBatch(
         selectedIngredient.id,
@@ -1382,9 +1270,9 @@ const RestockIngredientAction = () => {
       );
 
       console.log(`Batch ${batchId} added successfully!`);
-      setConfirmOpen(false);
-      setDialogOpen(false);
+
       setSelectedIngredientId("");
+
       setRestockData({
         quantityReceived: "",
         expirationDate: "",
@@ -1393,13 +1281,12 @@ const RestockIngredientAction = () => {
     } catch (error) {
       console.error("Error adding batch:", error);
       alert("Failed to add batch. Please try again.");
-      setConfirmOpen(false);
     }
   };
 
   return (
     <>
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      <Dialog>
         <DialogTrigger
           render={
             <button className="flex h-[40px] items-center gap-2 rounded-[12px] !bg-[#EA580C] px-[16px] text-[12px] font-bold !text-white hover:!bg-[#B24B16]" />
@@ -1558,14 +1445,6 @@ const RestockIngredientAction = () => {
           </form>
         </DialogContent>
       </Dialog>
-      <ConfirmActionDialog
-        open={confirmOpen}
-        onOpenChange={setConfirmOpen}
-        title="Confirm Restock"
-        // description={`Add ${ingredient.name || "this ingredient"} to your inventory?`}
-        confirmLabel="Restock"
-        onConfirm={handleConfirm}
-      />
     </>
   );
 };
@@ -1575,31 +1454,23 @@ const EditIngredientsAndBatches = ({ ingredient }) => {
     ingredientName: ingredient.ingredientName || "",
     batchId: ingredient.batchId || "",
   });
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [confirmOpen, setConfirmOpen] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setConfirmOpen(true);
-  };
 
-  const handleConfirm = async () => {
     try {
       await updateIngredient(
         ingredient.id,
         formData.ingredientName,
         formData.batchId,
       );
-      setConfirmOpen(false);
-      setDialogOpen(false);
     } catch (error) {
-      console.error("Error updating ingredient:", error);
-      setConfirmOpen(false);
+      console.log(error);
     }
   };
   return (
     <>
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      <Dialog>
         <DialogTrigger className="cursor-pointer justify-self-start self-center mx-[11px] !h-auto !w-auto rounded-[6px] border !border-[#dce5df] !bg-white !px-3 !py-[5px] !text-[10px] !font-semibold !leading-tight !text-[#26354c] hover:!bg-[#e4f9ed]">
           Edit
         </DialogTrigger>
@@ -1669,14 +1540,6 @@ const EditIngredientsAndBatches = ({ ingredient }) => {
           </form>
         </DialogContent>
       </Dialog>
-      <ConfirmActionDialog
-        open={confirmOpen}
-        onOpenChange={setConfirmOpen}
-        title="Confirm Edit Ingredient"
-        // description={`Add ${ingredient.name || "this ingredient"} to your inventory?`}
-        confirmLabel="Confirm"
-        onConfirm={handleConfirm}
-      />
     </>
   );
 };
@@ -1687,39 +1550,24 @@ const EditWasteReport = ({ wasteLog }) => {
     batchId: wasteLog.batch || "",
     reasonCode: wasteLog.reasonCode || "",
   });
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const [pendingAction, setPendingAction] = useState("update");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setPendingAction("update");
-    setConfirmOpen(true);
-  };
-
-  const handleConfirm = async () => {
     try {
-      if (pendingAction === "delete") {
-        await removeWasteLog(wasteLog.id);
-      } else {
-        await updateWasteLog(
-          wasteLog.id,
-          formData.ingredientName,
-          formData.batchId,
-          formData.reasonCode,
-        );
-      }
-      setConfirmOpen(false);
-      setDialogOpen(false);
+      await updateWasteLog(
+        wasteLog.id,
+        formData.ingredientName,
+        formData.batchId,
+        formData.reasonCode,
+      );
     } catch (error) {
-      console.error("Error saving waste report:", error);
-      setConfirmOpen(false);
+      console.log(error);
     }
   };
 
   return (
     <>
-      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      <Dialog>
         <DialogTrigger className="cursor-pointer justify-self-start self-center mx-[11px] !h-auto !w-auto rounded-[6px] border !border-[#dce5df] !bg-white !px-3 !py-[5px] !text-[10px] !font-semibold !leading-tight !text-[#26354c] hover:!bg-[#e4f9ed]">
           Edit
         </DialogTrigger>
@@ -1794,16 +1642,30 @@ const EditWasteReport = ({ wasteLog }) => {
 
             <div className="mt-8 flex items-center justify-end gap-[12px]">
               <CloseModal />
-              <button
-                type="button"
-                onClick={() => {
-                  setPendingAction("delete");
-                  setConfirmOpen(true);
-                }}
-                className="h-[40px] rounded-[12px] border border-[#D6D3D1] bg-[#E00509] px-[16px] text-[12px] font-bold text-white hover:bg-[#960306]"
-              >
-                Delete
-              </button>
+              <DialogClose
+                render={
+                  <button
+                    onClick={async () => {
+                      await removeWasteLog(wasteLog.id);
+                    }}
+                    className="
+                w-[117px]
+                h-[40px]
+                rounded-[12px]
+                border border-[#D6D3D1]
+                bg-[#E00509]
+                px-[16px]
+                text-[12px]
+                font-bold
+                text-white
+                cursor-pointer
+                hover:bg-[#960306]
+              "
+                  >
+                    Delete
+                  </button>
+                }
+              />
               <button
                 type="submit"
                 className="border border-[#D6D3D1] px-[16px] h-[40px] rounded-[12px] text-[12px] text-[white] font-bold font-[#44403C] cursor-pointer bg-[#EA580C] hover:bg-[#B24B16]"
@@ -1814,14 +1676,6 @@ const EditWasteReport = ({ wasteLog }) => {
           </form>
         </DialogContent>
       </Dialog>
-      <ConfirmActionDialog
-        open={confirmOpen}
-        onOpenChange={setConfirmOpen}
-        title="Confirm Update Report"
-        // description={`Add ${ingredient.name || "this ingredient"} to your inventory?`}
-        confirmLabel="Confirm"
-        onConfirm={handleConfirm}
-      />
     </>
   );
 };
