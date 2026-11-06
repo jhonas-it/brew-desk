@@ -870,9 +870,10 @@ const AddIngredientAction = () => {
                     id="unit"
                     className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
                   >
-                    <option value="ml">ml (Mililiters)</option>
+                    <option value="">Select an ingredient first</option>
                     <option value="g">g (Grams)</option>
-                    <option value="g">pcs (Pieces)</option>
+                    <option value="mL">mL (Milliliters)</option>
+                    <option value="pcs">pcs (Pieces)</option>
                   </select>
                 </div>
 
