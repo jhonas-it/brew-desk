@@ -27,7 +27,7 @@ import { calculateCheckout } from "./DiscountCalculator";
 import "./CartDetails.css";
 import ReceiptModal from "./ReceiptModal";
 import { buildTransactionDraft } from "../services/buildTransactionDraft";
-
+import { saveTransaction } from "../../sales/Transaction.service";
 const formatPrice = (amount) =>
   new Intl.NumberFormat("en-PH", {
     style: "currency",
@@ -40,12 +40,13 @@ const blankBeneficiary = () => ({
   verified: false,
 });
 
-export default function CartDetails() {
+export default function CartDetails({ user }) {
   const items = usePOSCart((state) => state.items);
   const changeQuantity = usePOSCart((state) => state.changeQuantity);
   const removeItem = usePOSCart((state) => state.removeItem);
   const clearCart = usePOSCart((state) => state.clearCart);
   const [receiptPreview, setReceiptPreview] = useState(null);
+  const [savingTransaction, setSavingTransaction] = useState(false);
 
   const [orderType, setOrderType] = useState("Dine in");
   const [promoInput, setPromoInput] = useState("");
@@ -140,6 +141,70 @@ export default function CartDetails() {
     });
     toast.info("Product removed from cart.");
   }
+
+
+  async function handleCompleteTransaction() {
+    if (!receiptPreview?.transactionDraft || savingTransaction) return;
+    if (!user?.uid) {
+      toast.error("Cashier information is still loading. Please try again.");
+      return;
+    }
+    
+    setSavingTransaction(true);
+
+    try {
+      const draft = receiptPreview.transactionDraft;
+
+      // GCash cannot be marked as paid without verification.
+      if (draft.payment.method !== "Cash") {
+        toast.error("GCash payment verification is not available yet.");
+        return;
+      }
+
+      const now = new Date();
+
+      const datePart = [
+        now.getFullYear(),
+        String(now.getMonth() + 1).padStart(2, "0"),
+        String(now.getDate()).padStart(2, "0"),
+      ].join("");
+
+      const receiptId = `RCP-${datePart}-${crypto.randomUUID()
+        .slice(0, 8)
+        .toUpperCase()}`;
+
+      const completedTransaction = {
+        ...draft,
+        receiptId,
+        cashierId: user?.uid || null,
+        cashierName: user?.name || "Unknown",
+        cashierRole: user?.role || "cashier",
+        status: "completed",
+        paymentStatus: "paid",
+        createdAt: now.toISOString(),
+      };
+
+      await saveTransaction(completedTransaction);
+
+      // Clear the cart only after Firestore confirms the save.
+      clearCart();
+      setReceiptPreview(null);
+      setOrderType("Dine in");
+      setPromoInput("");
+      setAppliedPromo(null);
+      setDiscountType("none");
+      setBeneficiary(blankBeneficiary());
+      setEligibleQuantities({});
+
+      toast.success("Transaction saved successfully!");
+    } catch (error) {
+      console.error("Transaction save failed:", error);
+      toast.error(error.message || "Unable to save transaction.");
+    } finally {
+      setSavingTransaction(false);
+    }
+  }
+
 
   return (
     <aside className="bd-cart-panel">
@@ -401,13 +466,17 @@ export default function CartDetails() {
         }}
 
       />
-
       <ReceiptModal
         open={Boolean(receiptPreview)}
-        onClose={() => setReceiptPreview(null)}
+        onClose={() => {
+          if (!savingTransaction) {
+            setReceiptPreview(null);
+          }
+        }}
         data={receiptPreview}
+        onComplete={handleCompleteTransaction}
+        saving={savingTransaction}
       />
-
     </aside>
   );
 }

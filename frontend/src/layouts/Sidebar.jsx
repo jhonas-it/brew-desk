@@ -8,6 +8,7 @@ import {
     UsersRound,
     Settings2,
     LogOut,
+    ReceiptText,
 } from "lucide-react";
 
 import "./Sidebar.css";
@@ -25,6 +26,13 @@ const mainMenu = [
         icon: ShoppingCart,
         roles: ["owner", "manager", "cashier"],
     },
+    {
+        id: "sales",
+        label: "Sales",
+        icon: ReceiptText,
+        roles: ["owner", "manager", "cashier"],
+    },
+
     {
         id: "inventory",
         label: "Inventory",
