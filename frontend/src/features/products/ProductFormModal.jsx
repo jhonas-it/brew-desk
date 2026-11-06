@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Modal from "../../components/Modal";
 import Icon from "../../components/Icon";
@@ -43,9 +42,7 @@ function buildInitialRows(product) {
   };
 
   const bySize = product?.recipesBySize ?? {};
-  const hasSizeRecipes = SIZES.some(
-    (size) => bySize[size]?.length
-  );
+  const hasSizeRecipes = SIZES.some((size) => bySize[size]?.length);
 
   SIZES.forEach((size) => {
     (bySize[size] ?? []).forEach((item) => {
@@ -70,27 +67,16 @@ function buildInitialRows(product) {
 
 function UploadImageIcon() {
   return (
-    <svg
-      width="144"
-      height="130"
-      viewBox="0 0 144 130"
-      fill="none"
-    >
+    <svg width="144" height="130" viewBox="0 0 144 130" fill="none">
       <path
         d="M52 22H126a14 14 0 0 1 14 14V112a14 14 0 0 1-14 14H18A14 14 0 0 1 4 112V66"
         stroke="#1f1f1f"
         strokeWidth="8"
         strokeLinecap="round"
       />
-      <path
-        d="M24 4L44 30H33V66H15V30H4Z"
-        fill="#1f1f1f"
-      />
+      <path d="M24 4L44 30H33V66H15V30H4Z" fill="#1f1f1f" />
       <circle cx="112" cy="52" r="17" fill="#1f1f1f" />
-      <path
-        d="M12 116L52 74L74 98L92 80L132 116Z"
-        fill="#1f1f1f"
-      />
+      <path d="M12 116L52 74L74 98L92 80L132 116Z" fill="#1f1f1f" />
     </svg>
   );
 }
@@ -112,9 +98,7 @@ export default function ProductFormModal({
   const [form, setForm] = useState({
     name: product?.name ?? "",
     category: product?.category ?? "Coffee",
-    price: product?.price != null
-      ? String(product.price)
-      : "",
+    price: product?.price != null ? String(product.price) : "",
     showOnPos: product?.showOnPos ?? true,
     sizes: initialSizes,
     image: product?.image ?? null,
@@ -127,12 +111,12 @@ export default function ProductFormModal({
           : product?.price != null
             ? String(product.price)
             : "",
-      ])
+      ]),
     ),
   });
 
   const [activeSize, setActiveSize] = useState(
-    SIZES.find((size) => initialSizes.includes(size)) ?? "Small"
+    SIZES.find((size) => initialSizes.includes(size)) ?? "Small",
   );
 
   const [errors, setErrors] = useState({});
@@ -205,9 +189,7 @@ export default function ProductFormModal({
     setForm((previous) => ({
       ...previous,
       rows: previous.rows.map((row, i) =>
-        i === index
-          ? { ...row, ingredientId }
-          : row
+        i === index ? { ...row, ingredientId } : row,
       ),
     }));
 
@@ -226,7 +208,7 @@ export default function ProductFormModal({
                 [key]: value,
               },
             }
-          : row
+          : row,
       ),
     }));
 
@@ -242,9 +224,7 @@ export default function ProductFormModal({
 
   const removeRow = (index) => {
     setForm((previous) => {
-      const remaining = previous.rows.filter(
-        (_, i) => i !== index
-      );
+      const remaining = previous.rows.filter((_, i) => i !== index);
 
       return {
         ...previous,
@@ -304,8 +284,7 @@ export default function ProductFormModal({
           !Number.isFinite(Number(price)) ||
           Number(price) <= 0
         ) {
-          nextErrors[`price-${size}`] =
-            `Enter a valid price for ${size}.`;
+          nextErrors[`price-${size}`] = `Enter a valid price for ${size}.`;
         }
       });
     } else if (
@@ -318,26 +297,20 @@ export default function ProductFormModal({
 
     // Validate shared ingredients and each size's quantity.
     const filled = form.rows.filter(
-      (row) =>
-        row.ingredientId ||
-        keys.some((key) => row.qty[key] !== "")
+      (row) => row.ingredientId || keys.some((key) => row.qty[key] !== ""),
     );
 
     if (!filled.length) {
       nextErrors.recipe = "Add at least one ingredient.";
     } else {
       if (filled.some((row) => !row.ingredientId)) {
-        nextErrors.recipe =
-          "Select an ingredient for every row.";
+        nextErrors.recipe = "Select an ingredient for every row.";
       }
 
-      const ids = filled
-        .map((row) => row.ingredientId)
-        .filter(Boolean);
+      const ids = filled.map((row) => row.ingredientId).filter(Boolean);
 
       if (new Set(ids).size !== ids.length) {
-        nextErrors.recipe =
-          "Each ingredient can only be added once.";
+        nextErrors.recipe = "Each ingredient can only be added once.";
       }
 
       keys.forEach((key) => {
@@ -345,7 +318,7 @@ export default function ProductFormModal({
           (row) =>
             row.qty[key] === "" ||
             !Number.isFinite(Number(row.qty[key])) ||
-            Number(row.qty[key]) <= 0
+            Number(row.qty[key]) <= 0,
         );
 
         if (bad) {
@@ -361,9 +334,7 @@ export default function ProductFormModal({
 
     if (Object.keys(nextErrors).length) {
       const badSize = SIZES.find(
-        (size) =>
-          nextErrors[`price-${size}`] ||
-          nextErrors[`recipe-${size}`]
+        (size) => nextErrors[`price-${size}`] || nextErrors[`recipe-${size}`],
       );
 
       if (isDrink && badSize) {
@@ -376,12 +347,12 @@ export default function ProductFormModal({
     const recipeFor = (key) =>
       filled.map((row) => ({
         ingredientId: row.ingredientId,
+        ingredientName:
+          findIngredient(ingredients, row.ingredientId)?.name || "",
         qty: Number(row.qty[key]),
       }));
 
-    const primarySize = SIZES.find(
-      (size) => form.sizes.includes(size)
-    );
+    const primarySize = SIZES.find((size) => form.sizes.includes(size));
 
     const legacyPrice = isDrink
       ? Number(form.sizePrices[primarySize])
@@ -401,19 +372,11 @@ export default function ProductFormModal({
       recipe: legacyRecipe,
       sizePrices: isDrink
         ? Object.fromEntries(
-            form.sizes.map((size) => [
-              size,
-              Number(form.sizePrices[size]),
-            ])
+            form.sizes.map((size) => [size, Number(form.sizePrices[size])]),
           )
         : {},
       recipesBySize: isDrink
-        ? Object.fromEntries(
-            form.sizes.map((size) => [
-              size,
-              recipeFor(size),
-            ])
-          )
+        ? Object.fromEntries(form.sizes.map((size) => [size, recipeFor(size)]))
         : {},
     };
 
@@ -424,9 +387,7 @@ export default function ProductFormModal({
     } catch (error) {
       setErrors((previous) => ({
         ...previous,
-        form:
-          error.message ||
-          "Could not save the product. Please try again.",
+        form: error.message || "Could not save the product. Please try again.",
       }));
 
       setSaving(false);
@@ -434,9 +395,7 @@ export default function ProductFormModal({
   };
 
   const renderRecipeEditor = () => {
-    const pickedIds = form.rows.map(
-      (row) => String(row.ingredientId)
-    );
+    const pickedIds = form.rows.map((row) => String(row.ingredientId));
 
     const disabled = isDrink && !sizeOffered;
 
@@ -449,9 +408,7 @@ export default function ProductFormModal({
               aria-label="Ingredient"
               value={row.ingredientId}
               disabled={disabled}
-              onChange={(event) =>
-                setIngredient(index, event.target.value)
-              }
+              onChange={(event) => setIngredient(index, event.target.value)}
             >
               <option value="">Select ingredient</option>
 
@@ -461,8 +418,7 @@ export default function ProductFormModal({
                   value={String(ingredient.id)}
                   disabled={
                     pickedIds.includes(String(ingredient.id)) &&
-                    String(ingredient.id) !==
-                      String(row.ingredientId)
+                    String(ingredient.id) !== String(row.ingredientId)
                   }
                 >
                   {ingredient.name}
@@ -490,10 +446,7 @@ export default function ProductFormModal({
               />
 
               <span className="unit">
-                {findIngredient(
-                  ingredients,
-                  row.ingredientId
-                )?.unit || "unit"}
+                {findIngredient(ingredients, row.ingredientId)?.unit || "unit"}
               </span>
             </div>
 
@@ -502,25 +455,17 @@ export default function ProductFormModal({
               className="pd-trash"
               onClick={() => removeRow(index)}
               aria-label="Remove ingredient"
-              title={
-                isDrink
-                  ? "Remove from all sizes"
-                  : "Remove ingredient"
-              }
+              title={isDrink ? "Remove from all sizes" : "Remove ingredient"}
             >
               <Icon name="trash" size={18} />
             </button>
           </div>
         ))}
 
-        {errors.recipe && (
-          <p className="error">{errors.recipe}</p>
-        )}
+        {errors.recipe && <p className="error">{errors.recipe}</p>}
 
         {errors[`recipe-${activeKey}`] && (
-          <p className="error">
-            {errors[`recipe-${activeKey}`]}
-          </p>
+          <p className="error">{errors[`recipe-${activeKey}`]}</p>
         )}
 
         <button
@@ -536,9 +481,7 @@ export default function ProductFormModal({
     );
   };
 
-  const priceError = isDrink
-    ? errors[`price-${activeSize}`]
-    : errors.price;
+  const priceError = isDrink ? errors[`price-${activeSize}`] : errors.price;
 
   return (
     <Modal onClose={onClose} wide labelledBy="product-form-title">
@@ -548,10 +491,7 @@ export default function ProductFormModal({
             <h3 id="product-form-title">
               {isEdit ? "Edit product" : "Add product"}
             </h3>
-            <p>
-              Recipe ingredients are chosen from existing
-              inventory items.
-            </p>
+            <p>Recipe ingredients are chosen from existing inventory items.</p>
           </div>
 
           <button
@@ -574,13 +514,9 @@ export default function ProductFormModal({
                   className={`input${errors.name ? " invalid" : ""}`}
                   placeholder="e.g. Spanish Latte"
                   value={form.name}
-                  onChange={(event) =>
-                    set("name", event.target.value)
-                  }
+                  onChange={(event) => set("name", event.target.value)}
                 />
-                {errors.name && (
-                  <p className="error">{errors.name}</p>
-                )}
+                {errors.name && <p className="error">{errors.name}</p>}
               </div>
 
               <div className="field">
@@ -589,9 +525,7 @@ export default function ProductFormModal({
                   id="pd-category"
                   className="select"
                   value={form.category}
-                  onChange={(event) =>
-                    changeCategory(event.target.value)
-                  }
+                  onChange={(event) => changeCategory(event.target.value)}
                 >
                   {CATEGORIES.map((category) => (
                     <option key={category} value={category}>
@@ -611,24 +545,15 @@ export default function ProductFormModal({
                     step="0.01"
                     className={`input${priceError ? " invalid" : ""}`}
                     placeholder="0.00"
-                    value={
-                      isDrink
-                        ? form.sizePrices[activeSize]
-                        : form.price
-                    }
+                    value={isDrink ? form.sizePrices[activeSize] : form.price}
                     disabled={isDrink && !sizeOffered}
                     onChange={(event) =>
                       isDrink
-                        ? setSizePrice(
-                            activeSize,
-                            event.target.value
-                          )
+                        ? setSizePrice(activeSize, event.target.value)
                         : set("price", event.target.value)
                     }
                   />
-                  {priceError && (
-                    <p className="error">{priceError}</p>
-                  )}
+                  {priceError && <p className="error">{priceError}</p>}
                 </div>
 
                 <div className="field">
@@ -647,10 +572,7 @@ export default function ProductFormModal({
               </div>
             </div>
 
-            <label
-              className="pd-image"
-              title="Upload product image"
-            >
+            <label className="pd-image" title="Upload product image">
               <input
                 type="file"
                 accept="image/*"
@@ -679,8 +601,7 @@ export default function ProductFormModal({
               >
                 {SIZES.map((size) => {
                   const hasError =
-                    errors[`price-${size}`] ||
-                    errors[`recipe-${size}`];
+                    errors[`price-${size}`] || errors[`recipe-${size}`];
 
                   return (
                     <button
@@ -713,9 +634,7 @@ export default function ProductFormModal({
                 </label>
               </div>
 
-              {errors.sizes && (
-                <p className="error">{errors.sizes}</p>
-              )}
+              {errors.sizes && <p className="error">{errors.sizes}</p>}
             </div>
           )}
 
@@ -728,9 +647,7 @@ export default function ProductFormModal({
             {renderRecipeEditor()}
           </div>
 
-          {errors.form && (
-            <p className="error">{errors.form}</p>
-          )}
+          {errors.form && <p className="error">{errors.form}</p>}
         </div>
 
         <div className="modal-foot">
@@ -743,16 +660,8 @@ export default function ProductFormModal({
             Cancel
           </button>
 
-          <button
-            type="submit"
-            className="btn primary"
-            disabled={saving}
-          >
-            {saving
-              ? "Saving..."
-              : isEdit
-                ? "Update product"
-                : "Add product"}
+          <button type="submit" className="btn primary" disabled={saving}>
+            {saving ? "Saving..." : isEdit ? "Update product" : "Add product"}
           </button>
         </div>
       </form>

@@ -12,7 +12,7 @@ import { getApp, getApps } from "firebase/app";
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
 const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_API,
+    apiKey: "AIzaSyAZHtOLZ3nqEKVIWdBeeT5AlNoOMGco1pE",
     authDomain: "brew-desk-b9f27.firebaseapp.com",
     databaseURL: "https://brew-desk-b9f27-default-rtdb.asia-southeast1.firebasedatabase.app",
     projectId: "brew-desk-b9f27",
