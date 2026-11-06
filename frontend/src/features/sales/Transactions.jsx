@@ -86,8 +86,10 @@ export default function Transactions() {
 
             <div className="bd-sales-stats">
                 <Stat label="TOTAL REVENUE" value={peso(revenue)} />
-                <Stat label="TOTAL TRANSACTIONS" value={filtered.length.toLocaleString("en-PH")} />
-                <Stat label="AVERAGE TICKET" value={peso(average)} />
+                <Stat
+                    label="TOTAL TRANSACTIONS"
+                    value={completed.length.toLocaleString("en-PH")}
+                />                <Stat label="AVERAGE TICKET" value={peso(average)} />
             </div>
 
             <div className="bd-sales-filters">
@@ -96,8 +98,10 @@ export default function Transactions() {
                 <label>Payment method <select value={payment} onChange={e => resetPage(setPayment)(e.target.value)}><option>All</option><option>Cash</option><option>GCash</option></select></label>
                 <label className="bd-sales-search"><Search size={15} /><input type="search" placeholder="Search sale, item or cashier" value={search} onChange={e => resetPage(setSearch)(e.target.value)} /></label>
                 <button type="button" className="bd-sales-clear" onClick={() => { setFrom(""); setTo(""); setPayment("All"); setSearch(""); setPage(1); }}><RotateCcw size={13} /> Clear filters</button>
-                <p className="bd-sales-filter-count"><strong>{filtered.length}</strong> transactions · <b>{peso(revenue)}</b> completed</p>
-            </div>
+                <p className="bd-sales-filter-count">
+                    <strong>{filtered.length}</strong> transactions ·
+                    <b>{peso(revenue)}</b> completed
+                </p>            </div>
 
             <div className="bd-sales-table-card">
                 {loading ? <div className="bd-sales-notice">Loading transactions…</div> : error ? (
