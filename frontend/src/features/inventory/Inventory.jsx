@@ -1361,9 +1361,9 @@ const RestockIngredientAction = () => {
                     className="h-[50px] w-full rounded-[12px] border-2 border-[#E2E8F0] bg-[#F8FAFC] px-[14px] py-[12px] outline-none"
                   >
                     <option value="">Select an ingredient first</option>
-                    <option value="ml">ml (Mililiters)</option>
                     <option value="g">g (Grams)</option>
-                    <option value="g">pcs (Pieces)</option>
+                    <option value="mL">mL (Milliliters)</option>
+                    <option value="pcs">pcs (Pieces)</option>
                   </select>
                 </div>
 
