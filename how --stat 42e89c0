@@ -1,0 +1,10 @@
+[33mdb5f5e5[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mrefactor/inventory-css[m[33m, [m[1;31morigin/refactor/inventory-css[m[33m)[m HEAD@{0}: checkout: moving from 42e89c03b0a0895f5073225f6da3dffe11ff5ada to refactor/inventory-css
+[33m42e89c0[m HEAD@{1}: commit: backend remove pos recents, protected routing, sidebar active status
+[33m1282164[m[33m ([m[1;31morigin/refactor/project-structure[m[33m)[m HEAD@{2}: checkout: moving from refactor/inventory-css to origin/refactor/project-structure
+[33mdb5f5e5[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mrefactor/inventory-css[m[33m, [m[1;31morigin/refactor/inventory-css[m[33m)[m HEAD@{3}: checkout: moving from db5f5e5c7da45c4b3dfe4e16dd89e82805b496d3 to refactor/inventory-css
+[33mdb5f5e5[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mrefactor/inventory-css[m[33m, [m[1;31morigin/refactor/inventory-css[m[33m)[m HEAD@{4}: commit: ui fix and settings validation
+[33mdbdfaa2[m HEAD@{5}: checkout: moving from feature/products-cloudinary to origin/refactor/inventory-css
+[33mcd284ef[m[33m ([m[1;32mfeature/products-cloudinary[m[33m)[m HEAD@{6}: pull origin refactor/project-structure: Fast-forward
+[33m33a28aa[m[33m ([m[1;31morigin/feature/products-cloudinary[m[33m)[m HEAD@{7}: checkout: moving from refactor/project-structure to feature/products-cloudinary
+[33m8a98e48[m[33m ([m[1;32mrefactor/project-structure[m[33m)[m HEAD@{8}: checkout: moving from feature/products-cloudinary to refactor/project-structure
+[33m33a28aa[m[33m ([m[1;31morigin/feature/products-cloudinary[m[33m)[m HEAD@{9}: commit: added fetching of ingredient list
