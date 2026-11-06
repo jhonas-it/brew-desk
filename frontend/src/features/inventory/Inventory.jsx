@@ -932,12 +932,12 @@ const AddIngredientAction = () => {
             </div>
             <div className="flex items-center justify-end gap-[12px] mt-8">
               <CloseModal />
-              <button
+              <DialogClose
                 type="submit"
                 className="border border-[#D6D3D1] px-[16px] h-[40px] rounded-[12px] text-[12px] text-[white] font-bold font-[#44403C] cursor-pointer bg-[#EA580C] hover:bg-[#B24B16]"
               >
                 Add Ingredient
-              </button>
+              </DialogClose>
             </div>
           </form>
         </DialogContent>
@@ -1189,12 +1189,12 @@ const LogWasteAction = () => {
             </div>
             <div className="flex items-center justify-end gap-[12px] mt-8">
               <CloseModal />
-              <button
+              <DialogClose
                 type="submit"
                 className="border border-[#D6D3D1] px-[16px] h-[40px] rounded-[12px] text-[12px] text-[white] font-bold font-[#44403C] cursor-pointer bg-[#EA580C] hover:bg-[#B24B16]"
               >
                 Log Waste
-              </button>
+              </DialogClose>
             </div>
           </form>
         </DialogContent>
@@ -1424,7 +1424,7 @@ const RestockIngredientAction = () => {
             <div className="mt-8 flex items-center justify-end gap-[12px]">
               <CloseModal />
 
-              <button
+              <DialogClose
                 type="submit"
                 className="
                   h-[40px]
@@ -1440,7 +1440,7 @@ const RestockIngredientAction = () => {
                 "
               >
                 Restock Ingredient
-              </button>
+              </DialogClose>
             </div>
           </form>
         </DialogContent>
@@ -1520,7 +1520,7 @@ const EditIngredientsAndBatches = ({ ingredient }) => {
             <div className="mt-8 flex items-center justify-end gap-[12px]">
               <CloseModal />
 
-              <button
+              <DialogClose
                 className="
                 h-[40px]
                 rounded-[12px]
@@ -1535,7 +1535,7 @@ const EditIngredientsAndBatches = ({ ingredient }) => {
               "
               >
                 Update
-              </button>
+              </DialogClose>
             </div>
           </form>
         </DialogContent>
@@ -1666,12 +1666,12 @@ const EditWasteReport = ({ wasteLog }) => {
                   </button>
                 }
               />
-              <button
+              <DialogClose
                 type="submit"
                 className="border border-[#D6D3D1] px-[16px] h-[40px] rounded-[12px] text-[12px] text-[white] font-bold font-[#44403C] cursor-pointer bg-[#EA580C] hover:bg-[#B24B16]"
               >
                 Update Report
-              </button>
+              </DialogClose>
             </div>
           </form>
         </DialogContent>
