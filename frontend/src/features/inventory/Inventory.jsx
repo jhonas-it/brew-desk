@@ -936,6 +936,7 @@ const addLogWaste = async (
 
 const LogWasteAction = () => {
   const [existingIngredients, setExistingIngredients] = useState([]);
+  const [availableBatches, setAvailableBatches] = useState([]);
   useEffect(() => {
     getIngredients((data) => {
       setExistingIngredients(data);
@@ -951,7 +952,21 @@ const LogWasteAction = () => {
     note: "",
     isUnknown: false,
   });
+  const selectedIngredient = existingIngredients.find(
+    (ingredient) => ingredient.ingredientName === logWaste.ingredient,
+  );
+  useEffect(() => {
+    if (!selectedIngredient?.id) {
+      setAvailableBatches([]);
+      return;
+    }
 
+    const unsubscribe = getBatches(selectedIngredient.id, (data) => {
+      setAvailableBatches(data);
+    });
+
+    return () => unsubscribe();
+  }, [selectedIngredient?.id]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const time = new Date().toISOString();
@@ -993,6 +1008,7 @@ const LogWasteAction = () => {
                     setLogWaste({
                       ...logWaste,
                       ingredient: e.target.value,
+                      batch: "",
                     });
                   }}
                   name="ingredient"
@@ -1016,16 +1032,33 @@ const LogWasteAction = () => {
                   BATCH
                 </span>
                 <select
+                  value={logWaste.batch}
                   onChange={(e) => {
-                    console.log(e.target.value);
-                    setLogWaste({ ...logWaste, batch: e.target.value });
+                    setLogWaste({
+                      ...logWaste,
+                      batch: e.target.value,
+                    });
                   }}
                   name="batch"
                   id="batch"
+                  disabled={
+                    !selectedIngredient || availableBatches.length === 0
+                  }
                   className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
                 >
-                  <option value="">Select a batch...</option>
-                  <option value="#WM-001">#WM-001</option>
+                  <option value="">
+                    {!selectedIngredient
+                      ? "Select an ingredient first..."
+                      : availableBatches.length === 0
+                        ? "No batches available"
+                        : "Select a batch..."}
+                  </option>
+
+                  {availableBatches.map((batch) => (
+                    <option key={batch.id} value={batch.batchId}>
+                      {batch.batchId} - {batch.quantity} {batch.unit}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="flex w-full gap-2">
