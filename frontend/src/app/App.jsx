@@ -12,6 +12,7 @@ import Inventory from "../features/inventory/Inventory";
 import Staffs from "../features/staff/Staffs";
 import ProtectedRoute from "./ProtectedRoute";
 import POSPage from "../features/pos/POSPage";
+import Settings from "../features/settings/Settings";
 import { Toaster } from "../components/ui/sonner";
 import Products from "../features/products/Products";
 
@@ -75,7 +76,7 @@ export default function App() {
 
             <Route
               path="settings"
-              element={<ComingSoon title="Settings" />}
+              element={<Settings />}
             />
 
             <Route
