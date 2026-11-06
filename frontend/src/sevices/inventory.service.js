@@ -7,7 +7,7 @@ import {
     runTransaction
 } from "firebase/database";
 
-import { db } from "../lib/firebase";
+import { rtdb as db } from "../lib/firebase";
 
 const wasteRef = ref(db, "Waste");
 const ingredientRef = ref(db, "POS/Products/Inventory");

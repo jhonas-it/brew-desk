@@ -38,6 +38,7 @@ import {
   DialogDescription,
   DialogClose,
 } from "@/components/ui/dialog";
+import PageHeader from "../../components/PageHeader";
 
 const getBatchAlerts = (ingredient) => {
   let expired = 0;
@@ -63,6 +64,7 @@ const getBatchAlerts = (ingredient) => {
 
   return { expired, expiringSoon };
 };
+
 
 const Inventory = () => {
   const isBatchExpired = (expirationDate) => {
@@ -194,6 +196,11 @@ const Inventory = () => {
     activeTab === "waste" ? wasteHeaderData : firstHeaderData;
   return (
     <>
+      <PageHeader
+        title="Inventory"
+        subtitle="Keep track of your inventory and waste."
+      />
+
       <div className="header-inventory">
         {useHeaderData.map((item) => (
           <HeaderContainer

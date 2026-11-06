@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Brew Desk - Firebase Test</title>
+</head>
+<body>
+  <h2>Brew Desk - Firestore Connection Test</h2>
+  <p id="result">Connecting to Firestore...</p>
+
+  <script type="module">
+    import { db } from "/src/lib/firebase.js";
+    import {
+      collection,
+      getDocs,
+      limit,
+      query
+    } from "firebase/firestore";
+
+    const result = document.getElementById("result");
+
+    try {
+      const transactionsRef = collection(db, "transactions");
+      const snapshot = await getDocs(
+        query(transactionsRef, limit(1))
+      );
+
+      result.textContent =
+        "SUCCESS! Connected to Cloud Firestore. " +
+        "Documents returned: " + snapshot.size;
+
+      result.style.color = "green";
+
+      console.log("Firestore connection successful!");
+    } catch (error) {
+      result.textContent =
+        "Firestore error: " + error.message;
+
+      result.style.color = "red";
+
+      console.error("Firestore error:", error);
+    }
+  </script>
+</body>
+</html>
