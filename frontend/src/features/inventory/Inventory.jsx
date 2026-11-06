@@ -197,75 +197,80 @@ const Inventory = () => {
     activeTab === "waste" ? wasteHeaderData : firstHeaderData;
   return (
     <>
-      <PageHeader
-        title="Inventory"
-        subtitle="Keep track of your inventory and waste."
-      />
+      <div className="bd-pos-page">
+        <PageHeader
+          title="Inventory"
+          subtitle="Keep track of your inventory and waste."
+        />
 
-      <div className="header-inventory">
-        {useHeaderData.map((item) => (
-          <HeaderContainer
-            title={item.title}
-            subtitle={item.subtitle}
-            value={item.value}
-            bgColor={item.bgColor}
-            icon={item.icon}
-            iconColor={item.iconColor}
-            isWaste={activeTab === "waste"}
-          />
-        ))}
-      </div>
-      <div className="toolbar">
-        <div className="inventory-tabs">
-          <button
-            className={activeTab === "ingredients" ? "active" : ""}
-            onClick={() => setActive("ingredients")}
-          >
-            Ingredients & batches
-          </button>
-          <button
-            className={activeTab === "waste" ? "active" : ""}
-            onClick={() => setActive("waste")}
-          >
-            Waste report
-          </button>
-          <button
-            className={activeTab === "stock" ? "active" : ""}
-            onClick={() => setActive("stock")}
-          >
-            Stock reconciliation
-          </button>
-        </div>
-        <div className="actions">
-          <AddIngredientAction />
-          <LogWasteAction />
-          <RestockIngredientAction />
-        </div>
-      </div>
-      {activeTab !== "stock" ? (
-        <div className="table-wrapper">
-          <div className="search-container">
-            <Search size="20px" color="#475569" />
-            <input
-              type="search"
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              aria-label="Search inventory"
+        <div className="header-inventory">
+          {useHeaderData.map((item) => (
+            <HeaderContainer
+              title={item.title}
+              subtitle={item.subtitle}
+              value={item.value}
+              bgColor={item.bgColor}
+              icon={item.icon}
+              iconColor={item.iconColor}
+              isWaste={activeTab === "waste"}
             />
+          ))}
+        </div>
+        <div className="toolbar">
+          <div className="inventory-tabs">
+            <button
+              className={activeTab === "ingredients" ? "active" : ""}
+              onClick={() => setActive("ingredients")}
+            >
+              Ingredients & batches
+            </button>
+            <button
+              className={activeTab === "waste" ? "active" : ""}
+              onClick={() => setActive("waste")}
+            >
+              Waste report
+            </button>
+            <button
+              className={activeTab === "stock" ? "active" : ""}
+              onClick={() => setActive("stock")}
+            >
+              Stock reconciliation
+            </button>
           </div>
-          <div className="table-header">
-            <HeaderTable isWaste={activeTab === "waste"} />
-          </div>
-          <div className="table-records">
-            <TableRecords isWaste={activeTab === "waste"} query={searchQuery} />
+          <div className="actions">
+            <AddIngredientAction />
+            <LogWasteAction />
+            <RestockIngredientAction />
           </div>
         </div>
-      ) : (
-        <>
-          <StockReconciliation />
-        </>
-      )}
+        {activeTab !== "stock" ? (
+          <div className="table-wrapper">
+            <div className="search-container">
+              <Search size="20px" color="#475569" />
+              <input
+                type="search"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                aria-label="Search inventory"
+              />
+            </div>
+            <div className="table-header">
+              <HeaderTable isWaste={activeTab === "waste"} />
+            </div>
+            <div className="table-records">
+              <TableRecords
+                isWaste={activeTab === "waste"}
+                query={searchQuery}
+              />
+            </div>
+          </div>
+        ) : (
+          <>
+            <StockReconciliation />
+          </>
+        )}
+      </div>
     </>
   );
 };
