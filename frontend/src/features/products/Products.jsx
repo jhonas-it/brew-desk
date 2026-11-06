@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
-import { Clock3 } from "lucide-react";
+import { Clock3, ImageUp } from "lucide-react";
 import Modal from "../../components/Modal";
 import Icon from "../../components/Icon";
 import {
@@ -13,6 +13,7 @@ import "./Products.css";
 const CATEGORIES = ["Coffee", "Non-Coffee", "Meal", "Pastry", "Dessert"];
 const DRINKS = ["Coffee", "Non-Coffee"];
 const SIZES = ["Small", "Medium", "Large"];
+
 
 const TABS = [
   ["All", "All"],
@@ -604,6 +605,23 @@ function buildInitialRows(product) {
   return rows.length ? rows : [blankRow()];
 }
 
+function UploadImageIcon() {
+  return (
+    <svg width="144" height="130" viewBox="0 0 144 130" fill="none">
+      <path
+        d="M52 22H126a14 14 0 0 1 14 14V112a14 14 0 0 1-14 14H18A14 14 0 0 1 4 112V66"
+        stroke="#1f1f1f"
+        strokeWidth="8"
+        strokeLinecap="round"
+      />
+      <path d="M24 4L44 30H33V66H15V30H4Z" fill="#1f1f1f" />
+      <circle cx="112" cy="52" r="17" fill="#1f1f1f" />
+      <path d="M12 116L52 74L74 98L92 80L132 116Z" fill="#1f1f1f" />
+    </svg>
+  );
+}
+
+
 function ProductForm({ product, ingredients, onSave, onClose }) {
   const isEdit = Boolean(product);
 
@@ -703,9 +721,7 @@ function ProductForm({ product, ingredients, onSave, onClose }) {
     setForm((previous) => ({
       ...previous,
       rows: previous.rows.map((row, i) =>
-        i === index
-          ? { ...row, qty: { ...row.qty, [key]: value } }
-          : row,
+        i === index ? { ...row, qty: { ...row.qty, [key]: value } } : row,
       ),
     }));
 
@@ -794,8 +810,7 @@ function ProductForm({ product, ingredients, onSave, onClose }) {
     /* Ingredients (shared list, quantity per size) */
 
     const filled = form.rows.filter(
-      (row) =>
-        row.ingredientId || keys.some((key) => row.qty[key] !== ""),
+      (row) => row.ingredientId || keys.some((key) => row.qty[key] !== ""),
     );
 
     if (!filled.length) {
@@ -831,10 +846,9 @@ function ProductForm({ product, ingredients, onSave, onClose }) {
     setErrors(nextErrors);
 
     if (Object.keys(nextErrors).length) {
-      // Jump to the first size tab that has a problem.
+      // Jump to the first size that has a problem.
       const badSize = SIZES.find(
-        (size) =>
-          nextErrors[`price-${size}`] || nextErrors[`recipe-${size}`],
+        (size) => nextErrors[`price-${size}`] || nextErrors[`recipe-${size}`],
       );
 
       if (isDrink && badSize) setActiveSize(badSize);
@@ -869,10 +883,7 @@ function ProductForm({ product, ingredients, onSave, onClose }) {
       recipe: legacyRecipe,
       sizePrices: isDrink
         ? Object.fromEntries(
-            form.sizes.map((size) => [
-              size,
-              Number(form.sizePrices[size]),
-            ]),
+            form.sizes.map((size) => [size, Number(form.sizePrices[size])]),
           )
         : {},
       recipesBySize: isDrink
@@ -895,7 +906,7 @@ function ProductForm({ product, ingredients, onSave, onClose }) {
     }
   };
 
-  /* One ingredient list; quantity input follows the open tab */
+  /* One ingredient list; quantity input follows the selected size */
 
   const renderRecipeEditor = () => {
     const pickedIds = form.rows.map((row) => String(row.ingredientId));
@@ -948,8 +959,7 @@ function ProductForm({ product, ingredients, onSave, onClose }) {
               />
 
               <span className="unit">
-                {findIngredient(ingredients, row.ingredientId)?.unit ||
-                  "unit"}
+                {findIngredient(ingredients, row.ingredientId)?.unit || "unit"}
               </span>
             </div>
 
@@ -957,10 +967,8 @@ function ProductForm({ product, ingredients, onSave, onClose }) {
               type="button"
               className="pd-trash"
               onClick={() => removeRow(index)}
-              aria-label="Remove ingredient from all sizes"
-              title={
-                isDrink ? "Remove from all sizes" : "Remove ingredient"
-              }
+              aria-label="Remove ingredient"
+              title={isDrink ? "Remove from all sizes" : "Remove ingredient"}
             >
               <Icon name="trash" size={18} />
             </button>
@@ -980,11 +988,13 @@ function ProductForm({ product, ingredients, onSave, onClose }) {
           disabled={disabled}
         >
           <Icon name="plus" size={16} />
-          {isDrink ? "Add ingredient (all sizes)" : "Add ingredient"}
+          Add ingredient
         </button>
       </div>
     );
   };
+
+  const priceError = isDrink ? errors[`price-${activeSize}`] : errors.price;
 
   return (
     <Modal onClose={onClose} wide labelledBy="product-form-title">
@@ -994,7 +1004,7 @@ function ProductForm({ product, ingredients, onSave, onClose }) {
             <h3 id="product-form-title">
               {isEdit ? "Edit product" : "Add product"}
             </h3>
-            <p>Configure product details, pricing, and ingredients.</p>
+            <p>Recipe ingredients are chosen from existing inventory items.</p>
           </div>
 
           <button
@@ -1038,7 +1048,29 @@ function ProductForm({ product, ingredients, onSave, onClose }) {
                 </select>
               </div>
 
-              {isDrink ? (
+              <div className="row">
+                <div className="field">
+                  <label htmlFor="pd-price">Price (₱)</label>
+                  <input
+                    id="pd-price"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    className={`input${priceError ? " invalid" : ""}`}
+                    placeholder="0.00"
+                    value={
+                      isDrink ? form.sizePrices[activeSize] : form.price
+                    }
+                    disabled={isDrink && !sizeOffered}
+                    onChange={(event) =>
+                      isDrink
+                        ? setSizePrice(activeSize, event.target.value)
+                        : set("price", event.target.value)
+                    }
+                  />
+                  {priceError && <p className="error">{priceError}</p>}
+                </div>
+
                 <div className="field">
                   <span className="label">Availability</span>
                   <label className="pd-check">
@@ -1052,40 +1084,7 @@ function ProductForm({ product, ingredients, onSave, onClose }) {
                     Show on POS
                   </label>
                 </div>
-              ) : (
-                <div className="row">
-                  <div className="field">
-                    <label htmlFor="pd-price">Price (₱)</label>
-                    <input
-                      id="pd-price"
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      className={`input${errors.price ? " invalid" : ""}`}
-                      placeholder="0.00"
-                      value={form.price}
-                      onChange={(event) => set("price", event.target.value)}
-                    />
-                    {errors.price && (
-                      <p className="error">{errors.price}</p>
-                    )}
-                  </div>
-
-                  <div className="field">
-                    <span className="label">Availability</span>
-                    <label className="pd-check">
-                      <input
-                        type="checkbox"
-                        checked={form.showOnPos}
-                        onChange={(event) =>
-                          set("showOnPos", event.target.checked)
-                        }
-                      />
-                      Show on POS
-                    </label>
-                  </div>
-                </div>
-              )}
+              </div>
             </div>
 
             <label className="pd-image" title="Upload product image">
@@ -1100,7 +1099,7 @@ function ProductForm({ product, ingredients, onSave, onClose }) {
                 <img src={form.image} alt="Product preview" />
               ) : (
                 <>
-                  <Icon name="imageUp" size={72} stroke={1.6} />
+                  <UploadImageIcon />
                   <span>Upload product image</span>
                   <small>Click to choose an image</small>
                 </>
@@ -1108,114 +1107,55 @@ function ProductForm({ product, ingredients, onSave, onClose }) {
             </label>
           </div>
 
-          {isDrink ? (
-            /* DRINKS: size tabs drive the price and the quantities */
-            <section className="pd-size-recipes">
-              <div className="pd-recipe-head">
-                <div className="pd-subheading">
-                  <h4>Pricing & Ingredients</h4>
-                  <p>
-                    Pick a size to set its price and quantities. The
-                    ingredient list is shared by every size.
-                  </p>
-                </div>
+          {/* DRINK SIZES: pills between price row and recipe */}
+          {isDrink && (
+            <div className="pd-sizes-wrap">
+              <div className="pd-sizes-row" role="tablist" aria-label="Drink sizes">
+                {SIZES.map((size) => {
+                  const hasError =
+                    errors[`price-${size}`] || errors[`recipe-${size}`];
 
-                <div
-                  className="pd-size-tabs"
-                  role="tablist"
-                  aria-label="Drink sizes"
-                >
-                  {SIZES.map((size) => {
-                    const hasError =
-                      errors[`price-${size}`] || errors[`recipe-${size}`];
+                  return (
+                    <button
+                      key={size}
+                      type="button"
+                      role="tab"
+                      aria-selected={activeSize === size}
+                      className={[
+                        "pd-pill",
+                        activeSize === size ? "active" : "",
+                        form.sizes.includes(size) ? "" : "off",
+                        hasError ? "has-error" : "",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                      onClick={() => setActiveSize(size)}
+                    >
+                      {size}
+                    </button>
+                  );
+                })}
 
-                    return (
-                      <button
-                        key={size}
-                        type="button"
-                        role="tab"
-                        aria-selected={activeSize === size}
-                        className={[
-                          "pd-size-tab",
-                          activeSize === size ? "active" : "",
-                          form.sizes.includes(size) ? "" : "off",
-                          hasError ? "has-error" : "",
-                        ]
-                          .filter(Boolean)
-                          .join(" ")}
-                        onClick={() => setActiveSize(size)}
-                      >
-                        {size}
-                      </button>
-                    );
-                  })}
-                </div>
+                <label className="pd-offer">
+                  <input
+                    type="checkbox"
+                    checked={sizeOffered}
+                    onChange={() => toggleSize(activeSize)}
+                  />
+                  Offer {activeSize}
+                </label>
               </div>
 
               {errors.sizes && <p className="error">{errors.sizes}</p>}
-
-              <div
-                className={`pd-size-panel${sizeOffered ? "" : " is-off"}`}
-              >
-                <div className="pd-size-panel-top">
-                  <div className="pd-price-card">
-                    <label htmlFor="pd-size-price">
-                      {activeSize} price (₱)
-                    </label>
-                    <input
-                      id="pd-size-price"
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      className={`input${
-                        errors[`price-${activeSize}`] ? " invalid" : ""
-                      }`}
-                      placeholder="0.00"
-                      value={form.sizePrices[activeSize]}
-                      disabled={!sizeOffered}
-                      onChange={(event) =>
-                        setSizePrice(activeSize, event.target.value)
-                      }
-                    />
-                    {errors[`price-${activeSize}`] && (
-                      <p className="error">
-                        {errors[`price-${activeSize}`]}
-                      </p>
-                    )}
-                  </div>
-
-                  <label
-                    className={`pd-size-option${
-                      sizeOffered ? " selected" : ""
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={sizeOffered}
-                      onChange={() => toggleSize(activeSize)}
-                    />
-                    <span>Offer {activeSize}</span>
-                  </label>
-                </div>
-
-                <div className="pd-ingredients-title">
-                  <strong>Ingredients</strong>
-                  <span>
-                    Showing {activeSize} quantities. Adding or removing an
-                    ingredient applies to all sizes.
-                  </span>
-                </div>
-
-                {renderRecipeEditor()}
-              </div>
-            </section>
-          ) : (
-            /* MEALS / PASTRIES / DESSERTS: one recipe */
-            <div className="field">
-              <span className="label">Recipe — per 1 unit</span>
-              {renderRecipeEditor()}
             </div>
           )}
+
+          <div className="field">
+            <span className="label">
+              Recipe - per 1 unit{isDrink ? ` (${activeSize})` : ""}
+            </span>
+            {renderRecipeEditor()}
+          </div>
 
           {errors.form && <p className="error">{errors.form}</p>}
         </div>
