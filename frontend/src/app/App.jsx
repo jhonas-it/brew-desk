@@ -43,7 +43,12 @@ export default function App() {
 
               <Route path="pos" element={<POSPage />} />
 
-              <Route path="sales" element={<Transactions />} />
+            <Route path="sales" element={<Transactions />} />
+
+            <Route
+              path="dashboard"
+              element={<ComingSoon title="Dashboard" />}
+            />
 
               <Route
                 path="dashboard"
