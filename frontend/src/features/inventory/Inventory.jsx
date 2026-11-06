@@ -519,6 +519,7 @@ const HeaderContainer = ({
 };
 
 const StockReconciliation = () => {
+  const { user } = useAuth();
   const [existingIngredients, setExistingIngredients] = useState([]);
   const [selectedIngredient, setSelectedIngredient] = useState("");
   const [physicalCount, setPhysicalCount] = useState("");
@@ -553,7 +554,7 @@ const StockReconciliation = () => {
         systemExpected,
         Number(physicalCount),
         discrepancy,
-        "Unknown",
+        user?.name || "Unknown",
         selectedIngredientData.unit,
       );
 
