@@ -1542,9 +1542,8 @@ const EditWasteReport = ({ wasteLog }) => {
               Edit Waste Report
             </DialogHeader>
             <DialogDescription className="text-[#78716C]">
-              {/* TODO: Create a new description for waste report */}
-              Log new incoming stock batches and adjust active batch details for
-              this specific ingredient below.
+              Track recorded ingredient waste, monitor losses, and review waste
+              reasons for better inventory management.
             </DialogDescription>
             <hr />
             <div className="flex flex-col gap-6">
