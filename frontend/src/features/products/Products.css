@@ -486,156 +486,470 @@
   color: #26354c;
 }
 
-/* ---------- Add / Edit modal ---------- */
+/* =====================================================
+   ADD / EDIT PRODUCT FORM — LANDSCAPE LAYOUT
+   Page styles above are untouched
+   ===================================================== */
+
+/* ---------- Widen the modal itself ----------
+   The form was cramped because the modal box is narrow.
+   If it is still narrow, add your Modal's box class here. */
+
+.modal:has(.pd-form),
+.modal-card:has(.pd-form),
+.modal-box:has(.pd-form),
+.modal-content:has(.pd-form),
+[role="dialog"]:has(.pd-form) {
+  width: min(1120px, calc(100vw - 48px));
+  max-width: none;
+}
+
+/* ---------- Form container ---------- */
+
+.pd-form {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+.pd-form .modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 28px;
+}
+
 .pd-form .modal-head h3 {
-  font-size: 26px;
+  margin: 0;
+  color: #202020;
+  font-size: 22px;
+  font-weight: 800;
 }
 
 .pd-form .modal-head p {
-  font-size: 15px;
-  margin-top: 6px;
+  margin: 5px 0 0;
+  color: #8491a5;
+  font-size: 12px;
+  line-height: 1.5;
 }
 
-.pd-body {
-  padding: 22px 28px 26px;
-  max-height: calc(100vh - 260px);
-  overflow-y: auto;
+.pd-form .icon-btn {
+  flex-shrink: 0;
+}
+
+/* ---------- Scrollable body ---------- */
+
+.pd-form .pd-body {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  width: 100%;
+  max-height: calc(100dvh - 180px);
+  padding: 20px 28px 24px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-.pd-top {
+/* ---------- Top area: fields (left) + image (right) ---------- */
+
+.pd-form .pd-top {
   display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 48px;
-  align-items: start;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  align-items: stretch;
+  gap: 24px;
+  width: 100%;
+  min-width: 0;
 }
 
-.pd-fields {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+/* Two-column field grid: name | category, everything else full width */
+.pd-form .pd-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+  gap: 16px 18px;
+  min-width: 0;
 }
 
-.pd-form .field label,
-.pd-form .field .label {
-  font-size: 13px;
-  margin-bottom: 8px;
+.pd-form .pd-fields > :nth-child(n + 3) {
+  grid-column: 1 / -1;
+}
+
+.pd-form .field {
+  min-width: 0;
+}
+
+.pd-form .field > label,
+.pd-form .field > .label {
+  display: block;
+  margin-bottom: 7px;
+  color: #303747;
+  font-size: 11px;
+  font-weight: 700;
 }
 
 .pd-form .input,
 .pd-form .select {
-  height: 44px;
-  padding: 0 16px;
-  font-size: 15px;
-  border-radius: 12px;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  padding: 0 12px;
+  box-sizing: border-box;
+  border: 1px solid #dfe5ed;
+  border-radius: 9px;
   background-color: #f8f9fc;
+  color: #26354c;
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.pd-form .input:focus,
+.pd-form .select:focus {
+  border-color: #f4511e;
+  box-shadow: 0 0 0 3px rgba(244, 81, 30, 0.1);
+}
+
+.pd-form .input.invalid {
+  border-color: #dc2626;
+}
+
+.pd-form .input::placeholder {
+  color: #9aa5b5;
 }
 
 .pd-form .select {
-  background-position: right 16px center;
+  padding-right: 30px;
 }
 
+/* Price + availability row (non-drink products) */
 .pd-form .row {
-  gap: 24px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 18px;
 }
 
-.pd-check {
+/* ---------- Product image: fills the right column ---------- */
+
+.pd-form .pd-image {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  min-height: 190px;
+  height: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+  overflow: hidden;
+  border: 1px dashed #d5dce6;
+  border-radius: 12px;
+  background: #f8f9fc;
+  color: #8491a5;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.pd-form .pd-image:hover {
+  border-color: #f4511e;
+  background: #fffaf7;
+}
+
+.pd-form .pd-image span {
+  color: #53637a;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.pd-form .pd-image small {
+  color: #8491a5;
+  font-size: 11px;
+}
+
+.pd-form .pd-image img {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: contain;
+}
+
+/* ---------- Availability checkbox ---------- */
+
+.pd-form .pd-check {
   display: flex;
   align-items: center;
-  gap: 10px;
-  height: 44px;
+  gap: 9px;
+  min-height: 40px;
   margin: 0;
-  font-size: 15px;
-  text-transform: none;
+  color: #53637a;
+  font-size: 12px;
+  font-weight: 500;
   letter-spacing: 0;
-  font-weight: 400;
+  text-transform: none;
+  cursor: pointer;
 }
 
-.pd-check input {
-  width: 18px;
-  height: 18px;
+.pd-form .pd-check input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
   accent-color: #f4511e;
 }
 
-.pd-image {
-  display: grid;
-  place-items: center;
-  width: 100%;
-  aspect-ratio: 1;
-  border: 1px solid #eee4dd;
-  border-radius: 12px;
-  background: #fff;
-  color: #9c795a;
-  cursor: pointer;
-  overflow: hidden;
-  box-sizing: border-box;
+/* ---------- Section headings ---------- */
+
+.pd-form .pd-subheading {
+  min-width: 0;
 }
 
-.pd-image:hover {
-  border-color: #f4511e;
-}
-
-.pd-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.pd-sizes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.pd-size {
-  padding: 9px 18px;
-  border: 1px solid #e1e7ee;
-  border-radius: 12px;
-  background: #fff;
-  font-size: 13px;
-  font-weight: 600;
-  color: #3b4258;
-  cursor: pointer;
-}
-
-.pd-size[aria-pressed="true"] {
-  background: #ffe9e2;
-  border-color: #f4511e;
-  color: #f4511e;
-}
-
-.pd-recipe-row {
-  display: grid;
-  grid-template-columns: 1fr 190px 32px;
-  gap: 14px;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.pd-qty {
-  position: relative;
-}
-
-.pd-qty .input {
-  padding-right: 44px;
-}
-
-.pd-qty .unit {
-  position: absolute;
-  right: 14px;
-  top: 50%;
-  transform: translateY(-50%);
+.pd-form .pd-subheading h4 {
+  margin: 0;
+  color: #202020;
   font-size: 14px;
+  font-weight: 800;
+}
+
+.pd-form .pd-subheading p {
+  margin: 4px 0 0;
   color: #8491a5;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* ---------- Pricing & ingredients (drinks) ---------- */
+
+.pd-form .pd-size-recipes {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+/* Heading on the left, size tabs on the right */
+.pd-form .pd-recipe-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+}
+
+.pd-form .pd-size-tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  background: #e5e5e9;
+  border-radius: 10px;
+}
+
+.pd-form .pd-size-tab {
+  position: relative;
+  min-width: 92px;
+  padding: 9px 18px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #303036;
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.pd-form .pd-size-tab:hover {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.pd-form .pd-size-tab.active {
+  background: #f4511e;
+  color: #fff;
+  font-weight: 700;
+}
+
+/* Size not offered */
+.pd-form .pd-size-tab.off:not(.active) {
+  color: #9aa5b5;
+  text-decoration: line-through;
+}
+
+/* Tab has a validation problem */
+.pd-form .pd-size-tab.has-error::after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #dc2626;
+  box-shadow: 0 0 0 2px #e5e5e9;
+}
+
+.pd-form .pd-size-tab.active.has-error::after {
+  box-shadow: 0 0 0 2px #f4511e;
+}
+
+/* Panel that changes with the open tab */
+.pd-form .pd-size-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: 16px;
+  box-sizing: border-box;
+  border: 1px solid #e8e9ed;
+  border-radius: 11px;
+  background: #fff;
+}
+
+.pd-form .pd-size-panel.is-off .pd-price-card,
+.pd-form .pd-size-panel.is-off .pd-recipe-editor {
+  opacity: 0.55;
+}
+
+.pd-form .pd-size-panel-top {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.pd-form .pd-price-card {
+  width: 240px;
+  max-width: 100%;
+  min-width: 0;
+  padding: 12px 14px;
+  box-sizing: border-box;
+  border: 1px solid #f0e5df;
+  border-radius: 11px;
+  background: #fffaf7;
+}
+
+.pd-form .pd-price-card label {
+  display: block;
+  margin-bottom: 8px;
+  color: #53637a;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.pd-form .pd-price-card .input {
+  background: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.pd-form .pd-size-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 14px;
+  margin: 0 0 12px;
+  box-sizing: border-box;
+  border: 1px solid #e1e7ee;
+  border-radius: 9px;
+  background: #fff;
+  color: #53637a;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  cursor: pointer;
+}
+
+.pd-form .pd-size-option input {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: #f4511e;
+}
+
+.pd-form .pd-size-option.selected {
+  border-color: #f4511e;
+  background: #fff0e9;
+  color: #e54816;
+}
+
+.pd-form .pd-ingredients-title {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  padding-top: 14px;
+  border-top: 1px solid #edf0f3;
+}
+
+.pd-form .pd-ingredients-title strong {
+  color: #f4511e;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.pd-form .pd-ingredients-title span {
+  color: #8491a5;
+  font-size: 11px;
+}
+
+/* ---------- Ingredient rows: [ingredient] [quantity] [trash] ---------- */
+
+.pd-form .pd-recipe-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.pd-form .pd-recipe-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 190px 34px;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.pd-form .pd-recipe-row > .select {
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+}
+
+.pd-form .pd-qty {
+  position: relative;
+  min-width: 0;
+}
+
+.pd-form .pd-qty .input {
+  height: 40px;
+  padding: 0 40px 0 12px;
+}
+
+.pd-form .pd-qty .unit {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  color: #8491a5;
+  font-size: 11px;
   pointer-events: none;
 }
 
-.pd-trash {
+.pd-form .pd-trash {
   display: grid;
   place-items: center;
-  padding: 6px;
+  width: 34px;
+  height: 38px;
+  padding: 0;
   border: 0;
   border-radius: 8px;
   background: transparent;
@@ -643,36 +957,70 @@
   cursor: pointer;
 }
 
-.pd-trash:hover {
+.pd-form .pd-trash:hover {
   background: #ffe9e2;
 }
 
-.pd-add-row {
+.pd-form .pd-add-row {
   display: inline-flex;
   align-items: center;
+  align-self: flex-start;
   gap: 6px;
   padding: 6px 0;
   border: 0;
   background: transparent;
-  font-size: 14px;
-  font-weight: 600;
   color: #f4511e;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
   cursor: pointer;
 }
 
+.pd-form .pd-add-row:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pd-form select:disabled,
+.pd-form .input:disabled {
+  cursor: not-allowed;
+}
+
+/* ---------- Messages ---------- */
+
+.pd-form .error {
+  margin: 5px 0 0;
+  color: #dc2626;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.pd-form .pd-muted {
+  margin: 0;
+  color: #8491a5;
+  font-size: 12px;
+}
+
+/* ---------- Footer ---------- */
+
 .pd-form .modal-foot {
-  padding: 16px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
   gap: 12px;
+  padding: 14px 28px;
 }
 
 .pd-form .btn,
 .pd-form .btn.primary,
 .pd-form .btn.ghost {
-  height: 44px;
-  min-width: 0;
-  padding: 0 26px;
-  font-size: 15px;
-  border-radius: 12px;
+  min-width: 110px;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .pd-form .btn:disabled {
@@ -680,63 +1028,69 @@
   cursor: not-allowed;
 }
 
-/* ---------- Responsive (mirrors POS breakpoints) ---------- */
-@media (max-width: 1050px) {
-  .pd-stats {
-    grid-template-columns: 1fr;
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1000px) {
+  .pd-form .pd-top {
+    grid-template-columns: minmax(0, 1fr) 200px;
+    gap: 18px;
   }
 }
 
-@media (max-width: 750px) {
-  .bd-products-page {
+@media (max-width: 700px) {
+  .pd-form .modal-head {
+    padding: 16px 18px;
+  }
+
+  .pd-form .pd-body {
+    max-height: calc(100dvh - 150px);
+    padding: 16px 18px;
+  }
+
+  .pd-form .pd-top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pd-form .pd-fields,
+  .pd-form .row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pd-form .pd-image {
+    min-height: 160px;
     height: auto;
-    min-height: 100vh;
   }
 
-  .bd-products-header {
-    flex-wrap: wrap;
-  }
-
-  .bd-products-panel {
-    min-height: 420px;
-  }
-
-  .bd-section-header {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .bd-section-actions {
-    flex-wrap: wrap;
-  }
-
-  .bd-product-search {
-    flex: 1;
-  }
-
-  .bd-product-search input {
+  .pd-form .pd-size-tabs {
     width: 100%;
   }
 
-  .pd-top {
-    grid-template-columns: 1fr;
-    gap: 20px;
+  .pd-form .pd-size-tab {
+    flex: 1;
+    min-width: 0;
+    padding: 9px 6px;
   }
 
-  .pd-image {
-    max-width: 240px;
+  .pd-form .pd-price-card {
+    width: 100%;
   }
 
-  .pd-recipe-row {
-    grid-template-columns: minmax(0, 1fr) 100px 32px;
-    gap: 8px;
-  }
-
-  .pd-body {
-    padding: 18px;
+  .pd-form .pd-recipe-row {
+    grid-template-columns: minmax(0, 1fr) 120px 32px;
+    gap: 6px;
   }
 
   .pd-form .modal-foot {
-    padding: 14px 18px;
+    padding: 12px 18px;
+  }
+}
+
+@media (max-height: 650px) {
+  .pd-form .pd-body {
+    max-height: calc(100dvh - 140px);
+  }
+
+  .pd-form .pd-image {
+    min-height: 150px;
   }
 }

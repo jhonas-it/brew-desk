@@ -13,6 +13,7 @@ import Staffs from "../features/staff/Staffs";
 import ProtectedRoute from "./ProtectedRoute";
 import POSPage from "../features/pos/POSPage";
 import { Toaster } from "../components/ui/sonner";
+import Products from "../features/products/Products";
 
 function ComingSoon({ title }) {
   return (
@@ -63,7 +64,7 @@ export default function App() {
 
             <Route
               path="products"
-              element={<ComingSoon title="Products" />}
+              element={<Products />}
             />
 
             <Route 
