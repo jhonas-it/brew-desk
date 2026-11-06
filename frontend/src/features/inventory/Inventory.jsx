@@ -871,9 +871,8 @@ const AddIngredientAction = () => {
                     className="w-full rounded-[12px] border-2 border-[#E2E8F0] px-[14px] py-[12px] outline-none focus:border-[#96bdf2]"
                   >
                     <option value="ml">ml (Mililiters)</option>
-                    <option value="l">l (Liters)</option>
-                    <option value="oz">oz (Ounces)</option>
                     <option value="g">g (Grams)</option>
+                    <option value="g">pcs (Pieces)</option>
                   </select>
                 </div>
 
@@ -1363,9 +1362,8 @@ const RestockIngredientAction = () => {
                   >
                     <option value="">Select an ingredient first</option>
                     <option value="ml">ml (Mililiters)</option>
-                    <option value="l">l (Liters)</option>
-                    <option value="oz">oz (Ounces)</option>
                     <option value="g">g (Grams)</option>
+                    <option value="g">pcs (Pieces)</option>
                   </select>
                 </div>
 
@@ -1501,7 +1499,7 @@ const EditIngredientsAndBatches = ({ ingredient }) => {
                 hover:bg-[#B24B16]
               "
               >
-                Add Ingredient
+                Update
               </button>
             </div>
           </form>
